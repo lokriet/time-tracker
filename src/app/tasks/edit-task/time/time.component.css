@@ -1,0 +1,14 @@
+.dropdown {
+  display: inline-block;
+  width: 100px;
+}
+
+.dropdown-menu {
+  max-height: 200px;
+  overflow-x: hidden; 
+  overflow-y: auto;
+}
+
+.dropdown-toggle {
+  max-width: 100px;
+}

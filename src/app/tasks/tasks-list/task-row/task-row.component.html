@@ -1,0 +1,43 @@
+<div class="container task-row">
+  <div class="row w-100" 
+       (click)="onArrowClicked()"
+       data-toggle="collapse" 
+       [attr.data-target]="'#breaksList'+index"
+       aria-expanded="false" 
+       [attr.aria-controls]="'breaksList'+index">
+      <div class="d-inline-block">
+        <button class="btn bg-transparent" 
+                type="button" 
+                [@rotatedState]="state">
+          <fa-icon [icon]="faArrowRight" ></fa-icon>
+        </button>
+      </div>
+      <div class="d-inline-block w-25 mt-2">
+        {{task.taskName}}
+      </div>
+      <div class="d-inline-block w-25 mt-2">
+        {{task.workDate.year}}-{{task.workDate.month}}-{{task.workDate.day}}
+      </div>
+      <div class="d-inline-block w-25 mt-2">
+        {{task.workHours.startTime.formatTime()}}-{{task.workHours.endTime.formatTime()}} ({{task.workHours.formatLength()}})
+      </div>
+      <div class="d-inline-block w-auto ">
+        <button type="button" class="btn bg-transparent" (click)="onDeleteTask()">
+            <fa-icon [icon]="faDelete" ></fa-icon>
+        </button>
+      </div>
+    </div>
+    <div class="row" *ngIf="task.breaks && task.breaks.length > 0">
+      <div class="col-xs-12 w-100">
+        <div class="collapse" [id]="'breaksList'+index">
+          <div class="card card-body">
+            <div class="row" *ngFor="let break of task.breaks">
+              <fa-icon [icon]="faCoffee"  class="ml-3"></fa-icon>
+              <div class="col-xs-12 ml-2">{{break.startTime.formatTime()}}-{{break.endTime.formatTime()}} ({{break.formatLength()}})</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>

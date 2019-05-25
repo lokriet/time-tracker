@@ -1,0 +1,25 @@
+<div class="dropdown" #wrappingDiv>
+  <input 
+      type="text" 
+      [pattern]="'^/d?/d:/d/d[am|AM|pm|PM]$'"
+      class="dropdown-toggle form-control" 
+      data-toggle="dropdown" 
+      aria-haspopup="true" 
+      aria-expanded="false"
+      id="{{id}}"
+      [value]="selectedTime?.formatTime()"
+      (keyup)="onKeyPressed($event)"
+      (blur)="onTimeSelected(timeInput.value)"
+      #timeInput>
+  <div class="dropdown-menu" 
+       aria-labelledby="dropdownMenu2"
+       #dropdownDiv>
+    <button 
+      *ngFor="let timeOption of timeOptions" 
+      class="dropdown-item" 
+      type="button"
+      (click)="onTimeSelected(timeOption)">
+          {{ timeOption }}
+    </button>
+  </div>
+</div>
