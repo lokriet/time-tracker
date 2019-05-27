@@ -1,9 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Task } from 'src/app/shared/task.model';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
+
 import { faChevronRight, faMugHot } from '@fortawesome/free-solid-svg-icons';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
+
+import { Task } from 'src/app/shared/task.model';
 import { TasksService } from '../../tasks.service';
+import { TimeRange } from 'src/app/shared/time-range.model';
 
 @Component({
   selector: 'app-task-row',
@@ -25,11 +29,14 @@ export class TaskRowComponent implements OnInit {
 
   faArrowRight = faChevronRight;
   faDelete = faTrashAlt;
+  faEdit = faEdit;
   faCoffee = faMugHot;
 
   state: string = 'default';
 
-  constructor(private tasksService: TasksService) { }
+  constructor(private tasksService: TasksService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit() {
   }
@@ -45,7 +52,11 @@ export class TaskRowComponent implements OnInit {
   }
 
   onDeleteTask() {
-    this.tasksService.removeTask(this.index);
+    this.tasksService.removeTask(this.task.id);
+  }
+
+  onEditTask() {
+    this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
   }
 
 }

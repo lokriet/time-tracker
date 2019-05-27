@@ -25,7 +25,6 @@ export class TimeRangeComponent implements ControlValueAccessor {
   onChange;
   
   @Input() id: string;
-  // @Output() timeRangeSelected = new EventEmitter<{range: TimeRange, id: string}>();
   
   constructor() { }
   
@@ -51,7 +50,6 @@ export class TimeRangeComponent implements ControlValueAccessor {
     } else {
       this.timeRange = null;
     }
-    // this.timeRangeSelected.emit({range: this.timeRange, id: this.id});
 
     this.onChange(this.timeRange);
   }
@@ -75,7 +73,6 @@ export class TimeRangeComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     //TODO
-    //throw new Error("Method not implemented.");
   }
 
 }

@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+    <a class="navbar-brand" [routerLink]="['/']" >Time Tracker</a>
+    <button class="navbar-toggler" 
+            type="button" 
+            data-toggle="collapse" 
+            data-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="'/tasks'">Tasks</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+<!-- <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a [routerLink]="['/']" class="navbar-brand">Time Tracker</a>
+      </div>
+      <div class="navbar-default">
+        <ul class="nav navbar-nav">
+          <li routerLinkActive="active">
+            <a [routerLink]="'/tasks'">Tasks list</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <ng-template [ngIf]="!(authState | async).isAuthenticated">
+            <li routerLinkActive="active">
+              <a [routerLink]="'/signin'">Log In</a>
+            </li>
+            <li routerLinkActive="active">
+              <a [routerLink]="'/signup'">Register</a>
+            </li>
+          </ng-template>
+          
+          <ng-template [ngIf]="(authState | async).isAuthenticated">
+            <li routerLinkActive="active" style="cursor: pointer;">
+              <a (click)="onSignOut()" >Log Out</a>
+            </li>
+            <li appDropdown class="dropdown">
+              <a style="cursor: pointer;" class="dropdown-toggle">Manage <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a style="cursor: pointer;" (click)="onSaveData()">Save Data</a></li>
+                <li><a style="cursor: pointer;" (click)="onLoadData()">Fetch Data</a></li>
+              </ul>
+            </li>
+          </ng-template>
+        </ul> 
+      </div>
+    </div>
+  </nav> -->

@@ -10,6 +10,8 @@ import { SharedModule } from '../shared/shared.module';
 import { EditTaskComponent } from './edit-task/edit-task.component';
 import { TimeRangeComponent } from './edit-task/time-range/time-range.component';
 import { TaskRowComponent } from './tasks-list/task-row/task-row.component';
+import { TasksComponent } from './tasks.component';
+import { TasksRoutingModule } from './tasks-routing.module';
 
 @NgModule({
   declarations: [
@@ -17,14 +19,16 @@ import { TaskRowComponent } from './tasks-list/task-row/task-row.component';
     TasksListComponent, 
     TimeComponent, 
     TimeRangeComponent, 
-    TaskRowComponent
+    TaskRowComponent,
+    TasksComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     NgbDatepickerModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TasksRoutingModule
   ],
   exports: [
     EditTaskComponent,

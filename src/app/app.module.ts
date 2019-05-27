@@ -6,10 +6,13 @@ import { AppComponent } from './app.component';
 import { TasksModule } from './tasks/tasks.module';
 import { TasksService } from './tasks/tasks.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TasksRoutingModule } from './tasks/tasks-routing.module';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
