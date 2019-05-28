@@ -2,7 +2,7 @@
 <div class="container">
   <hr>
 </div>
-<div *ngFor="let task of tasks; let i = index;">
+<div *ngFor="let task of tasks$ | async; let i = index;">
   <app-task-row [task]="task" [index]="i"></app-task-row>
 </div>
 

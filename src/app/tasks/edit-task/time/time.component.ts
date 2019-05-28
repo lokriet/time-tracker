@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { Time } from '../../../shared/time.model';
+import { Time } from '../../../shared/model/time.model';
 
 @Component({
   selector: 'app-time',

@@ -5,9 +5,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { faChevronRight, faMugHot } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
 
-import { Task } from 'src/app/shared/task.model';
+import { Task } from 'src/app/shared/model/task.model';
 import { TasksService } from '../../tasks.service';
-import { TimeRange } from 'src/app/shared/time-range.model';
+import { TasksStore } from 'src/app/shared/store/tasks.store';
 
 @Component({
   selector: 'app-task-row',
@@ -35,8 +35,10 @@ export class TaskRowComponent implements OnInit {
   state: string = 'default';
 
   constructor(private tasksService: TasksService,
+              private tasksStore: TasksStore,
               private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+               ) { }
 
   ngOnInit() {
   }
@@ -56,6 +58,7 @@ export class TaskRowComponent implements OnInit {
   }
 
   onEditTask() {
+    // this.tasksStore.setActive(this.task.id);
     this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
   }
 

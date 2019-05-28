@@ -1,6 +1,6 @@
 import { Component, Input, forwardRef } from '@angular/core';
-import { Time } from '../../../shared/time.model';
-import { TimeRange } from '../../../shared/time-range.model';
+import { Time } from '../../../shared/model/time.model';
+import { TimeRange } from '../../../shared/model/time-range.model';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 

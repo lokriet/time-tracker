@@ -136,5 +136,8 @@
       }
     }
   },
-  "defaultProject": "time-tracker"
+  "defaultProject": "time-tracker",
+  "cli": {
+    "defaultCollection": "@datorama/akita"
+  }
 }
