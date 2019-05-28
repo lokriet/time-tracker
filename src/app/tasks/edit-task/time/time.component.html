@@ -7,7 +7,7 @@
       aria-haspopup="true" 
       aria-expanded="false"
       id="{{id}}"
-      [value]="selectedTime?.formatTime()"
+      [value]="formatTime()"
       (keyup)="onKeyPressed($event)"
       (blur)="onTimeSelected(timeInput.value)"
       #timeInput>

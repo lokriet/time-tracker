@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Time } from '../../../shared/model/time.model';
+import { formatTime } from 'src/app/shared/model/time-formatter.service';
 
 @Component({
   selector: 'app-time',
@@ -38,12 +39,12 @@ export class TimeComponent implements OnInit, OnChanges {
 
   private generateTimeOptions() {
     this.timeOptions = [];
-    this.timeOptions.push(this.startTime.formatTime());
+    this.timeOptions.push(formatTime(this.startTime));
 
     let date = new Date(this.startTime.date);
     for (let i = 0; i < 47; i++) {
       date.setMinutes(date.getMinutes() + 30);
-      this.timeOptions.push(Time.fromDate(date).formatTime());
+      this.timeOptions.push(formatTime(Time.fromDate(date)));
     }
   }
 
@@ -68,5 +69,13 @@ export class TimeComponent implements OnInit, OnChanges {
 
       //focus next :(
     }
+  }
+
+  formatTime() {
+    if (this.selectedTime) {
+      return formatTime(this.selectedTime);
+    }
+
+    return '';
   }
 }

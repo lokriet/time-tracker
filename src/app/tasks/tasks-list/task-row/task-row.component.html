@@ -19,7 +19,7 @@
         {{task.workDate.year}}-{{task.workDate.month}}-{{task.workDate.day}}
       </div>
       <div class="d-inline-block w-25 mt-2">
-        {{task.workHours.startTime.formatTime()}}-{{task.workHours.endTime.formatTime()}} ({{task.workHours.formatLength()}})
+        {{formatTimeRange(task.workHours)}} ({{formatTaskLength(task)}})
       </div>
       <div class="d-inline-block w-auto ">
         <button type="button" class="btn bg-transparent" (click)="onEditTask($event)">
@@ -34,9 +34,9 @@
       <div class="col-xs-12 w-100">
         <div class="collapse" [id]="'breaksList'+index">
           <div class="card card-body">
-            <div class="row" *ngFor="let break of task.breaks">
+            <div class="row" *ngFor="let taskBreak of task.breaks">
               <fa-icon [icon]="faCoffee"  class="ml-3"></fa-icon>
-              <div class="col-xs-12 ml-2">{{break.startTime.formatTime()}}-{{break.endTime.formatTime()}} ({{break.formatLength()}})</div>
+              <div class="col-xs-12 ml-2">{{formatTimeRange(taskBreak)}} ({{formatBreakLength(taskBreak)}})</div>
             </div>
           </div>
         </div>

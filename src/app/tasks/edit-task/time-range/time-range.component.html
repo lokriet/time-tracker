@@ -1,3 +1,2 @@
 <app-time [id]="id+'startTime'" (timeSelected)="onStartTimeSelected($event)" [selectedTime]="startTime"></app-time> -
 <app-time [id]="id+'endTime'" [startTime]="startTime" (timeSelected)="onEndTimeSelected($event)" [selectedTime]="endTime"></app-time>
-<span class="text-muted mx-1">{{ timeRange?.formatLength() }}</span>

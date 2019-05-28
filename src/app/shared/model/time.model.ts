@@ -2,10 +2,6 @@ export class Time {
 
   constructor(public hours: number, public minutes: number, public ampm: string, public date: Date) {}
 
-  formatTime():string {
-    return this.hours + ':' + String(this.minutes).padStart(2, '0') + this.ampm;
-  }
-
   static fromString(timeString: string): Time {
     let hours, minutes, ampm, date;
 

@@ -22,6 +22,7 @@
         <app-time-range 
           [id]="'work'" 
           formControlName="workHours"></app-time-range>
+        <span class="text-muted mx-1">{{ formatTaskLength() }}</span>
         <button class="btn btn-light" type="submit" [disabled]="!taskForm.valid">
           <fa-icon [icon]="faCheck"></fa-icon>
         </button>
@@ -43,6 +44,7 @@
           style="margin-bottom: 7px;">
           <div class="col-xs-10">
             <app-time-range [id]="'break'+i" [formControlName]="i" ></app-time-range>
+            <span class="text-muted mx-1">{{ formatBreakLength(i) }}</span>
           </div>
           <div class="col-xs-2 ml-1">
               <button 

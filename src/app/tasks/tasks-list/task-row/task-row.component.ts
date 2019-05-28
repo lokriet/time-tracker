@@ -8,6 +8,8 @@ import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { Task } from 'src/app/shared/model/task.model';
 import { TasksService } from '../../tasks.service';
 import { TasksStore } from 'src/app/shared/store/tasks.store';
+import { TimeRange } from 'src/app/shared/model/time-range.model';
+import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/shared/model/time-formatter.service';
 
 @Component({
   selector: 'app-task-row',
@@ -61,6 +63,27 @@ export class TaskRowComponent implements OnInit {
     // this.tasksStore.setActive(this.task.id);
     this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
     event.stopPropagation();
+  }
+
+  formatTimeRange(timeRange: TimeRange) {
+    if (timeRange) {
+      return formatTime(timeRange.startTime) + '-' + formatTime(timeRange.endTime);
+    }
+    return '';
+  }
+
+  formatBreakLength(taskBreak: TimeRange) {
+    if (taskBreak) {
+      return formatBreakLength(taskBreak);
+    }
+    return '';
+  }
+
+  formatTaskLength(task: Task) {
+    if (task) {
+      return formatTaskLength(task);
+    }
+    return '';
   }
 
 }

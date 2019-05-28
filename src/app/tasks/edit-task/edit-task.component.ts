@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationStart, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +11,8 @@ import { TimeRange } from 'src/app/shared/model/time-range.model';
 import { TasksQuery } from 'src/app/shared/store/tasks.query';
 import { TasksStore } from 'src/app/shared/store/tasks.store';
 import { Task } from 'src/app/shared/model/task.model';
+import { formatBreakLength, getLength, formatLength } from 'src/app/shared/model/time-formatter.service';
+import { timeRangesValidator } from './edit-task.validators';
 
 @Component({
   selector: 'app-edit-task',
@@ -80,7 +82,30 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       'workDate': new FormControl(workDate, Validators.required),
       'workHours': new FormControl(workHours, Validators.required),
       'breaks': breaks
-    });
+    }, { validators: timeRangesValidator });
+  }
+
+
+  formatTaskLength() {
+    if (this.taskForm.value.workHours) {
+      let taskLengthInMillis = getLength(this.taskForm.value.workHours);
+      if (this.taskForm.value.breaks) {
+        for (let taskBreak of this.taskForm.value.breaks) {
+          if (taskBreak) {
+            taskLengthInMillis -= getLength(taskBreak);
+          }
+        }
+      }
+      return formatLength(taskLengthInMillis);
+    }
+    return '';
+  }
+
+  formatBreakLength(index: number) {
+    if (this.taskForm.value.breaks && this.taskForm.value.breaks[index]) {
+      return formatBreakLength(this.taskForm.value.breaks[index]);
+    }
+    return '';
   }
 
   getToday() {
@@ -102,7 +127,6 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.taskForm.value);
     if (this.editMode) {
       this.tasksStore.updateActive(activeTask => {
         return {
