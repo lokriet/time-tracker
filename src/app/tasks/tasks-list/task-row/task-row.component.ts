@@ -1,15 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { faChevronRight, faMugHot } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
+import { untilDestroyed } from 'ngx-take-until-destroy';
 
 import { Task } from 'src/app/shared/model/task.model';
 import { TasksService } from '../../tasks.service';
-import { TasksStore } from 'src/app/shared/store/tasks.store';
+import { TasksUI, TasksStore } from 'src/app/shared/store/tasks.store';
 import { TimeRange } from 'src/app/shared/model/time-range.model';
 import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/shared/model/time-formatter.service';
+import { TasksQuery } from 'src/app/shared/store/tasks.query';
+import { ID } from '@datorama/akita';
 
 @Component({
   selector: 'app-task-row',
@@ -25,7 +28,8 @@ import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/shared/
     ])
   ]
 })
-export class TaskRowComponent implements OnInit {
+export class TaskRowComponent implements OnInit, OnDestroy {
+  
   @Input() task: Task;
   @Input() index: number;
 
@@ -35,34 +39,48 @@ export class TaskRowComponent implements OnInit {
   faCoffee = faMugHot;
 
   state: string = 'default';
+  
+  initialExpandedValue: boolean;
+  taskUIstate: TasksUI = {isExpanded: false};
 
   constructor(private tasksService: TasksService,
+              private tasksQuery: TasksQuery,
               private tasksStore: TasksStore,
               private route: ActivatedRoute,
-              private router: Router,
-               ) { }
+              private router: Router ) { }
 
   ngOnInit() {
+    this.initialExpandedValue = this.tasksQuery.ui.getAll().find((item: {id: ID, isExpanded: boolean}) => item.id == this.task.id).isExpanded;
+
+    this.tasksQuery.ui.selectEntity(this.task.id).pipe(
+      untilDestroyed(this)
+    ).subscribe(taskUIstate => {
+      console.log(`got new ui state ${JSON.stringify(taskUIstate)} in row component ${this.task.id}`);
+      if (taskUIstate) {
+        this.taskUIstate = taskUIstate;
+        this.state = this.taskUIstate.isExpanded ? 'rotated' : 'default';
+      }
+    })
   }
 
   onArrowClicked() {
     if (this.task.breaks && this.task.breaks.length > 0) {
-      if (this.state == 'default') {
-        this.state = 'rotated';
-      } else {
-        this.state = 'default';
-      }
+      this.tasksService.updateTaskUiState(this.task.id, !this.taskUIstate.isExpanded);
     }
   }
 
   onDeleteTask() {
+    event.stopPropagation();
     this.tasksService.removeTask(this.task.id);
+    if (this.tasksQuery.getActiveId() == this.task.id) {
+      this.tasksStore.setActive(null);
+      this.router.navigate(['tasks']);
+    }
   }
 
   onEditTask(event: Event) {
-    // this.tasksStore.setActive(this.task.id);
-    this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
     event.stopPropagation();
+    this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
   }
 
   formatTimeRange(timeRange: TimeRange) {
@@ -86,4 +104,7 @@ export class TaskRowComponent implements OnInit {
     return '';
   }
 
+  ngOnDestroy(): void {
+    
+  }
 }

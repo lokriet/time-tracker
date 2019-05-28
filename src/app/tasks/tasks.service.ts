@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
 
 import { Task } from '../shared/model/task.model';
-import { TasksStore } from '../shared/store/tasks.store';
+import { TasksStore, TasksUI } from '../shared/store/tasks.store';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
@@ -19,6 +19,11 @@ export class TasksService {
 
   removeTask(id: ID) {
     this.tasksStore.remove(id);
+    this.tasksStore.ui.remove(id);
+  }
+
+  updateTaskUiState(id: ID, isExpanded: boolean) {
+    this.tasksStore.ui.upsert(id, { isExpanded });
   }
 
   generateId():ID {
