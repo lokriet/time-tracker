@@ -22,43 +22,46 @@
         <app-time-range 
           [id]="'work'" 
           formControlName="workHours"></app-time-range>
-        </div>
-      </div>
-    </div>
-    <div class="row my-2">
-      <div class="col-xs-12">
-        <button class="btn btn-light" (click)="onAddBreak()" type="button">
-            <fa-icon [icon]="faCoffee"></fa-icon><span> Add a break</span>
+        <button class="btn btn-light" type="submit" [disabled]="!taskForm.valid">
+          <fa-icon [icon]="faCheck"></fa-icon>
         </button>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12" formArrayName="breaks">
-        <div class="container">
-          <div class="row" 
-            *ngFor="let breakControl of getBreakControls(); let i = index"
-            style="margin-bottom: 7px;">
-            <div class="col-xs-10">
-              <app-time-range [id]="'break'+i" [formControlName]="i" ></app-time-range>
-            </div>
-            <div class="col-xs-2 ml-1">
-                <button 
-                  type="button"
-                  class="btn btn-light"
-                  (click)="onRemoveBreak(i)">
-                  <fa-icon [icon]="faDelete"></fa-icon>
-                </button>
-            </div>
+  </div>
+  <div class="row my-2">
+    <div class="col-xs-12">
+      <button class="btn btn-light" (click)="onAddBreak()" type="button">
+          <fa-icon [icon]="faCoffee"></fa-icon><span> Add a break</span>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12" formArrayName="breaks">
+      <div class="container">
+        <div class="row" 
+          *ngFor="let breakControl of getBreakControls(); let i = index"
+          style="margin-bottom: 7px;">
+          <div class="col-xs-10">
+            <app-time-range [id]="'break'+i" [formControlName]="i" ></app-time-range>
+          </div>
+          <div class="col-xs-2 ml-1">
+              <button 
+                type="button"
+                class="btn btn-light"
+                (click)="onRemoveBreak(i)">
+                <fa-icon [icon]="faDelete"></fa-icon>
+              </button>
           </div>
         </div>
       </div>
+    </div>
   </div>
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-xs-12">
       <button type="submit" [disabled]="!taskForm.valid" class="btn btn-light">
           <fa-icon [icon]="faRightArrow"></fa-icon><span> Submit</span>
       </button>
     </div>
-  </div>
+  </div> -->
 
 </form>

@@ -57,9 +57,10 @@ export class TaskRowComponent implements OnInit {
     this.tasksService.removeTask(this.task.id);
   }
 
-  onEditTask() {
+  onEditTask(event: Event) {
     // this.tasksStore.setActive(this.task.id);
     this.router.navigate(['edit', this.task.id], {relativeTo: this.route});
+    event.stopPropagation();
   }
 
 }

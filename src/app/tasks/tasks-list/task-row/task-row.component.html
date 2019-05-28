@@ -22,7 +22,7 @@
         {{task.workHours.startTime.formatTime()}}-{{task.workHours.endTime.formatTime()}} ({{task.workHours.formatLength()}})
       </div>
       <div class="d-inline-block w-auto ">
-        <button type="button" class="btn bg-transparent" (click)="onEditTask()">
+        <button type="button" class="btn bg-transparent" (click)="onEditTask($event)">
             <fa-icon [icon]="faEdit" ></fa-icon>
         </button>
         <button type="button" class="btn bg-transparent" (click)="onDeleteTask()">

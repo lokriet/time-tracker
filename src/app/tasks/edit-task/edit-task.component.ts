@@ -3,9 +3,8 @@ import { Router, NavigationStart, ActivatedRoute, Params } from '@angular/router
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { faCalendarAlt, faMugHot, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import { filter } from 'rxjs/operators';
 
 import { TasksService } from '../tasks.service';
 import { TimeRange } from 'src/app/shared/model/time-range.model';
@@ -23,6 +22,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faCoffee = faMugHot;
   faRightArrow = faAngleDoubleRight;
   faDelete = faTrashAlt;
+  faCheck = faCheck;
 
   taskForm: FormGroup;
 
@@ -40,6 +40,10 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       (params: Params) => {
         this.tasksStore.setActive(params['id']);
         const task = this.tasksQuery.getActive();
+        if (params['id'] != null && !task) {
+          //task not found
+          this.router.navigate(['/404']);
+        }
         
         this.initForm(task);
       }
