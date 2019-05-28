@@ -3,8 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
 
 import { TasksService } from '../tasks.service';
 import { TimeRange } from 'src/app/shared/model/time-range.model';
@@ -25,10 +25,13 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faRightArrow = faAngleDoubleRight;
   faDelete = faTrashAlt;
   faCheck = faCheck;
+  faBug = faAngry;
 
   taskForm: FormGroup;
 
   editMode: boolean = false;
+
+  errorMessages: string[] = [];
 
   constructor(private calendar: NgbCalendar, 
               private tasksService: TasksService,
@@ -115,7 +118,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   onAddBreak() {
     (<FormArray>this.taskForm.get('breaks')).push(
       new FormControl(null, Validators.required)
-    )
+    );
   }
 
   getBreakControls() {

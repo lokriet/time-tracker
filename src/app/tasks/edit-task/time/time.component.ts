@@ -50,8 +50,12 @@ export class TimeComponent implements OnInit, OnChanges {
 
   onTimeSelected(timeOption: string) {
     if (timeOption) {
-      this.selectedTime = Time.fromString(timeOption);
-      this.timeSelected.emit(this.selectedTime);
+      if (this.validateTimeString(timeOption)) {
+        this.selectedTime = Time.fromString(timeOption);
+        this.timeSelected.emit(this.selectedTime);
+      } else {
+        this.timeSelected.emit(null);
+      }
     } else {
       this.timeSelected.emit(null);
     }
@@ -59,6 +63,7 @@ export class TimeComponent implements OnInit, OnChanges {
 
   onKeyPressed(event: KeyboardEvent) {
     if (event.keyCode == 13) { //enter
+      this.checkAndReplaceInputFormat();
       let input = <HTMLInputElement> event.target;
       this.onTimeSelected(input.value);
 
@@ -77,5 +82,44 @@ export class TimeComponent implements OnInit, OnChanges {
     }
 
     return '';
+  }
+
+
+  checkAndReplaceInputFormat() {
+    let pattern_24hours = /^(\d?\d):(\d\d)$/gi;
+    if (pattern_24hours.test(this.timeInput.nativeElement.value)) {
+      pattern_24hours.lastIndex = 0;
+      let ampm: string;
+      let [_, hoursString, minutesString] = pattern_24hours.exec(this.timeInput.nativeElement.value);
+      let hoursNo = +hoursString;
+      if (hoursNo < 12) {
+        ampm = 'am';
+        if (hoursNo == 0) {
+          hoursNo = 12;
+        }
+      } else {
+        ampm = 'pm';
+        if (hoursNo != 12) {
+          hoursNo -= 12;
+        }
+      }
+
+      hoursString = String(hoursNo).padStart(2, '0');
+      let replaceString = hoursString + ':' + minutesString + ampm;
+      this.timeInput.nativeElement.value = replaceString;
+    }
+  }
+
+  validateTimeString(timeString: string):boolean {
+    let accepted_pattern = /^(\d?\d):(\d\d)(am|pm)$/gi;
+    if (!accepted_pattern.test(timeString)) {
+      this.timeInput.nativeElement.classList.remove('ng-valid');
+      this.timeInput.nativeElement.classList.add('ng-invalid');
+      return false;
+    } else {
+      this.timeInput.nativeElement.classList.remove('ng-invalid');
+      this.timeInput.nativeElement.classList.add('ng-valid');
+      return true;
+    }
   }
 }

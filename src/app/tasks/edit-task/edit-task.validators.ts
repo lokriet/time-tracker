@@ -10,7 +10,7 @@ export const timeRangesValidator: ValidatorFn = (control: FormGroup): Validation
   if (workHours && breaks) {
     for (let taskBreak of <TimeRange[]>breaks) {
       if (taskBreak) {
-        if (!isInRange(taskBreak.startTime, workHours)) {
+        if (!isInRange(taskBreak.startTime, workHours) || !isInRange(taskBreak.endTime, workHours)) {
           return {'breakTimeOutsideOfWorkHours': true};
         }
 
