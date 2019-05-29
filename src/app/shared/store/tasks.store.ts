@@ -12,8 +12,8 @@ const initialTasks: Task[] = [
     taskName: 'work',
     workDate: {
       day: 1,
-      month: 1,
-      year: 2019
+      month: 12,
+      year: 2018
     },
     workHours: new TimeRange(
       Time.fromString('11:00am'),

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { TasksQuery } from 'src/app/shared/store/tasks.query';
+import { TasksQuery, compareTasks } from 'src/app/shared/store/tasks.query';
 import { Task } from 'src/app/shared/model/task.model';
 
 @Component({
@@ -17,5 +17,9 @@ export class TasksListComponent implements OnInit {
 
   ngOnInit() {
     this.tasks$ = this.tasksQuery.selectAll();
+  }
+
+  sameDate(a: Task, b: Task) {
+    return a.workDate.year == b.workDate.year && a.workDate.month == b.workDate.month && a.workDate.day == b.workDate.day;
   }
 }
