@@ -6,7 +6,7 @@ import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
 
-import { TasksService } from '../tasks.service';
+import { TasksService } from '../../shared/store/tasks.service';
 import { TimeRange } from 'src/app/shared/model/time-range.model';
 import { TasksQuery } from 'src/app/shared/store/tasks.query';
 import { TasksStore } from 'src/app/shared/store/tasks.store';

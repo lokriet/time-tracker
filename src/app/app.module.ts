@@ -11,6 +11,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { HeaderComponent } from './header/header.component';
 import { environment } from '../environments/environment';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { PageNotFoundComponent } from './page-not-found.component';
     TasksModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     environment.production ?
         [] :
         [ AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot() ]

@@ -7,7 +7,7 @@ import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
 import { Task } from 'src/app/shared/model/task.model';
-import { TasksService } from '../../tasks.service';
+import { TasksService } from '../../../shared/store/tasks.service';
 import { TasksUI, TasksStore } from 'src/app/shared/store/tasks.store';
 import { TimeRange } from 'src/app/shared/model/time-range.model';
 import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/shared/model/time-formatter.service';
@@ -55,7 +55,6 @@ export class TaskRowComponent implements OnInit, OnDestroy {
     this.tasksQuery.ui.selectEntity(this.task.id).pipe(
       untilDestroyed(this)
     ).subscribe(taskUIstate => {
-      console.log(`got new ui state ${JSON.stringify(taskUIstate)} in row component ${this.task.id}`);
       if (taskUIstate) {
         this.taskUIstate = taskUIstate;
         this.state = this.taskUIstate.isExpanded ? 'rotated' : 'default';
@@ -71,9 +70,9 @@ export class TaskRowComponent implements OnInit, OnDestroy {
 
   onDeleteTask() {
     event.stopPropagation();
+    let shouldNavigateAway = this.tasksQuery.getActiveId() == this.task.id;
     this.tasksService.removeTask(this.task.id);
-    if (this.tasksQuery.getActiveId() == this.task.id) {
-      this.tasksStore.setActive(null);
+    if (shouldNavigateAway) {
       this.router.navigate(['tasks']);
     }
   }

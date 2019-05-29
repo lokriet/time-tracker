@@ -2,9 +2,6 @@
 <div class="container">
   <hr>
 </div>
-<!-- <div *ngFor="let task of tasks$ | async; let i = index;">
-  <app-task-row [task]="task" [index]="i"></app-task-row>
-</div> -->
 
 <ng-template ngFor let-task [ngForOf]="tasks$ | async" let-i="index" let-isFirst="first" let-isLast="last">
   <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="container">

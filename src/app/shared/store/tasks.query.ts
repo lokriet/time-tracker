@@ -21,7 +21,7 @@ export class TasksQuery extends QueryEntity<TasksState, Task> {
   }
 }
 
-export function compareTasks(a: Task, b: Task): number {
+function compareTasks(a: Task, b: Task): number {
   if (a.workDate.year != b.workDate.year) {
     return a.workDate.year - b.workDate.year;
   }

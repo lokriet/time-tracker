@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { TasksQuery, compareTasks } from 'src/app/shared/store/tasks.query';
+import { TasksQuery } from 'src/app/shared/store/tasks.query';
 import { Task } from 'src/app/shared/model/task.model';
+import { TasksService } from 'src/app/shared/store/tasks.service';
 
 @Component({
   selector: 'app-tasks-list',
@@ -12,11 +13,21 @@ import { Task } from 'src/app/shared/model/task.model';
 })
 export class TasksListComponent implements OnInit {
   tasks$: Observable<Task[]>;
+  tasks: Task[];
 
-  constructor(private tasksQuery: TasksQuery) { }
+  constructor(private tasksQuery: TasksQuery,
+              private tasksService: TasksService) { }
 
   ngOnInit() {
-    this.tasks$ = this.tasksQuery.selectAll();
+    this.tasks$ = this.tasksService.getTasks();
+    // this.tasksService.getTasks().subscribe(
+    //   (tasks: Task[]) => {
+    //     console.log(tasks);
+    //     this.tasks = tasks;
+    //   }
+    // );
+
+    // this.tasks$.subscribe((tasks: Task[]) => console.log(tasks));
   }
 
   sameDate(a: Task, b: Task) {
