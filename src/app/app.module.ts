@@ -14,17 +14,18 @@ import { environment } from '../environments/environment';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/store/auth.service';
-import { AuthInterceptor } from './auth/auth.interceptor';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
 import { DatabaseService } from './db.service';
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    HomeComponent
+    HomeComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,

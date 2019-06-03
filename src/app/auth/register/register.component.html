@@ -6,9 +6,6 @@
         <input type="password" name="password" id="password" class="form-control mb-2" placeholder="Password" [(ngModel)]="password" password minlength="6">
         <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Register</button>
       </form>
-      <div class="alert alert-danger mt-3" *ngIf="errorMessage != null">
-        <fa-icon [icon]="faBug"></fa-icon> {{errorMessage}}
-      </div>
     </div>
   </div>
 </div>

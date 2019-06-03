@@ -1,6 +1,6 @@
-import { Task, createTask } from '../model/task.model';
-import { TimeRange } from '../model/time-range.model';
-import { Time } from '../model/time.model';
+import { Task, createTask } from './task.model';
+import { TimeRange } from './time-range.model';
+import { Time } from './time.model';
 
 export function serializeTask(task: Task) : any {
   let breakObjects = [];

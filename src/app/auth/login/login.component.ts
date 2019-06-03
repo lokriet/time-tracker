@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as firebase from 'firebase';
-import { faAngry } from '@fortawesome/free-regular-svg-icons';
 import { Router } from '@angular/router';
 import { AuthService } from '../store/auth.service';
+import { MessagesService } from 'src/app/messages/store/messages.service';
 
 @Component({
   selector: 'app-login',
@@ -12,12 +11,10 @@ import { AuthService } from '../store/auth.service';
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
-  errorMessage: string;
-
-  faBug = faAngry;
 
   constructor(private router: Router,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private messagesService: MessagesService) { }
 
   ngOnInit() {
   }
@@ -26,7 +23,7 @@ export class LoginComponent implements OnInit {
       this.authService.loginWithEmailAndPassword(this.email, this.password)
       .then(
         () => {
-          this.errorMessage = null;
+          this.messagesService.addInfo('Logged in successfully');
           this.router.navigate(['/']);
         }
       )
@@ -34,13 +31,13 @@ export class LoginComponent implements OnInit {
         (error) => {
           switch (error.code) {
             case 'auth/wrong-password': 
-              this.errorMessage = 'Wrong password';
+              this.messagesService.addError( 'Wrong password');
               break;
             case 'auth/user-not-found':
-              this.errorMessage = "User with this e-mail doesn't exist";
+              this.messagesService.addError("User with this e-mail doesn't exist");
               break;
             default:
-              this.errorMessage = error.message;
+              this.messagesService.addError(error.message);
               console.log(error);
           }
         }

@@ -13,8 +13,6 @@ import { TasksStore } from 'src/app/tasks/store/tasks.store';
 import { Task } from 'src/app/tasks/model/task.model';
 import { formatBreakLength, getLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
 import { timeRangesValidator } from './edit-task.validators';
-import { Observable } from 'rxjs';
-import { AuthQuery } from 'src/app/auth/store/auth.query';
 import { AuthService } from 'src/app/auth/store/auth.service';
 
 @Component({

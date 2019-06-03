@@ -3,6 +3,7 @@ import { TasksService } from '../tasks/store/tasks.service';
 import { AuthService } from '../auth/store/auth.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { MessagesService } from '../messages/store/messages.service';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(private tasksService: TasksService,
               private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private messagesService: MessagesService) { }
 
   isAuthenticated$: Observable<boolean>;
 
@@ -27,6 +29,7 @@ export class HeaderComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
+    this.messagesService.addInfo('Logged out successfully');
     this.router.navigate(['/']);
   }
 }

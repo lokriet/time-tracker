@@ -8,7 +8,7 @@ import { Task } from '../model/task.model';
 import { TasksStore } from './tasks.store';
 import { TasksQuery } from './tasks.query';
 import { DatabaseService } from 'src/app/db.service';
-import { serializeTask, deserializeTask } from './task.serializer';
+import { serializeTask, deserializeTask } from '../model/task.serializer';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
