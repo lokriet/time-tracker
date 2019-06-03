@@ -5,6 +5,7 @@ import { Message, MessageType } from './message.model';
 import { MessagesQuery } from './store/messages.query';
 import { Observable } from 'rxjs';
 import { MessagesService } from './store/messages.service';
+import { Order } from '@datorama/akita';
 
 @Component({
   selector: 'app-messages',
@@ -25,7 +26,7 @@ export class MessagesComponent implements OnInit {
               private messagesService: MessagesService) { }
 
   ngOnInit() {
-    this.messages = this.messagesQuery.selectAll();
+    this.messages = this.messagesQuery.selectAll({sortBy: 'id', sortByOrder: Order.DESC});
   }
 
   onCloseMessage(messageId: number) {

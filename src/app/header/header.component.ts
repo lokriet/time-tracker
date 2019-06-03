@@ -23,9 +23,9 @@ export class HeaderComponent implements OnInit {
     this.isAuthenticated$ = this.authService.isAuthenticated();
   }
 
-  onStoreTasks() {
-    this.tasksService.storeTasksForOwnerId(this.authService.getCurrentUserUid());
-  }
+  // onStoreTasks() {
+  //   this.tasksService.storeTasksForOwnerId(this.authService.getCurrentUserUid());
+  // }
 
   onLogout() {
     this.authService.logout();

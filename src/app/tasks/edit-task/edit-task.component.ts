@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
 
 import { TasksService } from '../store/tasks.service';
@@ -27,6 +27,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faDelete = faTrashAlt;
   faCheck = faCheck;
   faBug = faAngry;
+  faReload = faSyncAlt;
 
   taskForm: FormGroup;
 
@@ -135,11 +136,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.editMode) {
-      this.tasksStore.updateActive(activeTask => {
-        return {
-          ...this.taskForm.value
-        };
-      });
+      this.tasksService.updateTask(this.taskForm.value);
     } else {
       this.tasksService.addTask(this.taskForm.value);
     }
@@ -147,6 +144,15 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     this.clearState();
   
     this.router.navigate(['tasks']);
+  }
+
+  onClearForm() {
+    if (this.editMode) {
+      this.clearState();
+      this.router.navigate(['tasks']);
+    } else {
+      this.clearState();
+    }
   }
 
   ngOnDestroy(): void {

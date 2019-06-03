@@ -26,7 +26,7 @@ export class MessagesService {
     
     setTimeout(() => {
       this.removeMessage(nextId);
-    }, 20 * 1000);
+    }, 10 * 1000);
     
   }
 
