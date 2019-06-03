@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <form #f="ngForm" (ngSubmit)="onLogIn()">
+        <input type="text" name="email" id="email" class="form-control mb-2" placeholder="E-mail" [(ngModel)]="email" required>
+        <input type="password" name="password" id="password" class="form-control mb-2" placeholder="Password" [(ngModel)]="password" password>
+        <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Log In</button>
+      </form>
+      <div class="alert alert-danger mt-3" *ngIf="errorMessage != null">
+        <fa-icon [icon]="faBug"></fa-icon> {{errorMessage}}
+      </div>
+    </div>
+  </div>
+</div>

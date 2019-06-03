@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { TasksQuery } from 'src/app/shared/store/tasks.query';
-import { Task } from 'src/app/shared/model/task.model';
-import { TasksService } from 'src/app/shared/store/tasks.service';
+import { Task } from 'src/app/tasks/model/task.model';
+import { TasksService } from 'src/app/tasks/store/tasks.service';
+import { AuthService } from 'src/app/auth/store/auth.service';
 
 @Component({
   selector: 'app-tasks-list',
@@ -15,19 +15,11 @@ export class TasksListComponent implements OnInit {
   tasks$: Observable<Task[]>;
   tasks: Task[];
 
-  constructor(private tasksQuery: TasksQuery,
-              private tasksService: TasksService) { }
+  constructor(private tasksService: TasksService,
+              private authService: AuthService) { }
 
   ngOnInit() {
-    this.tasks$ = this.tasksService.getTasks();
-    // this.tasksService.getTasks().subscribe(
-    //   (tasks: Task[]) => {
-    //     console.log(tasks);
-    //     this.tasks = tasks;
-    //   }
-    // );
-
-    // this.tasks$.subscribe((tasks: Task[]) => console.log(tasks));
+    this.tasks$ = this.tasksService.getTasksByOwnerId(this.authService.getCurrentUserUid());
   }
 
   sameDate(a: Task, b: Task) {

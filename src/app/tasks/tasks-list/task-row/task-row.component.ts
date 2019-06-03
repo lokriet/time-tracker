@@ -6,12 +6,12 @@ import { faChevronRight, faMugHot } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 
-import { Task } from 'src/app/shared/model/task.model';
-import { TasksService } from '../../../shared/store/tasks.service';
-import { TasksUI, TasksStore } from 'src/app/shared/store/tasks.store';
-import { TimeRange } from 'src/app/shared/model/time-range.model';
-import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/shared/model/time-formatter.service';
-import { TasksQuery } from 'src/app/shared/store/tasks.query';
+import { Task } from 'src/app/tasks/model/task.model';
+import { TasksService } from '../../store/tasks.service';
+import { TasksUI } from 'src/app/tasks/store/tasks.store';
+import { TimeRange } from 'src/app/tasks/model/time-range.model';
+import { formatTime, formatBreakLength, formatTaskLength } from 'src/app/tasks/model/time-formatter.service';
+import { TasksQuery } from 'src/app/tasks/store/tasks.query';
 import { ID } from '@datorama/akita';
 
 @Component({
@@ -45,7 +45,6 @@ export class TaskRowComponent implements OnInit, OnDestroy {
 
   constructor(private tasksService: TasksService,
               private tasksQuery: TasksQuery,
-              private tasksStore: TasksStore,
               private route: ActivatedRoute,
               private router: Router ) { }
 

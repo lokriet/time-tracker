@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { Time } from '../../../shared/model/time.model';
-import { formatTime } from 'src/app/shared/model/time-formatter.service';
+import { Time } from '../../model/time.model';
+import { formatTime } from 'src/app/tasks/model/time-formatter.service';
 
 @Component({
   selector: 'app-time',

@@ -1,8 +1,6 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState, HashMap, EntityUIStore, ID } from '@datorama/akita';
+import { EntityState, EntityStore, StoreConfig, ActiveState, EntityUIStore } from '@datorama/akita';
 
 import { Task } from '../model/task.model';
-import { TimeRange } from '../model/time-range.model';
-import { Time } from '../model/time.model';
 import { Injectable } from '@angular/core';
 
 

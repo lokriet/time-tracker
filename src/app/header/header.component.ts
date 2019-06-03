@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TasksService } from '../shared/store/tasks.service';
+import { TasksService } from '../tasks/store/tasks.service';
+import { AuthService } from '../auth/store/auth.service';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -8,13 +11,22 @@ import { TasksService } from '../shared/store/tasks.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private tasksService: TasksService) { }
+  constructor(private tasksService: TasksService,
+              private authService: AuthService,
+              private router: Router) { }
+
+  isAuthenticated$: Observable<boolean>;
 
   ngOnInit() {
+    this.isAuthenticated$ = this.authService.isAuthenticated();
   }
 
   onStoreTasks() {
-    this.tasksService.storeTasks();
+    this.tasksService.storeTasksForOwnerId(this.authService.getCurrentUserUid());
   }
 
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
 }

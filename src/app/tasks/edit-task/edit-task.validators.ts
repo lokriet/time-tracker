@@ -1,7 +1,7 @@
 import { ValidatorFn, FormGroup, ValidationErrors, FormArray } from "@angular/forms";
 
-import { Time } from 'src/app/shared/model/time.model';
-import { TimeRange } from 'src/app/shared/model/time-range.model';
+import { Time } from 'src/app/tasks/model/time.model';
+import { TimeRange } from 'src/app/tasks/model/time-range.model';
 
 export const timeRangesValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
   const workHours: TimeRange = control.get('workHours').value;

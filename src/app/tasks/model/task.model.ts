@@ -4,15 +4,17 @@ import { ID } from '@datorama/akita';
 
 export class Task {
   id: ID;
+  ownerId: string;
   taskName: string;
   workDate: SimpleDate;
   workHours: TimeRange;
   breaks: TimeRange[];
 }
 
-export function createTask({ id, taskName, workDate, workHours, breaks }: Partial<Task>) {
+export function createTask({ id, ownerId, taskName, workDate, workHours, breaks }: Partial<Task>) {
   return {
     id,
+    ownerId,
     taskName,
     workDate,
     workHours,

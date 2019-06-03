@@ -6,13 +6,16 @@ import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
 
-import { TasksService } from '../../shared/store/tasks.service';
-import { TimeRange } from 'src/app/shared/model/time-range.model';
-import { TasksQuery } from 'src/app/shared/store/tasks.query';
-import { TasksStore } from 'src/app/shared/store/tasks.store';
-import { Task } from 'src/app/shared/model/task.model';
-import { formatBreakLength, getLength, formatLength } from 'src/app/shared/model/time-formatter.service';
+import { TasksService } from '../store/tasks.service';
+import { TimeRange } from 'src/app/tasks/model/time-range.model';
+import { TasksQuery } from 'src/app/tasks/store/tasks.query';
+import { TasksStore } from 'src/app/tasks/store/tasks.store';
+import { Task } from 'src/app/tasks/model/task.model';
+import { formatBreakLength, getLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
 import { timeRangesValidator } from './edit-task.validators';
+import { Observable } from 'rxjs';
+import { AuthQuery } from 'src/app/auth/store/auth.query';
+import { AuthService } from 'src/app/auth/store/auth.service';
 
 @Component({
   selector: 'app-edit-task',
@@ -38,7 +41,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
               private tasksQuery: TasksQuery,
               private tasksStore: TasksStore,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -66,12 +70,13 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     let workHours = null;
     let breaks = new FormArray([]);
     let id = this.tasksService.generateId();
+    let ownerId = this.authService.getCurrentUserUid();
 
     this.editMode = (task != null);
 
     if (this.editMode) {
       let taskBreaks: TimeRange[];
-      ({id, taskName, workDate, workHours, breaks: taskBreaks} = task);
+      ({id, ownerId, taskName, workDate, workHours, breaks: taskBreaks} = task);
       if (taskBreaks) {
         for (let taskBreak of taskBreaks) {
           breaks.push(new FormControl(taskBreak, Validators.required));
@@ -81,6 +86,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
     this.taskForm = new FormGroup({
       'id': new FormControl(id),
+      'ownerId': new FormControl(ownerId),
       'taskName': new FormControl(taskName, Validators.required),
       'workDate': new FormControl(workDate, Validators.required),
       'workHours': new FormControl(workHours, Validators.required),

@@ -61,11 +61,11 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="alert alert-danger" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimeOutsideOfWorkHours']">
-          <fa-icon [icon]="faBug"></fa-icon> Break time range should be inside of work time range.
+        <fa-icon [icon]="faBug"></fa-icon> Break time range should be inside of work time range.
       </div>
       <div class="alert alert-danger" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimesIntersect']">
-          <fa-icon [icon]="faBug"></fa-icon> Break time ranges should not intersect.
-        </div>
-    </div>
+        <fa-icon [icon]="faBug"></fa-icon> Break time ranges should not intersect.
+      </div>
+  </div>
   </div>
 </form>
