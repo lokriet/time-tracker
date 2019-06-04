@@ -3,3 +3,8 @@
   outline: none !important;
   box-shadow: none;
 }
+
+input[type="checkbox"]:focus {
+  outline: none !important;
+  box-shadow: none;
+}

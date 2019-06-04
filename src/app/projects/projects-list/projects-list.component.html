@@ -1,0 +1,51 @@
+<div class="container">
+  <hr>
+
+
+  <div *ngIf="(projects$ | async).length > 0; then projectsList else noProjects"></div>
+
+  <ng-template #projectsList>
+    <div class="row border border-secondary p-2 rounded-sm mb-3" *ngFor="let project of (projects$ | async)">
+      <div class="col-xs-12 w-100">
+        <div class="d-inline-block w-25 ml-3">
+          {{ project.projectName }}
+        </div>
+        <div class="d-inline-block mr-4 {{ project.isPaid ? '' : 'text-secondary' }}">
+            <fa-icon [icon]="faDollar"></fa-icon>
+        </div>
+        <div class="d-inline-block w-25">
+          {{ project.isPaid ? (project.payRate | currency) : '' }}
+        </div>
+        <div class="d-inline-block w-auto ">
+          <button type="button" class="btn bg-transparent" (click)="onEditProject(project)">
+              <fa-icon [icon]="faEdit" ></fa-icon>
+          </button>
+          <button type="button" class="btn bg-transparent" (click)="onDeleteProject(project)">
+              <fa-icon [icon]="faDelete" ></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- <ng-template ngFor let-task [ngForOf]="projects$ | async" let-i="index" let-isFirst="first" let-isLast="last">
+      <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="container">
+        <div class="row border border-secondary bg-light p-2 rounded-sm">
+          <div class="col-xs-12">
+            {{task.workDate.year}}/{{task.workDate.month}}/{{task.workDate.day}}
+          </div>
+        </div>
+      </div>
+      <app-task-row [task]="task" [index]="i"></app-task-row>
+      <div *ngIf="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])" class="container">
+        <hr />
+      </div>
+    </ng-template> -->
+  </ng-template>
+
+
+  <ng-template #noProjects>
+    <div class="container text-secondary">
+      No projects added yet
+    </div>
+  </ng-template>
+
+</div>

@@ -67,7 +67,7 @@ export class TaskRowComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDeleteTask() {
+  onDeleteTask(event: Event) {
     event.stopPropagation();
     let shouldNavigateAway = this.tasksQuery.getActiveId() == this.task.id;
     this.tasksService.removeTask(this.task.id);

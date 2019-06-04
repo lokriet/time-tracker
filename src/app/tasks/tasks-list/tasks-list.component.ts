@@ -13,7 +13,6 @@ import { AuthService } from 'src/app/auth/store/auth.service';
 })
 export class TasksListComponent implements OnInit {
   tasks$: Observable<Task[]>;
-  tasks: Task[];
 
   constructor(private tasksService: TasksService,
               private authService: AuthService) { }

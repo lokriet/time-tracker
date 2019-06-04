@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import * as firebase from 'firebase';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 import { AuthStore } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { Observable } from 'rxjs';
@@ -8,19 +9,20 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthService {
   constructor(private authStore: AuthStore,
-              private authQuery: AuthQuery) {}
+              private authQuery: AuthQuery,
+              private firebaseAuth: AngularFireAuth) {}
 
   loginWithEmailAndPassword(email: string, password: string):Promise<firebase.auth.UserCredential> {
     return new Promise((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
         .then(result => {
-          firebase.auth().currentUser.getIdToken().then(token => { this.authStore.update({token}); });
-          this.authStore.update({uid: firebase.auth().currentUser.uid});
-          firebase.auth().onIdTokenChanged((user) => {
+          this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
+          this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
+          this.firebaseAuth.auth.onIdTokenChanged((user) => {
             if (user) {
-              firebase.auth().currentUser.getIdToken()
+              this.firebaseAuth.auth.currentUser.getIdToken()
                 .then(token => { this.authStore.update({token}); });
-              this.authStore.update({uid: firebase.auth().currentUser.uid});
+              this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
             } else {
               this.authStore.update({token: null, uid: null});
             }
@@ -35,14 +37,14 @@ export class AuthService {
 
   registerWithEmailAndPassword(email: string, password: string):Promise<firebase.auth.UserCredential> {
     return new Promise((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
-          firebase.auth().currentUser.getIdToken().then(token => { this.authStore.update({token}); });
-          firebase.auth().onIdTokenChanged((user) => {
+          this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
+          this.firebaseAuth.auth.onIdTokenChanged((user) => {
             if (user) {
-              firebase.auth().currentUser.getIdToken()
+              this.firebaseAuth.auth.currentUser.getIdToken()
                 .then((token) => { this.authStore.update({token}); });
-              this.authStore.update({uid: firebase.auth().currentUser.uid});
+              this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
             } else {
               this.authStore.update({token: null, uid: null});
             }
@@ -56,7 +58,7 @@ export class AuthService {
   }
 
   logout() {
-    firebase.auth().signOut().then(
+    this.firebaseAuth.auth.signOut().then(
       () => {
         this.authStore.update({token: null, uid: null});
       }

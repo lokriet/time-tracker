@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,8 +19,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/store/auth.service';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
-import { DatabaseService } from './db.service';
 import { MessagesComponent } from './messages/messages.component';
+import { ProjectsModule } from './projects/projects.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,11 @@ import { MessagesComponent } from './messages/messages.component';
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
     TasksModule,
+    ProjectsModule,
     AuthModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -38,7 +45,7 @@ import { MessagesComponent } from './messages/messages.component';
         [] :
         [ AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot() ]
   ],
-  providers: [DatabaseService, AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

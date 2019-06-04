@@ -17,7 +17,7 @@ function createInitialState() {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({name: 'auth'})
 export class AuthStore extends Store<AuthState> {
-
+  
   constructor() {
     super(createInitialState());
   }
