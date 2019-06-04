@@ -14,9 +14,9 @@ export class TimeComponent implements OnInit, OnChanges {
   @Input() startTime: Time;
   @Output() timeSelected = new EventEmitter<Time>();
 
-  @ViewChild('wrappingDiv') wrappingDiv: ElementRef;
-  @ViewChild('timeInput') timeInput: ElementRef;
-  @ViewChild('dropdownDiv') dropdownDiv: ElementRef;
+  @ViewChild('wrappingDiv', { static: true }) wrappingDiv: ElementRef;
+  @ViewChild('timeInput', { static: true }) timeInput: ElementRef;
+  @ViewChild('dropdownDiv', { static: true }) dropdownDiv: ElementRef;
 
   constructor() { }
 

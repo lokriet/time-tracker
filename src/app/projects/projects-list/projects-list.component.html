@@ -14,7 +14,7 @@
             <fa-icon [icon]="faDollar"></fa-icon>
         </div>
         <div class="d-inline-block w-25">
-          {{ project.isPaid ? (project.payRate | currency) : '' }}
+          {{ project.isPaid ? (project.payRate | currency)+'/hour' : '' }}
         </div>
         <div class="d-inline-block w-auto ">
           <button type="button" class="btn bg-transparent" (click)="onEditProject(project)">
