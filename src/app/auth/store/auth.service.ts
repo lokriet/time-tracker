@@ -5,12 +5,16 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AuthStore } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { Observable } from 'rxjs';
+import { ProjectsService } from 'src/app/projects/store/projects.service';
+import { TasksService } from 'src/app/tasks/store/tasks.service';
 
 @Injectable()
 export class AuthService {
   constructor(private authStore: AuthStore,
               private authQuery: AuthQuery,
-              private firebaseAuth: AngularFireAuth) {}
+              private firebaseAuth: AngularFireAuth,
+              private projectsService: ProjectsService,
+              private tasksService: TasksService) {}
 
   loginWithEmailAndPassword(email: string, password: string):Promise<firebase.auth.UserCredential> {
     return new Promise((resolve, reject) => {
@@ -18,6 +22,7 @@ export class AuthService {
         .then(result => {
           this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
           this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
+          this.initStoreCaches();
           this.firebaseAuth.auth.onIdTokenChanged((user) => {
             if (user) {
               this.firebaseAuth.auth.currentUser.getIdToken()
@@ -40,6 +45,8 @@ export class AuthService {
       this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
           this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
+          this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
+          this.initStoreCaches();
           this.firebaseAuth.auth.onIdTokenChanged((user) => {
             if (user) {
               this.firebaseAuth.auth.currentUser.getIdToken()
@@ -83,5 +90,10 @@ export class AuthService {
 
   getCurrentUserUid(): string {
     return this.authQuery.getValue().uid;
+  }
+
+  private initStoreCaches() {
+    this.projectsService.initStoreCache(this.getCurrentUserUid());
+    this.tasksService.initStoreCache(this.getCurrentUserUid());
   }
 }

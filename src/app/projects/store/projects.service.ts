@@ -16,17 +16,21 @@ export class ProjectsService {
               private projectsStore: ProjectsStore,
               private projectsQuery: ProjectsQuery) {}
 
+  initStoreCache(ownerId: string) {
+    this.db.collection("projects", ref => ref.where("ownerId", "==", ownerId)).get()
+    .subscribe(querySnapshot => {
+      let projects: Project[] = [];
+      querySnapshot.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          projects.push(<Project>doc.data());
+      });
+      this.projectsStore.set(projects);
+    });
+  }
+
   getProjectsByOwnerId(ownerId: string): Observable<Project[]> {
     if (!this.projectsQuery.getHasCache()) {
-      this.db.collection("projects", ref => ref.where("ownerId", "==", ownerId)).get()
-        .subscribe(querySnapshot => {
-          let projects: Project[] = [];
-          querySnapshot.forEach(doc => {
-              // doc.data() is never undefined for query doc snapshots
-              projects.push(<Project>doc.data());
-          });
-          this.projectsStore.set(projects);
-        });
+      this.initStoreCache(ownerId);
     }
   
     return this.projectsQuery.selectAll({

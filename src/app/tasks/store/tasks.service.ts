@@ -6,29 +6,35 @@ import { Observable } from 'rxjs';
 import { Task } from '../model/task.model';
 import { TasksStore } from './tasks.store';
 import { TasksQuery } from './tasks.query';
-import { serializeTask, deserializeTask } from '../model/task.serializer';
+import { TaskSerializer } from '../model/task.serializer';
 import { MessagesService } from 'src/app/messages/store/messages.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AuthService } from 'src/app/auth/store/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
   constructor(private tasksStore: TasksStore,
               private tasksQuery: TasksQuery,
               private db: AngularFirestore,
-              private messagesService: MessagesService) {
+              private messagesService: MessagesService,
+              private taskSerializer: TaskSerializer) {
+  }
+
+  initStoreCache(ownerId: string) {
+    this.db.collection("tasks", ref => ref.where("ownerId", "==", ownerId)).get()
+    .subscribe(querySnapshot => {
+      let tasks: Task[] = [];
+      querySnapshot.forEach(doc => {
+          // doc.data() is never undefined for query doc snapshots
+          tasks.push(this.taskSerializer.deserializeTask(doc.data()));
+      });
+      this.tasksStore.set(tasks);
+    });
   }
 
   getTasksByOwnerId(ownerId: string): Observable<Task[]> {
     if (!this.tasksQuery.getHasCache()) {
-      this.db.collection("tasks", ref => ref.where("ownerId", "==", ownerId)).get()
-        .subscribe(querySnapshot => {
-          let tasks: Task[] = [];
-          querySnapshot.forEach(doc => {
-              // doc.data() is never undefined for query doc snapshots
-              tasks.push(deserializeTask(doc.data()));
-          });
-          this.tasksStore.set(tasks);
-        });
+      this.initStoreCache(ownerId);
     }
     
     return this.tasksQuery.selectAll({
@@ -38,7 +44,7 @@ export class TasksService {
 
   addTask(task: Task) {
     this.tasksStore.add(task);
-    this.db.collection('tasks').doc(String(task.id)).set(serializeTask(task))
+    this.db.collection('tasks').doc(String(task.id)).set(this.taskSerializer.serializeTask(task))
       .then(() => {
         this.messagesService.addInfo("Task created successfully");
       })
@@ -50,7 +56,7 @@ export class TasksService {
 
   updateTask(task: Task) {
     this.tasksStore.update(task.id, {...task});
-    this.db.collection('tasks').doc(String(task.id)).update(serializeTask(task))
+    this.db.collection('tasks').doc(String(task.id)).update(this.taskSerializer.serializeTask(task))
       .then(() => {
           this.messagesService.addInfo("Task updated successfully");
         }

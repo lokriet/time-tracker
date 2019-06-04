@@ -13,7 +13,10 @@
         </button>
       </div>
       <div class="d-inline-block w-25 mt-2">
-        {{task.taskName}}
+        {{task.description}}
+      </div>
+      <div class="d-inline-block w-25 mt-2">
+        {{ task.project?.projectName }}
       </div>
       <!-- <div class="d-inline-block w-25 mt-2">
         {{task.workDate.year}}/{{task.workDate.month}}/{{task.workDate.day}}

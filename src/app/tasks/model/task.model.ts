@@ -1,21 +1,24 @@
 import { SimpleDate } from './simple-date.model';
 import { TimeRange } from './time-range.model';
 import { ID } from '@datorama/akita';
+import { Project } from 'src/app/projects/project.model';
 
 export class Task {
   id: ID;
   ownerId: string;
-  taskName: string;
+  description: string;
+  project: Project;
   workDate: SimpleDate;
   workHours: TimeRange;
   breaks: TimeRange[];
 }
 
-export function createTask({ id, ownerId, taskName, workDate, workHours, breaks }: Partial<Task>) {
+export function createTask({ id, ownerId, description, project, workDate, workHours, breaks }: Partial<Task>) {
   return {
     id,
     ownerId,
-    taskName,
+    description,
+    project,
     workDate,
     workHours,
     breaks

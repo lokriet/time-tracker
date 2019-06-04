@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faBug, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
 
 import { TasksService } from '../store/tasks.service';
@@ -14,6 +14,9 @@ import { Task } from 'src/app/tasks/model/task.model';
 import { formatBreakLength, getLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
 import { timeRangesValidator } from './edit-task.validators';
 import { AuthService } from 'src/app/auth/store/auth.service';
+import { Observable } from 'rxjs';
+import { ProjectsService } from 'src/app/projects/store/projects.service';
+import { Project } from 'src/app/projects/project.model';
 
 @Component({
   selector: 'app-edit-task',
@@ -30,10 +33,10 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faReload = faSyncAlt;
 
   taskForm: FormGroup;
-
   editMode: boolean = false;
-
   errorMessages: string[] = [];
+
+  projects$: Observable<Project[]>;
 
   constructor(private calendar: NgbCalendar, 
               private tasksService: TasksService,
@@ -41,7 +44,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
               private tasksStore: TasksStore,
               private router: Router,
               private route: ActivatedRoute,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private projectsService: ProjectsService) { }
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -56,6 +60,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
         this.initForm(task);
       }
     );
+
+    this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid());
   }
 
   private clearState() {
@@ -64,7 +70,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   }
 
   private initForm(task: Task) {
-    let taskName = '';
+    let description = '';
+    let project = null;
     let workDate = null;
     let workHours = null;
     let breaks = new FormArray([]);
@@ -75,7 +82,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
     if (this.editMode) {
       let taskBreaks: TimeRange[];
-      ({id, ownerId, taskName, workDate, workHours, breaks: taskBreaks} = task);
+      ({id, ownerId, description, project, workDate, workHours, breaks: taskBreaks} = task);
       if (taskBreaks) {
         for (let taskBreak of taskBreaks) {
           breaks.push(new FormControl(taskBreak, Validators.required));
@@ -86,7 +93,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     this.taskForm = new FormGroup({
       'id': new FormControl(id),
       'ownerId': new FormControl(ownerId),
-      'taskName': new FormControl(taskName, Validators.required),
+      'description': new FormControl(description),
+      'project': new FormControl(project),
       'workDate': new FormControl(workDate, Validators.required),
       'workHours': new FormControl(workHours, Validators.required),
       'breaks': breaks
@@ -153,6 +161,10 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     } else {
       this.clearState();
     }
+  }
+
+  onProjectSelected(project) {
+    
   }
 
   ngOnDestroy(): void {
