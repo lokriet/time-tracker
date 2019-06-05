@@ -23,20 +23,24 @@ export function formatLength(lengthInMillis: number) {
 }
 
  export function formatBreakLength(taskBreak: TimeRange) {
-  return formatLength(getLength(taskBreak));
+  return formatLength(getTimeRangeLength(taskBreak));
 }
 
 export function formatTaskLength(task: Task) {
-  let taskLengthInMillis = getLength(task.workHours);
-  if (task.breaks) {
-    for (let taskBreak of task.breaks) {
-      taskLengthInMillis -= getLength(taskBreak);
-    }
-  }
-  return formatLength(taskLengthInMillis);
+  return formatLength(getTaskLength(task));
 }
 
-export function getLength(timeRange: TimeRange) {
+export function getTaskLength(task: Task):number {
+  let taskLengthInMillis = getTimeRangeLength(task.workHours);
+  if (task.breaks) {
+    for (let taskBreak of task.breaks) {
+      taskLengthInMillis -= getTimeRangeLength(taskBreak);
+    }
+  }
+  return taskLengthInMillis;
+}
+
+export function getTimeRangeLength(timeRange: TimeRange) {
   return timeRange.endTime.date.getTime() - timeRange.startTime.date.getTime();
 }
 

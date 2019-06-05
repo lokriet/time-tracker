@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 
 import { Task } from '../model/task.model';
 import { TasksStore } from './tasks.store';
-import { TasksQuery } from './tasks.query';
+import { TasksQuery, compareTasks } from './tasks.query';
 import { TaskSerializer } from '../model/task.serializer';
 import { MessagesService } from 'src/app/messages/store/messages.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { AuthService } from 'src/app/auth/store/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
@@ -38,7 +37,8 @@ export class TasksService {
     }
     
     return this.tasksQuery.selectAll({
-      filterBy: entity => entity.ownerId === ownerId
+      sortBy: compareTasks,
+      filterBy: (entity) => { return entity.ownerId === ownerId }
     });
   }
 

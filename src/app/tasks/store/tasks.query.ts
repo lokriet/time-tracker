@@ -9,8 +9,7 @@ import { Task } from '../model/task.model';
   providedIn: 'root'
 })
 @QueryConfig({
-  sortBy: compareTasks,
-  sortByOrder: Order.DESC
+  sortBy: compareTasks
 })
 export class TasksQuery extends QueryEntity<TasksState, Task> {
   ui: EntityUIQuery<TasksUIState, TasksUI>;
@@ -21,21 +20,21 @@ export class TasksQuery extends QueryEntity<TasksState, Task> {
   }
 }
 
-function compareTasks(a: Task, b: Task): number {
+export function compareTasks(a: Task, b: Task): number {
   if (a.workDate.year != b.workDate.year) {
-    return a.workDate.year - b.workDate.year;
+    return b.workDate.year - a.workDate.year;
   }
 
   if (a.workDate.month != b.workDate.month) {
-    return a.workDate.month - b.workDate.month;
+    return b.workDate.month - a.workDate.month;
   }
 
   if (a.workDate.day != b.workDate.day) {
-    return a.workDate.day - b.workDate.day;
+    return b.workDate.day - a.workDate.day;
   }
 
   if (a.workHours.startTime.date.getTime() != b.workHours.startTime.date.getTime()) {
-    return a.workHours.startTime.date.getTime() - b.workHours.startTime.date.getTime();
+    return b.workHours.startTime.date.getTime() - a.workHours.startTime.date.getTime();
   }
 
   return 0;

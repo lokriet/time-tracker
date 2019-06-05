@@ -11,7 +11,7 @@ import { TimeRange } from 'src/app/tasks/model/time-range.model';
 import { TasksQuery } from 'src/app/tasks/store/tasks.query';
 import { TasksStore } from 'src/app/tasks/store/tasks.store';
 import { Task } from 'src/app/tasks/model/task.model';
-import { formatBreakLength, getLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
+import { formatBreakLength, getTimeRangeLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
 import { timeRangesValidator } from './edit-task.validators';
 import { AuthService } from 'src/app/auth/store/auth.service';
 import { Observable } from 'rxjs';
@@ -104,11 +104,11 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
   formatTaskLength() {
     if (this.taskForm.value.workHours) {
-      let taskLengthInMillis = getLength(this.taskForm.value.workHours);
+      let taskLengthInMillis = getTimeRangeLength(this.taskForm.value.workHours);
       if (this.taskForm.value.breaks) {
         for (let taskBreak of this.taskForm.value.breaks) {
           if (taskBreak) {
-            taskLengthInMillis -= getLength(taskBreak);
+            taskLengthInMillis -= getTimeRangeLength(taskBreak);
           }
         }
       }

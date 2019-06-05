@@ -21,6 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
 import { MessagesComponent } from './messages/messages.component';
 import { ProjectsModule } from './projects/projects.module';
+import { ReportsModule } from './reports/reports.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ProjectsModule } from './projects/projects.module';
     AngularFireAuthModule,
     TasksModule,
     ProjectsModule,
+    ReportsModule,
     AuthModule,
     AppRoutingModule,
     BrowserAnimationsModule,
