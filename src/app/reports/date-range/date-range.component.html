@@ -2,8 +2,7 @@
                 (select)="onDateSelection($event)" 
                 [displayMonths]="2" 
                 [dayTemplate]="t" 
-                [outsideDays]="'visible'"
-                [maxDate]="getMaxDate()">
+                [outsideDays]="'visible'">
 </ngb-datepicker>
   
 <ng-template #t let-date let-focused="focused">

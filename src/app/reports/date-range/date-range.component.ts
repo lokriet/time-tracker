@@ -1,6 +1,6 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 
 export const DATE_RANGE_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -21,6 +21,7 @@ export class DateRangeComponent implements ControlValueAccessor {
   hoveredDate: NgbDate;
 
   onChange;
+  @ViewChild('dp', {static: true}) datepicker: NgbDatepicker;
 
   constructor(private calendar: NgbCalendar) {
   }
@@ -70,6 +71,7 @@ export class DateRangeComponent implements ControlValueAccessor {
       this.fromDate = null;
       this.toDate = null;
     }
+    this.datepicker.navigateTo(this.fromDate);
   }
 
   registerOnChange(fn: any): void {

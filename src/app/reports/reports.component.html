@@ -1,41 +1,34 @@
 <div class="container">
+  <form (ngSubmit)="onBuildReport()">
   <div class="row">
     <div class="col-auto">
-      <form (ngSubmit)="onBuildReport()">
         <app-date-range [(ngModel)]="dates" name="dates"></app-date-range>
+      </div>
+      <div class="col-auto">
+        <div class="form-group mb-2">
+          <label for="dateSelectionMode">Dates range</label>
+          <select class="form-control" id="dateSelectionMode" (change)="onChangeDateSelectionMode(dateSelectionMode.value)" #dateSelectionMode>
+            <option value='WEEKLY'>Weekly</option>
+            <option value='BIWEEKLY'>Bi-Weekly</option>
+            <option value='MONTHLY'>Monthly</option>
+          </select>
+        </div>
+        <button class="btn btn-light mb-2" (click)="onSelectPreviousPeriod()">
+          <fa-icon [icon]="faTwoLeft"></fa-icon>
+        </button>
+        <button class="btn btn-light mb-2" (click)="onSelectCurrentPeriod()">
+          <fa-icon [icon]="faCircle"></fa-icon>
+        </button>
+        <button class="btn btn-light mb-2" (click)="onSelectNextPeriod()">
+          <fa-icon [icon]="faTwoRight"></fa-icon>
+        </button>
         <br>
-        
         <button class="btn btn-light" type="submit">
           <fa-icon [icon]="faCheck"></fa-icon> Build report
         </button>
-      </form>
+      </div>
     </div>
-    <div class="col-auto">
-      <button class="btn btn-light mb-2 datebutton" (click)="onPreviousMonth()" [disabled]="!dates">
-        <fa-icon [icon]="faTwoLeft"></fa-icon> Prev month
-      </button>
-      <br>
-      <button class="btn btn-light mb-2 datebutton" (click)="onPreviousWeek()" [disabled]="!dates">
-        <fa-icon [icon]="faOneLeft"></fa-icon> Prev week
-      </button>
-      <br>
-      <button class="btn btn-light mb-2 datebutton" (click)="onNextWeek()" [disabled]="!dates">
-        <fa-icon [icon]="faOneRight"></fa-icon> Next week
-      </button>
-      <br>
-      <button class="btn btn-light mb-2 datebutton" (click)="onNextMonth()" [disabled]="!dates">
-        <fa-icon [icon]="faTwoRight"></fa-icon> Next month
-      </button>
-      <br>
-      <button class="btn btn-light mb-2 datebutton" (click)="onLastWeek()">
-        <fa-icon [icon]="faOneLast"></fa-icon> Last week
-      </button>
-      <br>
-      <button class="btn btn-light mb-2 datebutton" (click)="onLastMonth()">
-        <fa-icon [icon]="faTwoLast"></fa-icon> Last month
-      </button>
-    </div>
-  </div>
+  </form>
   <div class="row">
     <div class="col-xs-12 w-100">
       <ngx-charts-bar-vertical-stacked
