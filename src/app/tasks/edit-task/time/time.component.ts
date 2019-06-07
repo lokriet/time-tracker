@@ -1,6 +1,17 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+
+import { formatTime } from '../../model/time-formatter.service';
 import { Time } from '../../model/time.model';
-import { formatTime } from 'src/app/tasks/model/time-formatter.service';
 
 @Component({
   selector: 'app-time',
@@ -29,7 +40,7 @@ export class TimeComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     for (let propName in changes) {
-      if (propName == 'startTime') {
+      if (propName === 'startTime') {
         if (this.startTime) {
           this.generateTimeOptions();
         }
@@ -41,7 +52,7 @@ export class TimeComponent implements OnInit, OnChanges {
     this.timeOptions = [];
     this.timeOptions.push(formatTime(this.startTime));
 
-    let date = new Date(this.startTime.date);
+    const date = new Date(this.startTime.date);
     for (let i = 0; i < 47; i++) {
       date.setMinutes(date.getMinutes() + 30);
       this.timeOptions.push(formatTime(Time.fromDate(date)));
@@ -62,17 +73,17 @@ export class TimeComponent implements OnInit, OnChanges {
   }
 
   onKeyPressed(event: KeyboardEvent) {
-    if (event.keyCode == 13) { //enter
+    if (event.keyCode === 13) { // enter
       this.checkAndReplaceInputFormat();
-      let input = <HTMLInputElement> event.target;
+      const input = event.target as HTMLInputElement;
       this.onTimeSelected(input.value);
 
-      //hide dropdown
+      // hide dropdown
       this.wrappingDiv.nativeElement.classList.remove('show');
       this.dropdownDiv.nativeElement.classList.remove('show');
-      this.timeInput.nativeElement.setAttribute("aria-expanded", "false");
+      this.timeInput.nativeElement.setAttribute('aria-expanded', 'false');
 
-      //focus next :(
+      // focus next :(
     }
   }
 
@@ -86,40 +97,66 @@ export class TimeComponent implements OnInit, OnChanges {
 
 
   checkAndReplaceInputFormat() {
-    let pattern_24hours = /^(\d?\d):(\d\d)$/gi;
-    if (pattern_24hours.test(this.timeInput.nativeElement.value)) {
-      pattern_24hours.lastIndex = 0;
-      let ampm: string;
-      let [_, hoursString, minutesString] = pattern_24hours.exec(this.timeInput.nativeElement.value);
+    const inputPattern = /^(\d?\d)(:\d\d)?(am|pm)?$/gi;
+
+    if (inputPattern.test(this.timeInput.nativeElement.value)) {
+      inputPattern.lastIndex = 0;
+
+      let [_, hoursString, minutesString, ampm] = inputPattern.exec(this.timeInput.nativeElement.value);
+
       let hoursNo = +hoursString;
-      if (hoursNo < 12) {
-        ampm = 'am';
-        if (hoursNo == 0) {
-          hoursNo = 12;
-        }
+
+      let minutesNo: number;
+      if (!minutesString) {
+        minutesNo = 0;
       } else {
-        ampm = 'pm';
-        if (hoursNo != 12) {
-          hoursNo -= 12;
+        minutesNo = Number(minutesString.slice(1));
+      }
+
+      if (!ampm) {
+        if (hoursNo < 12) {
+          ampm = 'am';
+          if (hoursNo === 0) {
+            hoursNo = 12;
+          }
+        } else {
+          ampm = 'pm';
+          if (hoursNo !== 12) {
+            hoursNo -= 12;
+          }
         }
       }
 
-      hoursString = String(hoursNo).padStart(2, '0');
-      let replaceString = hoursString + ':' + minutesString + ampm;
-      this.timeInput.nativeElement.value = replaceString;
+      if (!(hoursNo < 0 || hoursNo > 12 || minutesNo < 0 || minutesNo > 59)) {
+        const replaceString = String(hoursNo) + ':' +  String(minutesNo).padStart(2, '0') + ampm;
+        this.timeInput.nativeElement.value = replaceString;
+      }
+
     }
+
   }
 
-  validateTimeString(timeString: string):boolean {
-    let accepted_pattern = /^(\d?\d):(\d\d)(am|pm)$/gi;
-    if (!accepted_pattern.test(timeString)) {
+  validateTimeString(timeString: string): boolean {
+    const acceptedPattern = /^(\d?\d):(\d\d)(am|pm)$/gi;
+    if (!acceptedPattern.test(timeString)) {
       this.timeInput.nativeElement.classList.remove('ng-valid');
       this.timeInput.nativeElement.classList.add('ng-invalid');
       return false;
     } else {
-      this.timeInput.nativeElement.classList.remove('ng-invalid');
-      this.timeInput.nativeElement.classList.add('ng-valid');
-      return true;
+      acceptedPattern.lastIndex = 0;
+      const [_, hoursString, minutesString, __] = acceptedPattern.exec(timeString);
+      const hoursNo = +hoursString;
+      const minutesNo = +minutesString;
+
+      if (!(hoursNo < 0 || hoursNo > 12 || minutesNo < 0 || minutesNo > 59)) {
+        this.timeInput.nativeElement.classList.remove('ng-invalid');
+        this.timeInput.nativeElement.classList.add('ng-valid');
+        return true;
+      } else {
+        this.timeInput.nativeElement.classList.remove('ng-valid');
+        this.timeInput.nativeElement.classList.add('ng-invalid');
+        return false;
+      }
     }
   }
 }

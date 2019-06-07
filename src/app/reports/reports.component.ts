@@ -1,11 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  faBackward,
+  faCaretLeft,
+  faCaretRight,
+  faCheck,
+  faFastForward,
+  faForward,
+  faStepForward,
+} from '@fortawesome/free-solid-svg-icons';
+import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { colorSets } from '@swimlane/ngx-charts/release/utils';
+import { fromEvent } from 'rxjs';
+import { auditTime, map } from 'rxjs/operators';
 
-import { TasksQuery } from '../tasks/store/tasks.query';
-import { Task } from '../tasks/model/task.model';
-import { getTaskLength } from '../tasks/model/time-formatter.service';
+import { DateRange } from './date-range/date-range.model';
+import { ReportsDataService } from './reports-data.service';
 
 @Component({
   selector: 'app-reports',
@@ -13,94 +22,134 @@ import { getTaskLength } from '../tasks/model/time-formatter.service';
   styleUrls: ['./reports.component.css']
 })
 export class ReportsComponent implements OnInit {
+  faCheck = faCheck;
+  faOneLeft = faCaretLeft;
+  faTwoLeft = faBackward;
+  faOneRight = faCaretRight;
+  faTwoRight = faForward;
+  faOneLast = faStepForward;
+  faTwoLast = faFastForward;
+
   data: any;
   scheme: any;
 
-  constructor(private tasksQuery: TasksQuery,
-              private calendar: NgbCalendar) { }
+  dates: DateRange;
+
+  windowWidth: number;
+  graphWidth: number;
+
+  constructor(private reportsDataService: ReportsDataService,
+              private calendar: NgbCalendar,
+              @Inject('windowObject') private window: Window) { }
 
   ngOnInit() {
     this.scheme = colorSets.find(s => s.name === 'vivid');
 
-    let tomorrow = this.calendar.getNext(this.calendar.getToday(), "d", 1);
-    let weekAndADayAgo = this.calendar.getPrev(this.calendar.getToday(), "d", 8);
-    let tasks = this.tasksQuery.getAll({filterBy: (task:Task) => tomorrow.after(task.workDate) && weekAndADayAgo.before(task.workDate)});
+    this.windowWidth = this.window.innerWidth - 20;
+    fromEvent(window, 'resize').pipe(
+      auditTime(100),
+      map(event => (event.currentTarget as Window).innerWidth)
+    ).subscribe((windowWidth) => {
+        this.windowWidth = windowWidth - 20;
+        this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
+    });
 
-    this.data = [];
+    this.dates = {fromDate: this.calendar.getPrev(this.calendar.getToday(), 'd', 6), toDate: this.calendar.getToday()};
 
-    let date = this.calendar.getToday();
-    let index = 0;
-    while (date.after(weekAndADayAgo)) {
-      let dataItemName = date.year + "/" + date.month + "/" + date.day;
-      let dataSeriesMap = new Map<string, number>();
-      while ((tasks.length > index) && date.before(tasks[index].workDate)) {
-        index++;
-      }
-      while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
-        if (dataSeriesMap.has(projectName(tasks[index]))) {
-          dataSeriesMap.set(projectName(tasks[index]), 
-                            dataSeriesMap.get(projectName(tasks[index])) + taskLength(tasks[index]));
-        } else {
-          dataSeriesMap.set(projectName(tasks[index]), taskLength(tasks[index]));
-        }
-        index++;
-      }
-
-      let dataSeries = [];
-      for (let dataSeriesEntry of dataSeriesMap.entries()) {
-        dataSeries.push({name: dataSeriesEntry[0], value: dataSeriesEntry[1]});
-      }
-
-      this.data.unshift({name: dataItemName, series: dataSeries});
-      date = this.calendar.getPrev(date, "d", 1);
+    if (this.dates) {
+      this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
     }
+  }
 
-    /*this.data = [
-      {
-        name: "2019/05/30",
-        series: [
-          {
-            name: "work",
-            value: 2.5
-          },
-          {
-            name: "study",
-            value: 8
-          }
-        ]
-      },
-      {
-        name: "2019/05/31",
-        series: []
-      },
-      {
-        name: "2019/06/02",
-        series: [
-          {
-            name: "work",
-            value: 7
-          },
-          {
-            name: "sleep",
-            value: 4.5
-          }
-        ]
+  onBuildReport() {
+    this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
+    this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
+  }
+
+  onPreviousMonth() {
+    if (this.dates) {
+      let interimDate = this.toJsDate(this.dates.fromDate);
+      interimDate.setMonth(interimDate.getMonth() - 1);
+      let newFromDate = this.fromJsDate(interimDate);
+
+      interimDate = this.toJsDate(this.dates.toDate);
+      interimDate.setMonth(interimDate.getMonth() - 1);
+      let newToDate = this.fromJsDate(interimDate);
+
+      this.dates = {fromDate: newFromDate, toDate: newToDate};
+      console.log(this.dates);
+    }
+  }
+
+  onPreviousWeek() {
+    if (this.dates) {
+      this.dates = {fromDate: this.calendar.getPrev(this.dates.fromDate, 'd', 7), toDate: this.calendar.getPrev(this.dates.toDate, 'd', 7)};
+      console.log(this.dates);
+    }
+  }
+
+  onNextMonth() {
+    if (this.dates) {
+      let interimDate = this.toJsDate(this.dates.fromDate);
+      interimDate.setMonth(interimDate.getMonth() + 1);
+      let newFromDate = this.fromJsDate(interimDate);
+
+      if (newFromDate.after(this.calendar.getToday())) {
+        console.log('not changing dates');
+        return;
       }
-    ]*/
+
+      interimDate = this.toJsDate(this.dates.toDate);
+      interimDate.setMonth(interimDate.getMonth() + 1);
+      let newToDate = this.fromJsDate(interimDate);
+
+      if (newToDate.after(this.calendar.getToday())) {
+        newToDate = this.calendar.getToday();
+      }
+
+      this.dates = {fromDate: newFromDate, toDate: newToDate};
+      console.log(this.dates);
+    }
   }
 
-
-  
-}
-function projectName(task: Task):string {
-  if (task.project) {
-    return task.project.projectName;
+  onNextWeek() {
+    if (this.dates) {
+      let newFromDate = this.calendar.getNext(this.dates.fromDate, 'd', 7);
+      if (newFromDate.after(this.calendar.getToday())) {
+        console.log('not changing dates');
+        return;
+      }
+      let newToDate = this.calendar.getNext(this.dates.toDate, 'd', 7);
+      if (newToDate.after(this.calendar.getToday())) {
+        newToDate = this.calendar.getToday();
+      }
+      this.dates = {fromDate: newFromDate, toDate: newToDate};
+      console.log(this.dates);
+    }
   }
-  return "no project";
+
+  onLastMonth() {
+    let interimDate = this.toJsDate(this.calendar.getToday());
+    interimDate.setMonth(interimDate.getMonth() - 1);
+    let monthAgo = this.fromJsDate(interimDate);
+
+    this.dates = {fromDate: monthAgo, toDate: this.calendar.getToday()};
+    console.log(this.dates);
+  }
+
+  onLastWeek() {
+    this.dates = {fromDate: this.calendar.getPrev(this.calendar.getToday(), 'd', 6), toDate: this.calendar.getToday()};
+    console.log(this.dates);
+  }
+
+  toJsDate(date: NgbDate): Date {
+    return new Date(Date.UTC(date.year, date.month - 1, date.day));
+  }
+
+  fromJsDate(date: Date): NgbDate {
+    
+    return new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDay());
+  }
+
 }
 
-function taskLength(task: Task):number {
-  let taskLengthInMillis = getTaskLength(task);
-  let taskLengthInHours = taskLengthInMillis / (1000 * 60 * 60);
-  return taskLengthInHours;
-}

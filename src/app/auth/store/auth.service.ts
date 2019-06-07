@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFireAuth } from '@angular/fire/auth';
-
-import { AuthStore } from './auth.store';
-import { AuthQuery } from './auth.query';
+import * as firebase from 'firebase';
 import { Observable } from 'rxjs';
 import { ProjectsService } from 'src/app/projects/store/projects.service';
 import { TasksService } from 'src/app/tasks/store/tasks.service';
+
+import { AuthQuery } from './auth.query';
+import { AuthStore } from './auth.store';
 
 @Injectable()
 export class AuthService {
@@ -14,62 +14,79 @@ export class AuthService {
               private authQuery: AuthQuery,
               private firebaseAuth: AngularFireAuth,
               private projectsService: ProjectsService,
-              private tasksService: TasksService) {}
+              private tasksService: TasksService) {
 
-  loginWithEmailAndPassword(email: string, password: string):Promise<firebase.auth.UserCredential> {
-    return new Promise((resolve, reject) => {
-      this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
-        .then(result => {
-          this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
-          this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
+    this.firebaseAuth.auth.onIdTokenChanged((user) => {
+      if (user) {
+        user.getIdToken()
+          .then(token => { this.authStore.update({token}); });
+
+        const currentUser = this.getCurrentUserUid();
+        const newUser = user.uid;
+        this.authStore.update({uid: newUser});
+        if (!!newUser && newUser !== currentUser) {
           this.initStoreCaches();
-          this.firebaseAuth.auth.onIdTokenChanged((user) => {
-            if (user) {
-              this.firebaseAuth.auth.currentUser.getIdToken()
-                .then(token => { this.authStore.update({token}); });
-              this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
-            } else {
-              this.authStore.update({token: null, uid: null});
-            }
-          });
-          resolve(result);
-        })
+        }
+      } else {
+        this.authStore.update({token: null, uid: null});
+      }
+    });
+  }
+
+  loginWithEmailAndPassword(email: string, password: string): Promise<firebase.auth.UserCredential> {
+    return new Promise((resolve, reject) => {
+      this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
+        .then(user => resolve(user))
         .catch(error => {
-          reject(error);
+          let errorMessage: string;
+
+          switch (error.code) {
+            case 'auth/wrong-password':
+              errorMessage = 'Wrong password';
+              break;
+            case 'auth/user-not-found':
+              errorMessage = "User with this e-mail doesn't exist";
+              break;
+            default:
+              console.log(error);
+              errorMessage = 'Unknown error';
+          }
+          reject(errorMessage);
+        });
+    });
+
+  }
+
+  registerWithEmailAndPassword(email: string, password: string): Promise<firebase.auth.UserCredential> {
+    return new Promise((resolve, reject) => {
+      this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+        .then(user => resolve(user))
+        .catch(error => {
+          let errorMessage: string;
+
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'Account with this e-mail already exists';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'Invalid e-mail';
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'Password is weak. Try picking a stronger one';
+              break;
+            default:
+              console.log(error.code);
+              errorMessage = 'Unknown error';
+          }
+          reject(errorMessage);
         });
     });
   }
 
-  registerWithEmailAndPassword(email: string, password: string):Promise<firebase.auth.UserCredential> {
-    return new Promise((resolve, reject) => {
-      this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
-        .then(result => {
-          this.firebaseAuth.auth.currentUser.getIdToken().then(token => { this.authStore.update({token}); });
-          this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
-          this.initStoreCaches();
-          this.firebaseAuth.auth.onIdTokenChanged((user) => {
-            if (user) {
-              this.firebaseAuth.auth.currentUser.getIdToken()
-                .then((token) => { this.authStore.update({token}); });
-              this.authStore.update({uid: this.firebaseAuth.auth.currentUser.uid});
-            } else {
-              this.authStore.update({token: null, uid: null});
-            }
-          });
-          resolve(result);
-        })
-        .catch(error => {
-          reject(error);
-        });
-    })
-  }
-
   logout() {
-    this.firebaseAuth.auth.signOut().then(
-      () => {
-        this.authStore.update({token: null, uid: null});
-      }
-    );
+    this.firebaseAuth.auth.signOut();
   }
 
   getToken(): Observable<string> {

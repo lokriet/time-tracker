@@ -6,7 +6,7 @@
        [attr.aria-expanded]="initialExpandedValue" 
        [attr.aria-controls]="'breaksList'+index">
       <div class="d-inline-block">
-        <button class="btn bg-transparent" 
+        <button class="btn bg-transparent {{(task.breaks && task.breaks.length > 0) ? '' : 'transparentText'}}"
                 type="button" 
                 [@rotatedState]="state">
           <fa-icon [icon]="faArrowRight" ></fa-icon>
@@ -18,17 +18,14 @@
       <div class="d-inline-block w-25 mt-2">
         {{ task.project?.projectName }}
       </div>
-      <!-- <div class="d-inline-block w-25 mt-2">
-        {{task.workDate.year}}/{{task.workDate.month}}/{{task.workDate.day}}
-      </div> -->
       <div class="d-inline-block w-25 mt-2">
         {{formatTimeRange(task.workHours)}} ({{formatTaskLength(task)}})
       </div>
-      <div class="d-inline-block w-auto ">
+      <div class="d-inline-block w-auto">
         <button type="button" class="btn bg-transparent" (click)="onEditTask($event)">
             <fa-icon [icon]="faEdit" ></fa-icon>
         </button>
-        <button type="button" class="btn bg-transparent" (click)="onDeleteTask()">
+        <button type="button" class="btn bg-transparent" (click)="onDeleteTask($event)">
             <fa-icon [icon]="faDelete" ></fa-icon>
         </button>
       </div>

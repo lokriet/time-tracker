@@ -1,22 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { faAngry, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDoubleRight, faCalendarAlt, faCheck, faMugHot, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { faCalendarAlt, faMugHot, faAngleDoubleRight, faCheck, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faTrashAlt, faAngry } from '@fortawesome/free-regular-svg-icons';
-
-import { TasksService } from '../store/tasks.service';
-import { TimeRange } from 'src/app/tasks/model/time-range.model';
-import { TasksQuery } from 'src/app/tasks/store/tasks.query';
-import { TasksStore } from 'src/app/tasks/store/tasks.store';
-import { Task } from 'src/app/tasks/model/task.model';
-import { formatBreakLength, getTimeRangeLength, formatLength } from 'src/app/tasks/model/time-formatter.service';
-import { timeRangesValidator } from './edit-task.validators';
-import { AuthService } from 'src/app/auth/store/auth.service';
 import { Observable } from 'rxjs';
-import { ProjectsService } from 'src/app/projects/store/projects.service';
-import { Project } from 'src/app/projects/project.model';
+
+import { AuthService } from '../../auth/store/auth.service';
+import { Project } from '../../projects/project.model';
+import { ProjectsService } from '../../projects/store/projects.service';
+import { Task } from '../../tasks/model/task.model';
+import { formatBreakLength, formatLength, getTimeRangeLength } from '../../tasks/model/time-formatter.service';
+import { TimeRange } from '../../tasks/model/time-range.model';
+import { TasksQuery } from '../../tasks/store/tasks.query';
+import { TasksStore } from '../../tasks/store/tasks.store';
+import { TasksService } from '../store/tasks.service';
+import { timeRangesValidator } from './edit-task.validators';
 
 @Component({
   selector: 'app-edit-task',
@@ -24,7 +23,7 @@ import { Project } from 'src/app/projects/project.model';
   styleUrls: ['./edit-task.component.css']
 })
 export class EditTaskComponent implements OnInit, OnDestroy {
-  faCalendar = faCalendarAlt; 
+  faCalendar = faCalendarAlt;
   faCoffee = faMugHot;
   faRightArrow = faAngleDoubleRight;
   faDelete = faTrashAlt;
@@ -33,7 +32,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faReload = faSyncAlt;
 
   taskForm: FormGroup;
-  editMode: boolean = false;
+  editMode = false;
   errorMessages: string[] = [];
 
   projects$: Observable<Project[]>;
@@ -53,10 +52,10 @@ export class EditTaskComponent implements OnInit, OnDestroy {
         this.tasksStore.setActive(params['id']);
         const task = this.tasksQuery.getActive();
         if (params['id'] != null && !task) {
-          //task not found
+          // task not found
           this.router.navigate(['/404']);
         }
-        
+
         this.initForm(task);
       }
     );
@@ -91,13 +90,13 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     } 
 
     this.taskForm = new FormGroup({
-      'id': new FormControl(id),
-      'ownerId': new FormControl(ownerId),
-      'description': new FormControl(description),
-      'project': new FormControl(project),
-      'workDate': new FormControl(workDate, Validators.required),
-      'workHours': new FormControl(workHours, Validators.required),
-      'breaks': breaks
+      id: new FormControl(id),
+      ownerId: new FormControl(ownerId),
+      description: new FormControl(description),
+      project: new FormControl(project),
+      workDate: new FormControl(workDate, Validators.required),
+      workHours: new FormControl(workHours, Validators.required),
+      breaks
     }, { validators: timeRangesValidator });
   }
 
@@ -129,17 +128,17 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   }
 
   onAddBreak() {
-    (<FormArray>this.taskForm.get('breaks')).push(
+    (this.taskForm.get('breaks') as FormArray).push(
       new FormControl(null, Validators.required)
     );
   }
 
   getBreakControls() {
-    return (<FormArray>this.taskForm.get('breaks')).controls;
+    return (this.taskForm.get('breaks') as FormArray).controls;
   }
 
   onRemoveBreak(i: number) {
-    (<FormArray>this.taskForm.get('breaks')).removeAt(i);
+    (this.taskForm.get('breaks') as FormArray).removeAt(i);
   }
 
   onSubmit() {
@@ -150,7 +149,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     }
 
     this.clearState();
-  
+
     this.router.navigate(['tasks']);
   }
 
@@ -161,10 +160,6 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     } else {
       this.clearState();
     }
-  }
-
-  onProjectSelected(project) {
-    
   }
 
   ngOnDestroy(): void {

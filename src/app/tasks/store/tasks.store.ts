@@ -1,8 +1,8 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState, EntityUIStore } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+import { ActiveState, EntityState, EntityStore, EntityUIStore, StoreConfig } from '@datorama/akita';
 
 import { Task } from '../model/task.model';
-import { Injectable } from '@angular/core';
-    
+
 export interface TasksState extends EntityState<Task>, ActiveState {}
 
 export interface TasksUI {

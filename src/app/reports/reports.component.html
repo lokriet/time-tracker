@@ -1,13 +1,45 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-      
+    <div class="col-auto">
+      <form (ngSubmit)="onBuildReport()">
+        <app-date-range [(ngModel)]="dates" name="dates"></app-date-range>
+        <br>
+        
+        <button class="btn btn-light" type="submit">
+          <fa-icon [icon]="faCheck"></fa-icon> Build report
+        </button>
+      </form>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-light mb-2 datebutton" (click)="onPreviousMonth()" [disabled]="!dates">
+        <fa-icon [icon]="faTwoLeft"></fa-icon> Prev month
+      </button>
+      <br>
+      <button class="btn btn-light mb-2 datebutton" (click)="onPreviousWeek()" [disabled]="!dates">
+        <fa-icon [icon]="faOneLeft"></fa-icon> Prev week
+      </button>
+      <br>
+      <button class="btn btn-light mb-2 datebutton" (click)="onNextWeek()" [disabled]="!dates">
+        <fa-icon [icon]="faOneRight"></fa-icon> Next week
+      </button>
+      <br>
+      <button class="btn btn-light mb-2 datebutton" (click)="onNextMonth()" [disabled]="!dates">
+        <fa-icon [icon]="faTwoRight"></fa-icon> Next month
+      </button>
+      <br>
+      <button class="btn btn-light mb-2 datebutton" (click)="onLastWeek()">
+        <fa-icon [icon]="faOneLast"></fa-icon> Last week
+      </button>
+      <br>
+      <button class="btn btn-light mb-2 datebutton" (click)="onLastMonth()">
+        <fa-icon [icon]="faTwoLast"></fa-icon> Last month
+      </button>
     </div>
   </div>
   <div class="row">
     <div class="col-xs-12 w-100">
       <ngx-charts-bar-vertical-stacked
-        [view]="[400, 400]"
+        [view]="[graphWidth, 400]"
         [results]="data"
         [scheme]="scheme"
         [legend]="true"

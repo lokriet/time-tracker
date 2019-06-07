@@ -1,34 +1,32 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TasksModule } from './tasks/tasks.module';
-import { HeaderComponent } from './header/header.component';
-import { environment } from '../environments/environment';
-import { PageNotFoundComponent } from './page-not-found.component';
+import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/store/auth.service';
-import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './auth/auth.guard';
+import { HeaderComponent } from './header/header.component';
+import { HomeModule } from './home/home.module';
 import { MessagesComponent } from './messages/messages.component';
+import { PageNotFoundComponent } from './page-not-found.component';
 import { ProjectsModule } from './projects/projects.module';
 import { ReportsModule } from './reports/reports.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    HomeComponent,
     MessagesComponent
   ],
   imports: [
@@ -36,6 +34,7 @@ import { ReportsModule } from './reports/reports.module';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    HomeModule,
     TasksModule,
     ProjectsModule,
     ReportsModule,
