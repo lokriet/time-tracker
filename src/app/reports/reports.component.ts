@@ -20,6 +20,8 @@ export class ReportsComponent implements OnInit {
   faTwoRight = faForward;
   faCircle = faCircle;
 
+  reportType = 'hours';
+
   data: any;
   scheme: any;
 
@@ -51,14 +53,19 @@ export class ReportsComponent implements OnInit {
   }
 
   onBuildReport() {
-    this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
+    switch (this.reportType) {
+      case 'hours':
+        this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
+        break;
+      case 'money':
+        this.data = this.reportsDataService.getMoneyReportData(this.dates.fromDate, this.dates.toDate);
+        break;
+    }
     this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
   }
 
   onChangeDateSelectionMode(value: string) {
-    console.log(value);
     this.dateSelector.dateSelectionMode = DateSelectionMode[value];
-    // this.dateSelector.dateSelectionMode = mode;
     this.dates = this.dateSelector.getCurrentPeriod();
     this.onBuildReport();
   }
@@ -76,6 +83,20 @@ export class ReportsComponent implements OnInit {
   onSelectPreviousPeriod() {
     this.dates = this.dateSelector.getPreviousPeriod();
     this.onBuildReport();
+  }
+
+  onDatesSelected(dates: DateRange) {
+    this.dates = dates;
+    if (!!dates) {
+      this.dateSelector.setSelectedPeriod(dates);
+      this.onBuildReport();
+    }
+  }
+
+  reportTypeChanged() {
+    if (!!this.dates) {
+      this.onBuildReport();
+    }
   }
 
 }

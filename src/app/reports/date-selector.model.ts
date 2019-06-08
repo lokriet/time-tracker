@@ -25,6 +25,10 @@ export class DateSelector {
     return this._dateSelectionMode;
   }
 
+  setSelectedPeriod(dateRange: DateRange) {
+    this.currentSelectedDateRange = dateRange;
+  }
+
   getCurrentlySelected(): DateRange {
     if (!this.currentSelectedDateRange) {
       this.setCurrentPeriod();

@@ -19,9 +19,9 @@ export class DateRangeComponent implements ControlValueAccessor {
   toDate: NgbDate;
 
   hoveredDate: NgbDate;
-
-  onChange;
   @ViewChild('dp', {static: true}) datepicker: NgbDatepicker;
+
+  private propagateChange = (_: any) => { };
 
   constructor(private calendar: NgbCalendar) {
   }
@@ -37,9 +37,9 @@ export class DateRangeComponent implements ControlValueAccessor {
     }
 
     if (this.fromDate && this.toDate) {
-      this.onChange({fromDate: this.fromDate, toDate: this.toDate});
+      this.propagateChange({fromDate: this.fromDate, toDate: this.toDate});
     } else {
-      this.onChange(null);
+      this.propagateChange(null);
     }
   }
 
@@ -74,12 +74,11 @@ export class DateRangeComponent implements ControlValueAccessor {
     this.datepicker.navigateTo(this.fromDate);
   }
 
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
+  public registerOnChange(fn: any) {
+    this.propagateChange = fn;
   }
 
   registerOnTouched(fn: any): void {
     // TODO
   }
-
 }

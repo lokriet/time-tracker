@@ -2,7 +2,7 @@
   <form (ngSubmit)="onBuildReport()">
   <div class="row">
     <div class="col-auto">
-        <app-date-range [(ngModel)]="dates" name="dates"></app-date-range>
+        <app-date-range [ngModel]="dates" name="dates" (ngModelChange)="onDatesSelected($event);"></app-date-range>
       </div>
       <div class="col-auto">
         <div class="form-group mb-2">
@@ -29,6 +29,25 @@
       </div>
     </div>
   </form>
+    <div class="row">
+      <div class="col-xs-12 m-2">
+        <div class="btn-group btn-group-toggle form-group">
+          <label class="btn btn-light" [class.active]="hours.value === reportType">
+            <input type="radio" name="options" [(ngModel)]="reportType" value="hours" #hours (change)=reportTypeChanged()>
+            Hours
+          </label>
+          <label class="btn btn-light" [class.active]="money.value === reportType">
+            <input type="radio" name="options" [(ngModel)]="reportType" value="money" #money (change)=reportTypeChanged()>
+            Money
+          </label>
+          <label class="btn btn-light" [class.active]="combined.value === reportType">
+            <input type="radio" name="options" [(ngModel)]="reportType" value="combined" #combined (change)=reportTypeChanged()>
+            Combined
+          </label>
+        </div>
+      </div>
+    </div>
+
   <div class="row">
     <div class="col-xs-12 w-100">
       <ngx-charts-bar-vertical-stacked
