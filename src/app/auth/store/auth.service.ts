@@ -10,26 +10,44 @@ import { AuthStore } from './auth.store';
 
 @Injectable()
 export class AuthService {
+  initialAuthStateLoaded: Promise<void>;
+
   constructor(private authStore: AuthStore,
               private authQuery: AuthQuery,
               private firebaseAuth: AngularFireAuth,
               private projectsService: ProjectsService,
               private tasksService: TasksService) {
 
-    this.firebaseAuth.auth.onIdTokenChanged((user) => {
-      if (user) {
-        user.getIdToken()
-          .then(token => { this.authStore.update({token}); });
+    this.initialAuthStateLoaded = new Promise((resolve, reject) => {
+      console.log('setting initial auth state...');
+      let resolved = false;
 
-        const currentUser = this.getCurrentUserUid();
-        const newUser = user.uid;
-        this.authStore.update({uid: newUser});
-        if (!!newUser && newUser !== currentUser) {
-          this.initStoreCaches();
+      this.firebaseAuth.auth.onIdTokenChanged((user) => {
+        if (user) {
+          const currentUser = this.getCurrentUserUid();
+          const newUser = user.uid;
+          this.authStore.update({uid: newUser});
+          if (!newUser || newUser !== currentUser) {
+            this.resetStoreCaches();
+          }
+          user.getIdToken()
+            .then(token => {
+              this.authStore.update({token});
+              if (!resolved) {
+                resolved = true;
+                resolve();
+                console.log('initial auth state loaded with current user data');
+              }
+            });
+        } else {
+          this.authStore.update({token: null, uid: null});
+          if (!resolved) {
+            resolved = true;
+            resolve();
+            console.log('initial auth state loaded with no user');
+          }
         }
-      } else {
-        this.authStore.update({token: null, uid: null});
-      }
+      });
     });
   }
 
@@ -109,8 +127,8 @@ export class AuthService {
     return this.authQuery.getValue().uid;
   }
 
-  private initStoreCaches() {
-    this.projectsService.initStoreCache(this.getCurrentUserUid());
-    this.tasksService.initStoreCache(this.getCurrentUserUid());
+  private resetStoreCaches() {
+    this.projectsService.resetStoreCache();
+    this.tasksService.resetStoreCache();
   }
 }

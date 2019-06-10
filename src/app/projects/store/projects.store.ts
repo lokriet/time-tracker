@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-
-import { EntityState, ActiveState, EntityStore, StoreConfig } from '@datorama/akita';
+import { ActiveState, EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 
 import { Project } from '../project.model';
 
@@ -11,7 +10,7 @@ const initialState = {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({name: 'projects'})
+@StoreConfig({name: 'projects', resettable: true})
 export class ProjectsStore extends EntityStore<ProjectsState, Project> {
   constructor() {
     super(initialState);

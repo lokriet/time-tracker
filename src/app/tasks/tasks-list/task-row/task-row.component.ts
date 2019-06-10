@@ -5,13 +5,13 @@ import { ID } from '@datorama/akita';
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faChevronRight, faMugHot } from '@fortawesome/free-solid-svg-icons';
 import { untilDestroyed } from 'ngx-take-until-destroy';
-import { Task } from 'src/app/tasks/model/task.model';
-import { formatBreakLength, formatTaskLength, formatTime } from 'src/app/tasks/model/time-formatter.service';
-import { TimeRange } from 'src/app/tasks/model/time-range.model';
-import { TasksQuery } from 'src/app/tasks/store/tasks.query';
-import { TasksUI } from 'src/app/tasks/store/tasks.store';
 
+import { Task } from '../../model/task.model';
+import { formatBreakLength, formatTaskLength, formatTime } from '../../model/time-formatter.service';
+import { TimeRange } from '../../model/time-range.model';
+import { TasksQuery } from '../../store/tasks.query';
 import { TasksService } from '../../store/tasks.service';
+import { TasksUI } from '../../store/tasks.store';
 
 @Component({
   selector: 'app-task-row',
@@ -28,7 +28,6 @@ import { TasksService } from '../../store/tasks.service';
   ]
 })
 export class TaskRowComponent implements OnInit, OnDestroy {
-  
   @Input() task: Task;
   @Input() index: number;
 
@@ -37,8 +36,8 @@ export class TaskRowComponent implements OnInit, OnDestroy {
   faEdit = faEdit;
   faCoffee = faMugHot;
 
-  state: string = 'default';
-  
+  state = 'default';
+
   initialExpandedValue: boolean;
   taskUIstate: TasksUI = {isExpanded: false};
 
@@ -48,7 +47,8 @@ export class TaskRowComponent implements OnInit, OnDestroy {
               private router: Router ) { }
 
   ngOnInit() {
-    this.initialExpandedValue = this.tasksQuery.ui.getAll().find((item: {id: ID, isExpanded: boolean}) => item.id == this.task.id).isExpanded;
+    this.initialExpandedValue = this.tasksQuery.ui.getAll()
+                                                  .find((item: {id: ID, isExpanded: boolean}) => item.id === this.task.id).isExpanded;
 
     this.tasksQuery.ui.selectEntity(this.task.id).pipe(
       untilDestroyed(this)
@@ -68,7 +68,7 @@ export class TaskRowComponent implements OnInit, OnDestroy {
 
   onDeleteTask(event: Event) {
     event.stopPropagation();
-    let shouldNavigateAway = this.tasksQuery.getActiveId() === this.task.id;
+    const shouldNavigateAway = this.tasksQuery.getActiveId() === this.task.id;
     this.tasksService.removeTask(this.task.id);
     if (shouldNavigateAway) {
       this.router.navigate(['tasks']);
@@ -102,6 +102,6 @@ export class TaskRowComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    
+    // needed for untilDestroyed
   }
 }

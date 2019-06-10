@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ID } from '@datorama/akita';
-import { Observable } from 'rxjs';
 
 import { MessagesService } from '../../messages/store/messages.service';
 import { Task } from '../model/task.model';
 import { TaskSerializer } from '../model/task.serializer';
-import { compareTasks, TasksQuery } from './tasks.query';
+import { TasksQuery } from './tasks.query';
 import { TasksStore } from './tasks.store';
 
 @Injectable({ providedIn: 'root' })
@@ -18,27 +17,29 @@ export class TasksService {
               private taskSerializer: TaskSerializer) {
   }
 
-  initStoreCache(ownerId: string) {
-    this.db.collection('tasks', ref => ref.where('ownerId', '==', ownerId)).get()
-    .subscribe(querySnapshot => {
-      const tasks: Task[] = [];
-      querySnapshot.forEach(doc => {
-          // doc.data() is never undefined for query doc snapshots
-          tasks.push(this.taskSerializer.deserializeTask(doc.data()));
-      });
-      this.tasksStore.set(tasks);
+  initStoreCache(ownerId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.tasksQuery.getHasCache()) {
+        this.db.collection('tasks', ref => ref.where('ownerId', '==', ownerId)).get()
+        .subscribe(querySnapshot => {
+          const tasks: Task[] = [];
+          querySnapshot.forEach(doc => {
+              // doc.data() is never undefined for query doc snapshots
+              tasks.push(this.taskSerializer.deserializeTask(doc.data()));
+          });
+          this.tasksStore.set(tasks);
+          resolve();
+console.log('tasks store initialized');
+        });
+      } else {
+        resolve();
+      }
     });
   }
 
-  getTasksByOwnerId(ownerId: string): Observable<Task[]> {
-    if (!this.tasksQuery.getHasCache()) {
-      this.initStoreCache(ownerId);
-    }
-
-    return this.tasksQuery.selectAll({
-      sortBy: compareTasks,
-      filterBy: (entity) => entity.ownerId === ownerId
-    });
+  resetStoreCache() {
+    this.tasksStore.reset();
+    this.tasksStore.ui.reset();
   }
 
   addTask(task: Task) {

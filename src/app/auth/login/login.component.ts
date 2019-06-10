@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MessagesService } from 'src/app/messages/store/messages.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
+import { MessagesService } from '../../messages/store/messages.service';
 import { AuthService } from '../store/auth.service';
 
 @Component({
@@ -12,17 +12,15 @@ import { AuthService } from '../store/auth.service';
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
-
-  alreadyLoggedIn: boolean = false;
+  returnUrl: string;
 
   constructor(private router: Router,
+              private route: ActivatedRoute,
               private authService: AuthService,
               private messagesService: MessagesService) { }
 
   ngOnInit() {
-    if (this.authService.isAuthenticatedNow()) {
-      this.alreadyLoggedIn = true;
-    }
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
   onLogIn() {
@@ -30,7 +28,7 @@ export class LoginComponent implements OnInit {
     .then(
       () => {
         this.messagesService.addInfo('Logged in successfully');
-        this.router.navigate(['/']);
+        this.router.navigateByUrl(this.returnUrl);
       }
     )
     .catch(

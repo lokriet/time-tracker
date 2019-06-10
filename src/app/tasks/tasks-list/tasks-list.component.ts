@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Observable } from 'rxjs';
-
-import { Task } from 'src/app/tasks/model/task.model';
-import { TasksService } from 'src/app/tasks/store/tasks.service';
 import { AuthService } from 'src/app/auth/store/auth.service';
+import { Task } from 'src/app/tasks/model/task.model';
+
+import { compareTasks, TasksQuery } from '../store/tasks.query';
 
 @Component({
   selector: 'app-tasks-list',
@@ -14,11 +13,14 @@ import { AuthService } from 'src/app/auth/store/auth.service';
 export class TasksListComponent implements OnInit {
   tasks$: Observable<Task[]>;
 
-  constructor(private tasksService: TasksService,
+  constructor(private tasksQuery: TasksQuery,
               private authService: AuthService) { }
 
   ngOnInit() {
-    this.tasks$ = this.tasksService.getTasksByOwnerId(this.authService.getCurrentUserUid());
+    this.tasks$ = this.tasksQuery.selectAll({
+      sortBy: compareTasks,
+      filterBy: (entity) => entity.ownerId === this.authService.getCurrentUserUid()
+    });
   }
 
   sameDate(a: Task, b: Task) {

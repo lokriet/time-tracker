@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { EditProjectComponent } from './edit-project/edit-project.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ProjectsComponent } from './projects.component';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { ProjectsRoutingModule } from './projects-routing.module';
+import { ProjectsComponent } from './projects.component';
 
 @NgModule({
   declarations: [
     EditProjectComponent,
-    ProjectsListComponent, 
+    ProjectsListComponent,
     ProjectsComponent
   ],
   imports: [

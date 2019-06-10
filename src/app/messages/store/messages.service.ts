@@ -1,5 +1,6 @@
-import { Message, MessageType } from '../message.model';
 import { Injectable } from '@angular/core';
+
+import { MessageType } from '../message.model';
 import { MessagesStore } from './messages.store';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { MessagesStore } from './messages.store';
 export class MessagesService {
   constructor(private messagesStore: MessagesStore) {}
 
-  messageId: number = 0;
+  nextMessageId = 0;
 
   addError(errorMessage: string) {
     this.addMessage(MessageType.ERROR, errorMessage);
@@ -19,15 +20,14 @@ export class MessagesService {
   }
 
   addMessage(messageType: MessageType, message: string) {
-    let nextId = this.messageId;
-    this.messageId++;
-    
-    this.messagesStore.add({id: nextId, type: messageType, message: message});
-    
+    const messageId = this.nextMessageId;
+    this.nextMessageId++;
+
+    this.messagesStore.add({id: messageId, type: messageType, message});
+
     setTimeout(() => {
-      this.removeMessage(nextId);
+      this.removeMessage(messageId);
     }, 10 * 1000);
-    
   }
 
   removeMessage(messageId: number) {

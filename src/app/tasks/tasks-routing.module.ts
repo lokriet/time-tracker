@@ -1,14 +1,21 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Route } from '@angular/router';
-import { EditTaskComponent } from './edit-task/edit-task.component';
-import { TasksComponent } from './tasks.component';
+import { Route, RouterModule } from '@angular/router';
+
 import { AuthGuard } from '../auth/auth.guard';
+import { EditTaskComponent } from './edit-task/edit-task.component';
+import { TasksResolverService } from './tasks-resolver.service';
+import { TasksComponent } from './tasks.component';
 
 
 const routes: Route[] = [
-  { path: 'tasks', component: TasksComponent, canActivate: [AuthGuard], canActivateChild: [AuthGuard],  children: [
-    { path: '', component: EditTaskComponent }, // new task
-    { path: 'edit/:id', component: EditTaskComponent }
+  { path: 'tasks', component: TasksComponent,
+              canActivate: [AuthGuard],
+              canActivateChild: [AuthGuard],
+              resolve: { loaded : TasksResolverService },
+
+              children: [
+    { path: '', resolve: { loaded : TasksResolverService }, component: EditTaskComponent}, // new task
+    { path: 'edit/:id', resolve: { loaded : TasksResolverService }, component: EditTaskComponent}
   ] },
 ];
 
@@ -16,4 +23,4 @@ const routes: Route[] = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TasksRoutingModule {}
+export class TasksRoutingModule { }

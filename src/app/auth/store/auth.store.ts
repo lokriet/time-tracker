@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-
-import { StoreConfig, Store } from '@datorama/akita';
+import { Store, StoreConfig } from '@datorama/akita';
 
 export interface AuthState {
-  token: string,
-  uid: string
+  token: string;
+  uid: string;
 }
 
 function createInitialState() {
@@ -17,7 +16,7 @@ function createInitialState() {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({name: 'auth'})
 export class AuthStore extends Store<AuthState> {
-  
+
   constructor() {
     super(createInitialState());
   }

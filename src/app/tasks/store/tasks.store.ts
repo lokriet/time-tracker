@@ -16,7 +16,7 @@ const initialState = {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({name: 'tasks'})
+@StoreConfig({name: 'tasks', resettable: true})
 export class TasksStore extends EntityStore<TasksState, Task> {
   ui: EntityUIStore<TasksUIState, TasksUI>;
 

@@ -37,7 +37,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
   projects$: Observable<Project[]>;
 
-  constructor(private calendar: NgbCalendar, 
+  constructor(private calendar: NgbCalendar,
               private tasksService: TasksService,
               private tasksQuery: TasksQuery,
               private tasksStore: TasksStore,
@@ -47,11 +47,15 @@ export class EditTaskComponent implements OnInit, OnDestroy {
               private projectsService: ProjectsService) { }
 
   ngOnInit() {
+    console.log('initializing edit task component...');
     this.route.params.subscribe(
       (params: Params) => {
-        this.tasksStore.setActive(params['id']);
+        console.log('edit task page route param updated, processing...');
+        this.tasksStore.setActive(params.id);
         const task = this.tasksQuery.getActive();
-        if (params['id'] != null && !task) {
+        // const task = this.tasksQuery.getEntity(params.id);
+        console.log(`looking for a task ${params.id} in store... full count: ${this.tasksQuery.getCount()}`);
+        if (params.id != null && !task) {
           // task not found
           this.router.navigate(['/404']);
         }
@@ -73,7 +77,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     let project = null;
     let workDate = null;
     let workHours = null;
-    let breaks = new FormArray([]);
+    const breaks = new FormArray([]);
     let id = this.tasksService.generateId();
     let ownerId = this.authService.getCurrentUserUid();
 

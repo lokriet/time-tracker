@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TasksService } from '../tasks/store/tasks.service';
-import { AuthService } from '../auth/store/auth.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+
+import { AuthService } from '../auth/store/auth.service';
 import { MessagesService } from '../messages/store/messages.service';
+import { TasksService } from '../tasks/store/tasks.service';
 
 @Component({
   selector: 'app-header',
@@ -22,11 +23,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.isAuthenticated$ = this.authService.isAuthenticated();
   }
-
-  // onStoreTasks() {
-  //   this.tasksService.storeTasksForOwnerId(this.authService.getCurrentUserUid());
-  // }
-
   onLogout() {
     this.authService.logout();
     this.messagesService.addInfo('Logged out successfully');
