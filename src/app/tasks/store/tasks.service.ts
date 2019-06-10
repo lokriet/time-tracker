@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ID } from '@datorama/akita';
+import { Project } from 'src/app/projects/project.model';
 
 import { MessagesService } from '../../messages/store/messages.service';
 import { Task } from '../model/task.model';
@@ -29,7 +30,7 @@ export class TasksService {
           });
           this.tasksStore.set(tasks);
           resolve();
-console.log('tasks store initialized');
+          console.log('tasks store initialized');
         });
       } else {
         resolve();
@@ -82,6 +83,13 @@ console.log('tasks store initialized');
 
   updateTaskUiState(id: ID, isExpanded: boolean) {
     this.tasksStore.ui.upsert(id, { isExpanded });
+  }
+
+  updateTasksWithProject(project: Project) {
+    const tasks = this.tasksQuery.getAll({filterBy: task => task.project.id === project.id});
+    for (let task of tasks) {
+      this.tasksStore.update(task.id, {project});
+    }
   }
 
   generateId(): ID {

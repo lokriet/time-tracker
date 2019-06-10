@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ID, Order } from '@datorama/akita';
 import { Observable } from 'rxjs';
 import { MessagesService } from 'src/app/messages/store/messages.service';
+import { TasksService } from 'src/app/tasks/store/tasks.service';
 
 import { Project } from '../project.model';
 import { ProjectsQuery } from './projects.query';
@@ -15,7 +16,8 @@ export class ProjectsService {
   constructor(private db: AngularFirestore,
               private messagesService: MessagesService,
               private projectsStore: ProjectsStore,
-              private projectsQuery: ProjectsQuery) {}
+              private projectsQuery: ProjectsQuery,
+              private tasksService: TasksService) {}
 
   initStoreCache(ownerId: string): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -29,7 +31,7 @@ export class ProjectsService {
           });
           this.projectsStore.set(projects);
           resolve();
-console.log('projects store initialized');
+          console.log('projects store initialized');
         });
       } else {
         resolve();
@@ -66,6 +68,7 @@ console.log('projects store initialized');
 
   updateProject(project: Project) {
     this.projectsStore.update(project.id, {...project});
+    this.tasksService.updateTasksWithProject(project);
     this.db.collection('projects').doc(String(project.id)).update(project)
       .then(() => {
           this.messagesService.addInfo('Project updated successfully');
