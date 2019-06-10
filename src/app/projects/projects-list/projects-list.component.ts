@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { faEdit, faHeart, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { faDollarSign, faHeart as faFullHeart } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { Project } from '../project.model';
-import { ProjectsService } from '../store/projects.service';
 import { AuthService } from 'src/app/auth/store/auth.service';
-import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import { Router, ActivatedRoute } from '@angular/router';
+
+import { Project } from '../project.model';
 import { ProjectsQuery } from '../store/projects.query';
+import { ProjectsService } from '../store/projects.service';
 
 @Component({
   selector: 'app-projects-list',
@@ -17,6 +18,8 @@ export class ProjectsListComponent implements OnInit {
   faDollar = faDollarSign;
   faDelete = faTrashAlt;
   faEdit = faEdit;
+  faEmptyHeart = faHeart;
+  faFullHeart = faFullHeart;
 
   projects$: Observable<Project[]>;
 
@@ -27,7 +30,7 @@ export class ProjectsListComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid());
+    this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid(), null);
   }
 
   onEditProject(project: Project) {
@@ -35,11 +38,15 @@ export class ProjectsListComponent implements OnInit {
   }
 
   onDeleteProject(project: Project) {
-    let shouldNavigateAway = this.projectsQuery.getActiveId() == project.id;
+    const shouldNavigateAway = this.projectsQuery.getActiveId() == project.id;
     this.projectsService.removeProject(project.id);
     if (shouldNavigateAway) {
       this.router.navigate(['projects']);
     }
+  }
+
+  onSwitchFavorite(project: Project) {
+    this.projectsService.setProjectIsFavorite(project.id, !project.isFavorite);
   }
 
 }

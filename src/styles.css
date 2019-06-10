@@ -6,3 +6,7 @@ input[type="checkbox"]:focus {
   outline: none !important;
   box-shadow: none;
 }
+
+.favorite {
+  color: darkred;
+}

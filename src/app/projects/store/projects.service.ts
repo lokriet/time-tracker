@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { ID } from '@datorama/akita';
+import { ID, Order } from '@datorama/akita';
 import { Observable } from 'rxjs';
 import { MessagesService } from 'src/app/messages/store/messages.service';
 
@@ -41,13 +41,14 @@ console.log('projects store initialized');
     this.projectsStore.reset();
   }
 
-  getProjectsByOwnerId(ownerId: string): Observable<Project[]> {
+  getProjectsByOwnerId(ownerId: string, sortBy: any, sortByOrder = Order.ASC): Observable<Project[]> {
     if (!this.projectsQuery.getHasCache()) {
       this.initStoreCache(ownerId);
     }
 
     return this.projectsQuery.selectAll({
-      filterBy: entity => entity.ownerId === ownerId
+      filterBy: entity => entity.ownerId === ownerId,
+      sortBy, sortByOrder
     });
   }
 
@@ -66,6 +67,19 @@ console.log('projects store initialized');
   updateProject(project: Project) {
     this.projectsStore.update(project.id, {...project});
     this.db.collection('projects').doc(String(project.id)).update(project)
+      .then(() => {
+          this.messagesService.addInfo('Project updated successfully');
+        }
+      )
+      .catch(error => {
+        this.messagesService.addError('Failed to update project in database');
+        console.log(error);
+      });
+  }
+
+  setProjectIsFavorite(id: ID, isFavorite: boolean) {
+    this.projectsStore.update(id, {isFavorite});
+    this.db.collection('projects').doc(String(id)).update(this.projectsQuery.getEntity(id))
       .then(() => {
           this.messagesService.addInfo('Project updated successfully');
         }

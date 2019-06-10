@@ -3,6 +3,10 @@
     <div class="col-xs-12">
       <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="form-inline">
+          <input type="checkbox" formControlName="isFavorite" class="form-control favorite-checkbox" #favCheckbox>
+          <span class="favorite mr-3">
+            <fa-icon [icon]="favCheckbox.checked ? faFullHeart : faEmptyHeart" (click)="onSwitchFavorite()" ></fa-icon>
+          </span>
           <input type="text" formControlName="projectName" class="form-control mr-3" >
           <input type="checkbox" formControlName="isPaid" class="form-control mr-1"><span class="mr-3">Paid project</span>
           <input type="number" formControlName="payRate" class="form-control mr-1" style="max-width: 100px;"><span class="mr-3">$/hour</span>

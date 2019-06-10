@@ -1,12 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faCheck, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faCheck, faHeart as faFullHeart, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+
+import { AuthService } from '../../auth/store/auth.service';
 import { Project } from '../project.model';
-import { ProjectsService } from '../store/projects.service';
-import { AuthService } from 'src/app/auth/store/auth.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ProjectsStore } from '../store/projects.store';
 import { ProjectsQuery } from '../store/projects.query';
+import { ProjectsService } from '../store/projects.service';
+import { ProjectsStore } from '../store/projects.store';
 
 @Component({
   selector: 'app-edit-project',
@@ -16,9 +18,11 @@ import { ProjectsQuery } from '../store/projects.query';
 export class EditProjectComponent implements OnInit, OnDestroy {
   faCheck = faCheck;
   faReload = faSyncAlt;
-  
+  faEmptyHeart = faHeart;
+  faFullHeart = faFullHeart;
+
   projectForm: FormGroup;
-  editMode: boolean = false;
+  editMode = false;
 
   constructor(private projectsService: ProjectsService,
               private projectsStore: ProjectsStore,
@@ -30,13 +34,13 @@ export class EditProjectComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        this.projectsStore.setActive(params['id']);
+        this.projectsStore.setActive(params.id);
         const project = this.projectsQuery.getActive();
-        if (params['id'] != null && !project) {
-          //task not found
+        if (params.id != null && !project) {
+          // task not found
           this.router.navigate(['/404']);
         }
-        
+
         this.initForm(project);
       }
     );
@@ -48,40 +52,52 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     let projectName = '';
     let isPaid = false;
     let payRate = null;
+    let isFavorite = false;
 
     this.editMode = (project != null);
 
     if (this.editMode) {
-      ({id, ownerId, projectName, isPaid, payRate} = project);
+      ({id, ownerId, projectName, isPaid, payRate, isFavorite} = project);
     }
 
     this.projectForm = new FormGroup({
-      'id': new FormControl(id),
-      'ownerId': new FormControl(ownerId),
-      'projectName': new FormControl(projectName, Validators.required),
-      'isPaid': new FormControl(isPaid),
-      'payRate': new FormControl({value: payRate, disabled: !isPaid})});
-    
+      id: new FormControl(id),
+      ownerId: new FormControl(ownerId),
+      projectName: new FormControl(projectName, Validators.required),
+      isPaid: new FormControl(isPaid),
+      payRate: new FormControl({value: payRate, disabled: !isPaid}),
+      isFavorite: new FormControl(isFavorite, Validators.required)});
+
     this.projectForm.get('isPaid').valueChanges.subscribe(v => {
       if (v) {
         this.projectForm.get('payRate').enable();
       } else {
+        this.projectForm.get('payRate').setValue('');
         this.projectForm.get('payRate').disable();
-        this.projectForm.get('payRate').setValue("");
       }
     });
   }
 
   onSubmit() {
+    const project = {} as Project;
+    Object.assign(project, this.projectForm.value);
+    if (!project.isPaid) {
+      project.payRate = null;
+    }
+
     if (this.editMode) {
-      this.projectsService.updateProject(this.projectForm.value);
+      this.projectsService.updateProject(project);
     } else {
-      this.projectsService.addProject(this.projectForm.value);
+      this.projectsService.addProject(project);
     }
 
     this.clearState();
-  
     this.router.navigate(['projects']);
+  }
+
+  onSwitchFavorite() {
+    const favoriteCheckbox = this.projectForm.get('isFavorite');
+    favoriteCheckbox.setValue(!favoriteCheckbox.value);
   }
 
   onClearForm() {
@@ -92,7 +108,7 @@ export class EditProjectComponent implements OnInit, OnDestroy {
       this.clearState();
     }
   }
-  
+
   clearState() {
     this.projectsStore.setActive(null);
     this.initForm(null);

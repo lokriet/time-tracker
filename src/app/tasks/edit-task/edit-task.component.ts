@@ -1,8 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { faAngry, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import { faAngleDoubleRight, faCalendarAlt, faCheck, faMugHot, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { Order } from '@datorama/akita';
+import { faAngry, faHeart, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import {
+  faAngleDoubleRight,
+  faCalendarAlt,
+  faCheck,
+  faHeart as faFullHeart,
+  faMugHot,
+  faSyncAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 
@@ -30,6 +38,8 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faCheck = faCheck;
   faBug = faAngry;
   faReload = faSyncAlt;
+  faEmptyHeart = faHeart;
+  faFullHeart = faFullHeart;
 
   taskForm: FormGroup;
   editMode = false;
@@ -64,7 +74,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid());
+    this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid(), 'isFavorite', Order.DESC);
   }
 
   private clearState() {
