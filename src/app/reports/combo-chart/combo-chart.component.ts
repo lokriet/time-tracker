@@ -74,6 +74,7 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
   xScale: any;
   yScale: any;
   transform: string;
+  halfBarTransform: string;
   tickFormatting: (label: string) => string;
   colors: ColorHelper;
   margin = [10, 20, 10, 20];
@@ -83,38 +84,10 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
 
   scaledResults: any[];
   scaledLineResults: any[];
+  xSet: string[];
 
   ngOnInit(): void {
-    let maxResultsTotal = (this.results as DataEntry[]).map(el =>
-      el.series.map(seriesEl => seriesEl.value).reduce((sum, seriesElValue) => sum += seriesElValue, 0)
-    ).reduce((max, seriesTotal) => Math.max(max, seriesTotal));
-
-    if (maxResultsTotal === 0) {
-      maxResultsTotal = 1;
-    }
-
-    this.scaledResults = (this.results as DataEntry[]).map(el => { return { name: el.name, series:
-      el.series.map(seriesEl => {
-        return { name: seriesEl.name, value: seriesEl.value / maxResultsTotal
-      }; })
-    }; }
-    );
-
-
-    let maxLineResult = (this.lineResults as DataEntry[])[0]
-                                                              .series.map(el => el.value)
-                                                              .reduce((max, seriesEl) => Math.max(max, seriesEl));
-
-    if (maxLineResult === 0) {
-      maxLineResult = 1;
-    }
-
-    this.scaledLineResults = (this.lineResults as DataEntry[]).map(el => { return { name: el.name, series:
-      el.series.map(seriesEl => {
-        return { name: seriesEl.name, value: seriesEl.value / maxLineResult
-      }; })
-    }; }
-    );
+    
   }
 
 
@@ -152,6 +125,11 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     }; }
     );
 
+    this.xSet = [];
+    for (let moneyEntry of (this.lineResults as DataEntry[])[0].series) {
+      this.xSet.push(moneyEntry.name);
+    }
+
 
     this.dataLabelMaxHeight = {negative: 0, positive: 0};
     this.margin = [10 + this.dataLabelMaxHeight.positive, 20, 10 + this.dataLabelMaxHeight.negative, 20];
@@ -184,6 +162,8 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     this.legendOptions = this.getLegendOptions();
 
     this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] + this.dataLabelMaxHeight.negative})`;
+    this.halfBarTransform = `translate(${ this.dims.xOffset + Math.round(this.xScale.bandwidth() / 2) } ,
+                                       ${ this.margin[0] + this.dataLabelMaxHeight.negative})`;
   }
 
   getGroupDomain() {

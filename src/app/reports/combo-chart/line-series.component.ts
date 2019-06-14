@@ -8,7 +8,6 @@ import { curveMonotoneX, line } from 'd3-shape';
   selector: 'g[app-line-series]',
   template: `
       <svg:path
-        [attr.transform]="transform"
         [@animationState]="'active'"
         class="line"
         [attr.d]="path"
@@ -44,7 +43,6 @@ export class LineSeriesComponent implements OnChanges, OnInit {
   @Input() colors: ColorHelper;
   @Input() dims: ViewDimensions;
   curve = curveMonotoneX;
-  transform;
 
   clipPathId: string;
   clipPath: string;
@@ -66,20 +64,21 @@ export class LineSeriesComponent implements OnChanges, OnInit {
   updatePathEl(): void {
     const lineGen = this.getLineGenerator();
     this.stroke = this.colors.getColor(this.data.name);
+    let pathSeries = [];
 
     if (this.data.series.length) {
+      pathSeries = this.data.series.slice(0);
       this.halfBarWidth = this.xScale.bandwidth() / 2;
       this.firstXValue = this.xScale(this.data.series[0].name);
       this.lastXValue = this.xScale(this.data.series[this.data.series.length - 1].name);
 
-      this.data.series.unshift({name: 'start', value: this.data.series[0].value});
-      this.data.series.push({name: 'end', value: this.data.series[this.data.series.length - 1].value});
+      pathSeries.unshift({name: 'start', value: this.data.series[0].value});
+      pathSeries.push({name: 'end', value: this.data.series[this.data.series.length - 1].value});
     }
 
-    this.path = lineGen(this.data.series) || '';
+    this.path = lineGen(pathSeries) || '';
 
     this.halfBarWidth = Math.round(this.halfBarWidth);
-    this.transform = `translate(${this.halfBarWidth + this.dims.xOffset} , 10)`;
 
     const node = select(this.element.nativeElement).select('.line');
 

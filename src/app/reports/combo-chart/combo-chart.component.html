@@ -42,13 +42,26 @@
     </svg:g>
   </svg:g>
 
-  <svg:g *ngFor="let series of scaledLineResults">
-    <svg:g app-line-series
-      [data]="series"
-      [colors]="colors"
+  <svg:g [attr.transform]="halfBarTransform">
+    <svg:g
+      ngx-charts-tooltip-area
+      [dims]="dims"
+      [xSet]="xSet"
       [xScale]="xScale"
       [yScale]="yScale"
-      [dims]="dims"
+      [results]="lineResults"
+      [colors]="colors"
+      [tooltipDisabled]="false"
     />
+
+    <svg:g *ngFor="let series of scaledLineResults">
+      <svg:g app-line-series
+        [data]="series"
+        [colors]="colors"
+        [xScale]="xScale"
+        [yScale]="yScale"
+        [dims]="dims"
+      />
+    </svg:g>
   </svg:g>
 </ngx-charts-chart>
