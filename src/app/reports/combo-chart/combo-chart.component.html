@@ -1,0 +1,54 @@
+<ngx-charts-chart
+  [view]="[width, height]"
+  [showLegend]="legend"
+  [legendOptions]="legendOptions"
+  [activeEntries]="activeEntries"
+  [animations]="animations"
+  (legendLabelActivate)="onActivate($event)"
+  (legendLabelDeactivate)="onDeactivate($event)"
+  (legendLabelClick)="onClick($event)">
+  <svg:g [attr.transform]="transform" class="bar-chart chart">
+    <svg:g ngx-charts-x-axis
+      [xScale]="xScale"
+      [dims]="dims"
+      [showLabel]="true"
+      [labelText]="xAxisLabel"
+      [trimTicks]="false"
+      [tickFormatting]="xAxisTickFormatting"
+      [ticks]="xAxisTicks"
+      [xAxisOffset]="dataLabelMaxHeight.negative"
+      (dimensionsChanged)="updateXAxisHeight($event)">
+    </svg:g>
+    <svg:g
+      *ngFor="let group of scaledResults; let index = index; trackBy:trackBy"
+      [@animationState]="'active'"
+      [attr.transform]="groupTransform(group)">
+      <svg:g app-series-vertical
+        type="stacked"
+        [xScale]="xScale"
+        [yScale]="yScale"
+        [activeEntries]="activeEntries"
+        [colors]="colors"
+        [series]="group.series"
+        [dims]="dims"
+        [gradient]="gradient"
+        [seriesName]="group.name"
+        [animations]="animations"
+        (select)="onClick($event, group)"
+        (activate)="onActivate($event, group)"
+        (deactivate)="onDeactivate($event, group)"
+        (dataLabelHeightChanged)="onDataLabelMaxHeightChanged($event, index)"
+      />
+    </svg:g>
+  </svg:g>
+
+  <svg:g *ngFor="let series of scaledLineResults">
+    <svg:g app-line-series
+      [data]="series"
+      [colors]="colors"
+      [xScale]="xScale"
+      [yScale]="yScale"
+      [dims]="dims"
+    />
+  </svg:g>
+</ngx-charts-chart>

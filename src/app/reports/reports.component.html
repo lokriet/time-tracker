@@ -51,6 +51,7 @@
   <div class="row">
     <div class="col-xs-12 w-100">
       <ngx-charts-bar-vertical-stacked
+        *ngIf="reportType === 'hours' || reportType === 'money'"
         [view]="[graphWidth, 400]"
         [results]="data"
         [scheme]="scheme"
@@ -58,7 +59,28 @@
         [xAxis]="true"
         [yAxis]="true"
         [legendPosition]="'below'"
-      ></ngx-charts-bar-vertical-stacked>
+      >
+      <ng-template #tooltipTemplate let-model="model">
+        <div class="p-1">
+          <p>{{model.name}}:</p>
+          <p>{{reportType === 'hours' ? formatHours(model.value) : (model.value | currency)}}</p>
+        </div>
+        </ng-template>
+      </ngx-charts-bar-vertical-stacked>
+      
+
+
+      <app-combo-chart
+        *ngIf="reportType === 'combined'"
+        class="chart-container"
+        [view]="[graphWidth, 400]"
+        [scheme]="scheme"
+        [results]="data.hours"
+        [lineResults]="data.money"
+        [legendPosition]="'below'"
+      > 
+      <!-- [lineChart]="data.money" -->
+      </app-combo-chart>
     </div>
   </div>
 </div>

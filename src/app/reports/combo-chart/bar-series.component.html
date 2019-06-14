@@ -1,0 +1,30 @@
+<svg:g
+      ngx-charts-bar
+      *ngFor="let bar of bars; trackBy: trackBy"
+      [@animationState]="'active'"
+      [@.disabled]="!animations"
+      [width]="bar.width"
+      [height]="bar.height"
+      [x]="bar.x"
+      [y]="bar.y"
+      [fill]="bar.color"
+      [stops]="bar.gradientStops"
+      [data]="bar.data"
+      [orientation]="'vertical'"
+      [roundEdges]="bar.roundEdges"
+      [gradient]="gradient"
+      [ariaLabel]="bar.ariaLabel"
+      [isActive]="isActive(bar.data)"
+      (select)="onClick($event)"
+      (activate)="activate.emit($event)"
+      (deactivate)="deactivate.emit($event)"
+      ngx-tooltip
+      [tooltipDisabled]="tooltipDisabled"
+      [tooltipPlacement]="tooltipPlacement"
+      [tooltipType]="tooltipType"
+      [tooltipTitle]="bar.tooltipText"
+      [tooltipTemplate]="null"
+      [tooltipContext]="bar.data"
+      [animations]="animations">
+    </svg:g>
+    

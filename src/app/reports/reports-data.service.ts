@@ -14,6 +14,27 @@ export class ReportsDataService {
 
     }
 
+    /*
+    [
+      {
+        "name": "2019/6/10",
+        "series": []
+      },
+      {
+        "name": "2019/6/11",
+        "series": [
+          {
+            "name": "work",
+            "value": 119
+          }
+          {
+            "name": "meow",
+            "value": 2.5
+          }
+        ]
+      }
+    ]
+    */
     getMoneyReportData(reportFromDate: NgbDate, reportToDate: NgbDate): any[] {
       const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
       const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
@@ -53,9 +74,36 @@ export class ReportsDataService {
         date = this.calendar.getPrev(date, 'd', 1);
       }
 
+      console.log(JSON.stringify(data, null, 2));
       return data;
     }
 
+    /*
+    [
+      {
+        "name": "2019/6/10",
+        "series": [
+          {
+            "name": "study",
+            "value": 9.5
+          }
+        ]
+      },
+      {
+        "name": "2019/6/11",
+        "series": [
+          {
+            "name": "work",
+            "value": 8.5
+          },
+          {
+            "name": "sleep",
+            "value": 8
+          }
+        ]
+      }
+    ]
+    */
     getHoursReportData(reportFromDate: NgbDate, reportToDate: NgbDate): any[] {
       const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
       const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
@@ -75,7 +123,7 @@ export class ReportsDataService {
         }
         while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
           if (dataSeriesMap.has(this.projectName(tasks[index]))) {
-            dataSeriesMap.set(this.projectName(tasks[index]), 
+            dataSeriesMap.set(this.projectName(tasks[index]),
                               dataSeriesMap.get(this.projectName(tasks[index])) + this.taskLength(tasks[index]));
           } else {
             dataSeriesMap.set(this.projectName(tasks[index]), this.taskLength(tasks[index]));
@@ -93,6 +141,69 @@ export class ReportsDataService {
         date = this.calendar.getPrev(date, 'd', 1);
       }
 
+      console.log(JSON.stringify(data, null, 2));
+      return data;
+    }
+
+
+    /*
+    [
+      {
+        "name": "Money earned",
+        "series": [
+          {
+            "name": "2019/6/11",
+            "value": 119
+          }
+          {
+            "name": "2019/6/12",
+            "value": 2.5
+          }
+          {
+            "name": "2019/6/13",
+            "value": 0
+          }
+        ]
+      }
+    ]
+    */
+    getMoneyLineReportData(reportFromDate: NgbDate, reportToDate: NgbDate): any[] {
+      const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
+      const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
+      const tasks = this.tasksQuery.getAll({
+          filterBy: (task: Task) => afterLast.after(task.workDate) && beforeFirst.before(task.workDate)
+      });
+
+      const data = [];
+      const dataItemName = 'Money earned';
+      const dataSeries = [];
+
+      let date = reportToDate;
+      let index = 0;
+      while (date.after(beforeFirst)) {
+        const seriesItemName = date.year + '/' + date.month + '/' + date.day;
+
+
+        let currentDaySum = 0;
+
+        while ((tasks.length > index) && date.before(tasks[index].workDate)) {
+          index++;
+        }
+
+        while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
+          if (!!tasks[index].project && tasks[index].project.isPaid) {
+            currentDaySum += this.taskWorth(tasks[index]);
+          }
+          index++;
+        }
+        dataSeries.unshift({name: seriesItemName, value: currentDaySum});
+
+        date = this.calendar.getPrev(date, 'd', 1);
+      }
+
+      data.push({name: dataItemName, series: dataSeries});
+
+      console.log(JSON.stringify(data, null, 2));
       return data;
     }
 

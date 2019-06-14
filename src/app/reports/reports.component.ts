@@ -60,6 +60,12 @@ export class ReportsComponent implements OnInit {
       case 'money':
         this.data = this.reportsDataService.getMoneyReportData(this.dates.fromDate, this.dates.toDate);
         break;
+      case 'combined':
+        this.data = {
+          hours: this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate),
+          money: this.reportsDataService.getMoneyLineReportData(this.dates.fromDate, this.dates.toDate)
+        };
+        break;
     }
     this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
   }
@@ -97,6 +103,25 @@ export class ReportsComponent implements OnInit {
     if (!!this.dates) {
       this.onBuildReport();
     }
+  }
+
+  formatHours(hours: number): string {
+    const hoursNo = Math.floor(hours);
+    const minutesNo = Math.round((hours - hoursNo) * 60);
+    let result = '';
+    if (hoursNo > 0) {
+      result = hoursNo + 'h';
+      if (minutesNo > 0) {
+        result += ' ';
+      }
+    }
+    if (minutesNo > 0) {
+      result += minutesNo + 'm';
+    }
+    if (result === '') {
+      result = '0';
+    }
+    return result;
   }
 
 }
