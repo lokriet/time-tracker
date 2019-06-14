@@ -23,14 +23,14 @@
           <fa-icon [icon]="faTwoRight"></fa-icon>
         </button>
         <br>
-        <button class="btn btn-light" type="submit">
+        <!-- <button class="btn btn-light" type="submit">
           <fa-icon [icon]="faCheck"></fa-icon> Build report
-        </button>
+        </button> -->
       </div>
     </div>
   </form>
     <div class="row">
-      <div class="col-xs-12 m-2">
+      <div class="col-xs-6 m-2">
         <div class="btn-group btn-group-toggle form-group">
           <label class="btn btn-light" [class.active]="hours.value === reportType">
             <input type="radio" name="options" [(ngModel)]="reportType" value="hours" #hours (change)=reportTypeChanged()>
@@ -44,6 +44,40 @@
             <input type="radio" name="options" [(ngModel)]="reportType" value="combined" #combined (change)=reportTypeChanged()>
             Combined
           </label>
+        </div>
+      </div>
+      <div class="col-auto m-2">
+        <div class="form-inline">
+          <div class="mb-3">
+            <ng-select
+              class=""
+              [items]="projects$ | async"
+              [multiple]="true"
+              bindLabel="projectName"
+              groupBy="ownerId"
+              [selectableGroup]="true"
+              [selectableGroupAsModel]="false"
+              [closeOnSelect]="false"
+              bindValue="id"
+              [placeholder]="'Filter tasks'"
+              [(ngModel)]="filterProjects">
+              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
+                <span [hidden]="!item.isFavorite" class="ml-2 favorite">
+                  <fa-icon [icon]="faFullHeart"></fa-icon>
+                </span>
+                {{item.projectName}}
+              </ng-template>
+            </ng-select>
+          </div>
+          
+            <button class="btn btn-light mb-3 ml-2" type="button" (click)="onBuildReport()">
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </button>
+          
         </div>
       </div>
     </div>

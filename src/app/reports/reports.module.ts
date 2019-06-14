@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { BarSeriesComponent } from './combo-chart/bar-series.component';
@@ -23,7 +24,8 @@ import { ReportsComponent } from './reports.component';
     NgxChartsModule,
     NgbDatepickerModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgSelectModule
   ],
   providers: [
     { provide: 'windowObject', useValue: window},
