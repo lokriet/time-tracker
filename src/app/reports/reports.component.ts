@@ -13,6 +13,8 @@ import { ProjectsService } from '../projects/store/projects.service';
 import { DateRange } from './date-range/date-range.model';
 import { DateSelectionMode, DateSelector } from './date-selector.model';
 import { formatHours, ReportsDataService } from './reports-data.service';
+import { ReportsQuery } from './store/reports.query';
+import { ReportsStore } from './store/reports.store';
 
 @Component({
   selector: 'app-reports',
@@ -50,14 +52,15 @@ export class ReportsComponent implements OnInit {
               @Inject('windowObject') private window: Window,
               private currencyPipe: CurrencyPipe,
               private projectsService: ProjectsService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private reportsStore: ReportsStore,
+              private reportsQuery: ReportsQuery) { }
 
   ngOnInit() {
     this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid(), 'isFavorite', Order.DESC);
 
     this.scheme = colorSets.find(s => s.name === 'vivid');
     this.dateSelector = new DateSelector(this.calendar);
-    this.dates = this.dateSelector.getCurrentPeriod();
 
     this.windowWidth = this.window.innerWidth - 20;
     fromEvent(window, 'resize').pipe(
@@ -68,8 +71,19 @@ export class ReportsComponent implements OnInit {
         this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
     });
 
-    this.data = this.reportsDataService.getHoursBarReportData(this.dates.fromDate, this.dates.toDate, { projects: this.filterProjects });
-    this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
+    const uiState = this.reportsQuery.getValue().ui;
+    this.dateSelector.dateSelectionMode = uiState.dateSelectionMode;
+    if (uiState.selectedDates) {
+      this.dateSelector.setSelectedPeriod(uiState.selectedDates);
+      this.dates = uiState.selectedDates;
+    } else {
+      this.dates = this.dateSelector.getCurrentPeriod();
+    }
+
+    this.filterProjects = uiState.filters.projects;
+    this.reportType = uiState.reportType;
+
+    this.onBuildReport();
   }
 
   onBuildReport() {
@@ -109,21 +123,30 @@ export class ReportsComponent implements OnInit {
     this.dateSelector.dateSelectionMode = DateSelectionMode[value];
     this.dates = this.dateSelector.getCurrentPeriod();
     this.onBuildReport();
+
+    this.reportsStore.updateDateSelectionMode(this.dateSelector.dateSelectionMode);
+    this.reportsStore.updateSelectedDates(this.dates);
   }
 
   onSelectCurrentPeriod() {
     this.dates = this.dateSelector.getCurrentPeriod();
     this.onBuildReport();
+
+    this.reportsStore.updateSelectedDates(this.dates);
   }
 
   onSelectNextPeriod() {
     this.dates = this.dateSelector.getNextPeriod();
     this.onBuildReport();
+
+    this.reportsStore.updateSelectedDates(this.dates);
   }
 
   onSelectPreviousPeriod() {
     this.dates = this.dateSelector.getPreviousPeriod();
     this.onBuildReport();
+
+    this.reportsStore.updateSelectedDates(this.dates);
   }
 
   onDatesSelected(dates: DateRange) {
@@ -132,12 +155,20 @@ export class ReportsComponent implements OnInit {
       this.dateSelector.setSelectedPeriod(dates);
       this.onBuildReport();
     }
+
+    this.reportsStore.updateSelectedDates(this.dates);
   }
 
   reportTypeChanged() {
     if (!!this.dates) {
       this.onBuildReport();
     }
+
+    this.reportsStore.updateReportType(this.reportType);
+  }
+
+  onFilterProjectsSelected() {
+    this.reportsStore.updateFilterProjects(this.filterProjects);
   }
 
   formatHours(hours: number) {
@@ -163,7 +194,4 @@ export class ReportsComponent implements OnInit {
       <span class="tooltip-val">${value}</span>
     `;
   }
-
-
 }
-

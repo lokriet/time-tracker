@@ -8,9 +8,9 @@
         <div class="form-group mb-2">
           <label for="dateSelectionMode">Dates range</label>
           <select class="form-control" id="dateSelectionMode" (change)="onChangeDateSelectionMode(dateSelectionMode.value)" #dateSelectionMode>
-            <option value='WEEKLY'>Weekly</option>
-            <option value='BIWEEKLY'>Bi-Weekly</option>
-            <option value='MONTHLY'>Monthly</option>
+            <option value='WEEKLY' [selected]="dateSelector.dateSelectionMode === 0">Weekly</option>
+            <option value='BIWEEKLY' [selected]="dateSelector.dateSelectionMode === 1">Bi-Weekly</option>
+            <option value='MONTHLY' [selected]="dateSelector.dateSelectionMode === 2">Monthly</option>
           </select>
         </div>
         <button class="btn btn-light mb-2" (click)="onSelectPreviousPeriod()">
@@ -22,10 +22,6 @@
         <button class="btn btn-light mb-2" (click)="onSelectNextPeriod()">
           <fa-icon [icon]="faTwoRight"></fa-icon>
         </button>
-        <br>
-        <!-- <button class="btn btn-light" type="submit">
-          <fa-icon [icon]="faCheck"></fa-icon> Build report
-        </button> -->
       </div>
     </div>
   </form>
@@ -60,7 +56,8 @@
               [closeOnSelect]="false"
               bindValue="id"
               [placeholder]="'Filter tasks'"
-              [(ngModel)]="filterProjects">
+              [(ngModel)]="filterProjects"
+              (change)="onFilterProjectsSelected()">
               <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
                 <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
               </ng-template>
@@ -127,7 +124,7 @@
         [scheme]="scheme"
         [results]="reportType === 'hours' ? totalsData : totalsData.hours"
         [animations]="true"
-        [legend]="true"
+        [legend]="false"
         [legendPosition]="'below'"
         [explodeSlices]="false"
         [labels]="true"
@@ -146,7 +143,7 @@
         [scheme]="scheme"
         [results]="reportType === 'money' ? totalsData : totalsData.money"
         [animations]="true"
-        [legend]="true"
+        [legend]="false"
         [legendPosition]="'below'"
         [explodeSlices]="false"
         [labels]="true"

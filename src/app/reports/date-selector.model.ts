@@ -3,9 +3,9 @@ import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { DateRange } from './date-range/date-range.model';
 
 export enum DateSelectionMode {
-  MONTHLY,
   WEEKLY,
-  BIWEEKLY
+  BIWEEKLY,
+  MONTHLY
 }
 
 export class DateSelector {
