@@ -91,11 +91,6 @@ export class DateSelector {
     }
   }
 
-  private setLastWeek() {
-    const result = {fromDate: this.calendar.getPrev(this.calendar.getToday(), 'd', 6), toDate: this.calendar.getToday()};
-    this.currentSelectedDateRange = result;
-  }
-
   private setCurrentWeek() {
     const today = this.calendar.getToday();
     const todayWeekday = this.calendar.getWeekday(today);
@@ -122,11 +117,6 @@ export class DateSelector {
     const result = {fromDate: this.calendar.getNext(this.currentSelectedDateRange.fromDate, 'd', 7),
                     toDate: this.calendar.getNext(this.currentSelectedDateRange.toDate, 'd', 7)};
 
-    this.currentSelectedDateRange = result;
-  }
-
-  private setLastTwoWeeks() {
-    const result = {fromDate: this.calendar.getPrev(this.calendar.getToday(), 'd', 13), toDate: this.calendar.getToday()};
     this.currentSelectedDateRange = result;
   }
 

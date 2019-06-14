@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -26,7 +26,8 @@ import { ReportsComponent } from './reports.component';
     FontAwesomeModule
   ],
   providers: [
-    { provide: 'windowObject', useValue: window}
+    { provide: 'windowObject', useValue: window},
+    CurrencyPipe
   ]
 })
 export class ReportsModule { }

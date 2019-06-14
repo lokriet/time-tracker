@@ -4,23 +4,18 @@ import {
   Component,
   ContentChild,
   EventEmitter,
+  HostListener,
   Input,
-  OnInit,
   Output,
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
 import { BaseChartComponent, calculateViewDimensions, ColorHelper, ViewDimensions } from '@swimlane/ngx-charts';
 import { scaleBand, scaleLinear } from 'd3-scale';
-import { SimpleDate } from 'src/app/tasks/model/simple-date.model';
 
-interface DataEntry {
-  name: string;
-  series: {
-    name: string;
-    value: number;
-  }[];
-}
+import { DataEntry, formatHours } from '../reports-data.service';
+
+
 
 @Component({
   selector: 'app-combo-chart',
@@ -40,8 +35,7 @@ interface DataEntry {
     ])
   ]
 })
-export class ComboChartComponent extends BaseChartComponent implements OnInit {
-  @Input() legend = false;
+export class ComboChartComponent extends BaseChartComponent {
   @Input() legendTitle = 'Legend';
   @Input() legendPosition = 'bottom';
   @Input() xAxisLabel;
@@ -60,7 +54,7 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
   @Input() roundDomains = false;
   @Input() dataLabelFormatting: any;
   @Input() noBarWhenZero = true;
-  @Input() lineResults: any[];
+  @Input() lineResults: DataEntry[];
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() deactivate: EventEmitter<any> = new EventEmitter();
@@ -85,11 +79,7 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
   scaledResults: any[];
   scaledLineResults: any[];
   xSet: string[];
-
-  ngOnInit(): void {
-    
-  }
-
+  hoveredVertical: any; // the value of the x axis that is hovered over
 
   update(): void {
     super.update();
@@ -110,15 +100,14 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     );
 
 
-    let maxLineResult = (this.lineResults as DataEntry[])[0]
-                                                              .series.map(el => el.value)
-                                                              .reduce((max, seriesEl) => Math.max(max, seriesEl));
+    let maxLineResult = this.lineResults[0].series.map(el => el.value)
+                                                            .reduce((max, seriesEl) => Math.max(max, seriesEl));
 
     if (maxLineResult === 0) {
       maxLineResult = 1;
     }
 
-    this.scaledLineResults = (this.lineResults as DataEntry[]).map(el => { return { name: el.name, series:
+    this.scaledLineResults = this.lineResults.map(el => { return { name: el.name, series:
       el.series.map(seriesEl => {
         return { name: seriesEl.name, value: seriesEl.value / maxLineResult
       }; })
@@ -126,7 +115,7 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     );
 
     this.xSet = [];
-    for (let moneyEntry of (this.lineResults as DataEntry[])[0].series) {
+    for (let moneyEntry of this.lineResults[0].series) {
       this.xSet.push(moneyEntry.name);
     }
 
@@ -144,12 +133,10 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
       yAxisWidth: 0,
       showXLabel: true,
       showYLabel: false,
-      showLegend: this.legend,
+      showLegend: true,
       legendType: this.schemeType,
       legendPosition: this.legendPosition
     });
-
-    this.formatDates();
 
     this.groupDomain = this.getGroupDomain();
     this.innerDomain = this.getInnerDomain();
@@ -161,9 +148,9 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     this.setColors();
     this.legendOptions = this.getLegendOptions();
 
-    this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] + this.dataLabelMaxHeight.negative})`;
-    this.halfBarTransform = `translate(${ this.dims.xOffset + Math.round(this.xScale.bandwidth() / 2) } ,
-                                       ${ this.margin[0] + this.dataLabelMaxHeight.negative})`;
+    this.transform = `translate(${ this.dims.xOffset } , ${ this.margin[0] + this.dataLabelMaxHeight.negative })`;
+    this.halfBarTransform = `translate(${ this.dims.xOffset + Math.round(this.xScale.bandwidth() / 2) },
+                                       ${ this.margin[0] + this.dataLabelMaxHeight.negative })`;
   }
 
   getGroupDomain() {
@@ -303,43 +290,20 @@ export class ComboChartComponent extends BaseChartComponent implements OnInit {
     this.deactivate.emit({ value: item, entries: this.activeEntries });
   }
 
-
-  /**
-   * Converts all date objects that appear as name
-   * into formatted date strings
-   */
-  formatDates(): void {
-    for (let g of this.results) {
-      if (g.name instanceof SimpleDate) {
-        const date = g.name as SimpleDate;
-        g.name = date.day + '/' + date.month + '/' + date.year;
-      }
-
-      if (g.series) {
-        for (let d of g.series) {
-          if (d.name instanceof Date) {
-            const date = d.name as SimpleDate;
-            d.name = date.day + '/' + date.month + '/' + date.year;
-          }
-        }
-      }
-    }
-
-    for (let g of this.lineResults) {
-      if (g.name instanceof SimpleDate) {
-        const date = g.name as SimpleDate;
-        g.name = date.day + '/' + date.month + '/' + date.year;
-      }
-
-      if (g.series) {
-        for (let d of g.series) {
-          if (d.name instanceof Date) {
-            const date = d.name as SimpleDate;
-            d.name = date.day + '/' + date.month + '/' + date.year;
-          }
-        }
-      }
-    }
+  updateHoveredVertical(item): void {
+    this.hoveredVertical = item.value;
   }
 
+  @HostListener('mouseleave')
+  hideCircles(): void {
+    this.hoveredVertical = null;
+  }
+
+  formatHours(item) {
+    return formatHours(item);
+  }
+
+  getHoveredBars(): any[] {
+    return (this.results as DataEntry[]).find((result => result.name === this.hoveredVertical)).series;
+  }
 }

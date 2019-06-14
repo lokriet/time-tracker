@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { faBackward, faCheck, faCircle, faForward } from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
@@ -7,7 +8,7 @@ import { auditTime, map } from 'rxjs/operators';
 
 import { DateRange } from './date-range/date-range.model';
 import { DateSelectionMode, DateSelector } from './date-selector.model';
-import { ReportsDataService } from './reports-data.service';
+import { formatHours, ReportsDataService } from './reports-data.service';
 
 @Component({
   selector: 'app-reports',
@@ -23,6 +24,7 @@ export class ReportsComponent implements OnInit {
   reportType = 'hours';
 
   data: any;
+  totalsData: any;
   scheme: any;
 
   dates: DateRange;
@@ -31,9 +33,13 @@ export class ReportsComponent implements OnInit {
   windowWidth: number;
   graphWidth: number;
 
+  hoursPieTooltipText = this.formatHoursPieLabel.bind(this);
+  moneyPieTooltipText = this.formatMoneyPieLabel.bind(this);
+
   constructor(private reportsDataService: ReportsDataService,
               private calendar: NgbCalendar,
-              @Inject('windowObject') private window: Window) { }
+              @Inject('windowObject') private window: Window,
+              private currencyPipe: CurrencyPipe) { }
 
   ngOnInit() {
     this.scheme = colorSets.find(s => s.name === 'vivid');
@@ -49,25 +55,36 @@ export class ReportsComponent implements OnInit {
         this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
     });
 
-    this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
+    this.data = this.reportsDataService.getHoursBarReportData(this.dates.fromDate, this.dates.toDate, null);
+    this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
   }
 
   onBuildReport() {
     switch (this.reportType) {
       case 'hours':
-        this.data = this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate);
+        this.data = this.reportsDataService.getHoursBarReportData(this.dates.fromDate, this.dates.toDate, null);
+        this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
+        this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
         break;
       case 'money':
-        this.data = this.reportsDataService.getMoneyReportData(this.dates.fromDate, this.dates.toDate);
+        this.data = this.reportsDataService.getMoneyBarReportData(this.dates.fromDate, this.dates.toDate, null);
+        this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
+        this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
         break;
       case 'combined':
         this.data = {
-          hours: this.reportsDataService.getHoursReportData(this.dates.fromDate, this.dates.toDate),
-          money: this.reportsDataService.getMoneyLineReportData(this.dates.fromDate, this.dates.toDate)
+          hours: this.reportsDataService.getHoursBarReportData(this.dates.fromDate, this.dates.toDate, null),
+          money: this.reportsDataService.getMoneyLineReportData(this.dates.fromDate, this.dates.toDate, null)
+        };
+        this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.hours.length * 25 + 20));
+        this.totalsData = {
+          hours: this.reportsDataService.getBarReportDataTotals(this.data.hours),
+          money: this.reportsDataService.getBarReportDataTotals(
+                                            this.reportsDataService.getMoneyBarReportData(this.dates.fromDate, this.dates.toDate, null)
+                                         )
         };
         break;
     }
-    this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
   }
 
   onChangeDateSelectionMode(value: string) {
@@ -105,24 +122,30 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  formatHours(hours: number): string {
-    const hoursNo = Math.floor(hours);
-    const minutesNo = Math.round((hours - hoursNo) * 60);
-    let result = '';
-    if (hoursNo > 0) {
-      result = hoursNo + 'h';
-      if (minutesNo > 0) {
-        result += ' ';
-      }
-    }
-    if (minutesNo > 0) {
-      result += minutesNo + 'm';
-    }
-    if (result === '') {
-      result = '0';
-    }
-    return result;
+  formatHours(hours: number) {
+    return formatHours(hours);
   }
+
+  formatMoney(amount: number) {
+    return this.currencyPipe.transform(amount);
+  }
+
+  formatHoursPieLabel({ data }) {
+    const value = this.formatHours(data.value);
+    return `
+      <span class="tooltip-label">${data.name}</span>
+      <span class="tooltip-val">${value}</span>
+    `;
+  }
+
+  formatMoneyPieLabel({ data }) {
+    const value = this.formatMoney(data.value);
+    return `
+      <span class="tooltip-label">${data.name}</span>
+      <span class="tooltip-val">${value}</span>
+    `;
+  }
+
 
 }
 

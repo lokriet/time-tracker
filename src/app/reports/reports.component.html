@@ -63,12 +63,10 @@
       <ng-template #tooltipTemplate let-model="model">
         <div class="p-1">
           <p>{{model.name}}:</p>
-          <p>{{reportType === 'hours' ? formatHours(model.value) : (model.value | currency)}}</p>
+          <p>{{reportType === 'hours' ? formatHours(model.value) : formatMoney(model.value)}}</p>
         </div>
         </ng-template>
       </ngx-charts-bar-vertical-stacked>
-      
-
 
       <app-combo-chart
         *ngIf="reportType === 'combined'"
@@ -80,6 +78,49 @@
         [legendPosition]="'below'"
       >
       </app-combo-chart>
+    </div>
+  </div>
+
+
+  <h2 class="mt-3">Totals</h2>
+  <div class="d-flex flex-wrap mb-3">
+    <div>
+      <ngx-charts-pie-chart
+        *ngIf="reportType === 'hours' || reportType === 'combined'"
+        [view]="[450, 350]"
+        class="chart-container"
+        [view]="view"
+        [scheme]="scheme"
+        [results]="reportType === 'hours' ? totalsData : totalsData.hours"
+        [animations]="true"
+        [legend]="true"
+        [legendPosition]="'below'"
+        [explodeSlices]="false"
+        [labels]="true"
+        [doughnut]="true"
+        [arcWidth]="1"
+        [tooltipText]="hoursPieTooltipText"
+      >
+      </ngx-charts-pie-chart>
+    </div>
+    <div>
+      <ngx-charts-pie-chart
+        *ngIf="reportType === 'money' || reportType === 'combined'"
+        [view]="[450, 350]"
+        class="chart-container"
+        [view]="view"
+        [scheme]="scheme"
+        [results]="reportType === 'money' ? totalsData : totalsData.money"
+        [animations]="true"
+        [legend]="true"
+        [legendPosition]="'below'"
+        [explodeSlices]="false"
+        [labels]="true"
+        [doughnut]="true"
+        [arcWidth]="1"
+        [tooltipText]="moneyPieTooltipText"
+      >
+      </ngx-charts-pie-chart>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <ngx-charts-chart
   [view]="[width, height]"
-  [showLegend]="legend"
+  [showLegend]="true"
   [legendOptions]="legendOptions"
   [activeEntries]="activeEntries"
   [animations]="animations"
@@ -52,6 +52,8 @@
       [results]="lineResults"
       [colors]="colors"
       [tooltipDisabled]="false"
+      [tooltipTemplate]="tooltipTemplate"
+      (hover)="updateHoveredVertical($event)"
     />
 
     <svg:g *ngFor="let series of scaledLineResults">
@@ -63,5 +65,46 @@
         [dims]="dims"
       />
     </svg:g>
+
+    <svg:g *ngFor="let series of scaledLineResults">
+      <svg:g
+        ngx-charts-circle-series
+        [xScale]="xScale"
+        [yScale]="yScale"
+        [colors]="colors"
+        [data]="series"
+        [scaleType]="schemeType"
+        [visibleValue]="hoveredVertical"
+        [activeEntries]="activeEntries"
+        [tooltipDisabled]="false"
+        [tooltipTemplate]="tooltipTemplate"
+        (select)="onClick($event, series)"
+        (activate)="onActivate($event)"
+        (deactivate)="onDeactivate($event)"
+      />
+    </svg:g>
   </svg:g>
+  
+  <ng-template #tooltipTemplate let-model="model">
+    <div class="area-tooltip-container">
+      <div
+        *ngFor="let tooltipItem of model"
+        class="tooltip-item">
+        <span
+          class="tooltip-item-color"
+          [style.background-color]="tooltipItem.color">
+        </span>
+        {{ tooltipItem.series }}: {{ tooltipItem.value | currency }}
+      </div>
+      <div class="tooltip-item">Hours spent</div>
+      <div *ngFor="let taskTooltipItem of getHoveredBars()" class="tooltip-item">
+        <span
+          class="tooltip-item-color"
+          [style.background-color]="colors.getColor(taskTooltipItem.name)">
+        </span>
+        {{ taskTooltipItem.name }}: {{ formatHours(taskTooltipItem.value) }}
+      </div>
+    </div>
+  </ng-template>
+  
 </ngx-charts-chart>
