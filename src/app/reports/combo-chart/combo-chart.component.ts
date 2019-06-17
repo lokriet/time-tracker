@@ -1,11 +1,14 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
+  NgZone,
   Output,
   TemplateRef,
   ViewEncapsulation,
@@ -13,7 +16,7 @@ import {
 import { BaseChartComponent, calculateViewDimensions, ColorHelper, ViewDimensions } from '@swimlane/ngx-charts';
 import { scaleBand, scaleLinear } from 'd3-scale';
 
-import { DataEntry, formatHours } from '../reports-data.service';
+import { DataEntry, formatHours, ReportsDataService } from '../reports-data.service';
 
 
 
@@ -60,6 +63,13 @@ export class ComboChartComponent extends BaseChartComponent {
   @Output() deactivate: EventEmitter<any> = new EventEmitter();
 
   @ContentChild('tooltipTemplate', {static: true}) tooltipTemplate: TemplateRef<any>;
+
+  constructor(protected chartElement: ElementRef,
+              protected zone: NgZone,
+              protected cd: ChangeDetectorRef,
+              private reportsDataService: ReportsDataService) {
+    super(chartElement, zone, cd);
+  }
 
   dims: ViewDimensions;
   groupDomain: any[];
@@ -305,5 +315,9 @@ export class ComboChartComponent extends BaseChartComponent {
 
   getHoveredBars(): any[] {
     return (this.results as DataEntry[]).find((result => result.name === this.hoveredVertical)).series;
+  }
+
+  formatDate(dateString: string): string {
+    return this.reportsDataService.formatDate(dateString);
   }
 }

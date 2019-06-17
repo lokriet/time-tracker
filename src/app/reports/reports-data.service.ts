@@ -37,6 +37,8 @@ export function formatHours(hours: number): string {
   return result;
 }
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -289,5 +291,16 @@ export class ReportsDataService {
       return task.project.projectName;
     }
     return 'no project';
+  }
+
+ formatDate(dateString: string): string {
+    const datePattern = /^(\d+)\/(\d+)\/(\d+)$/gi;
+  
+    const [_, year, month, day] = datePattern.exec(dateString); 
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  
+    const date = new NgbDate(+year, +month, +day);
+    return months[date.month - 1] + ' ' + date.day + ', ' + weekdays[this.calendar.getWeekday(date) - 1];
   }
 }

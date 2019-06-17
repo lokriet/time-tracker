@@ -194,4 +194,8 @@ export class ReportsComponent implements OnInit {
       <span class="tooltip-val">${value}</span>
     `;
   }
+
+  formatDate(dateString: string) {
+    return this.reportsDataService.formatDate(dateString);
+  }
 }

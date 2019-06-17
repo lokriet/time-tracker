@@ -92,9 +92,9 @@
         [legendPosition]="'below'"
       >
       <ng-template #tooltipTemplate let-model="model">
-        <div class="p-1">
-          <p>{{model.name}}:</p>
-          <p>{{reportType === 'hours' ? formatHours(model.value) : formatMoney(model.value)}}</p>
+        <div class="area-tooltip-container">
+          <div class="tooltip-item">{{ formatDate(model.series) }}</div>
+          <div class="tooltip-item">{{ model.name }} • {{ reportType === 'hours' ? formatHours(model.value) : formatMoney(model.value) }}</div>
         </div>
         </ng-template>
       </ngx-charts-bar-vertical-stacked>
