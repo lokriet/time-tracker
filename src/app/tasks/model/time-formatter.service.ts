@@ -4,22 +4,27 @@ import { Time } from './time.model';
 
 
 export function formatLength(lengthInMillis: number) {
-  const minutesLength = lengthInMillis / (1000 * 60);
+  const secondsLength = Math.floor(lengthInMillis / 1000);
+  const resultSeconds = secondsLength % 60;
+
+  const minutesLength = Math.floor(secondsLength / 60);
   const resultMinutes = minutesLength % 60;
-  const resultHours = Math.round((minutesLength - resultMinutes) / 60);
+  const resultHours = (minutesLength - resultMinutes) / 60;
 
   let result = '';
   if (resultHours > 0) {
     result += `${resultHours}h`;
   }
-  if (resultHours !== 0 && resultMinutes !== 0) {
-    result += ' ';
-  }
-  if (resultMinutes > 0 || resultHours === 0) {
-    result += `${resultMinutes}min`;
+
+  if (resultMinutes > 0 || (resultHours === 0 && resultSeconds === 0)) {
+    result += ` ${resultMinutes}min`;
   }
 
-  return result;
+  if (resultSeconds > 0) {
+    result += ` ${resultSeconds}sec`;
+  }
+
+  return result.trim();
 }
 
 export function formatBreakLength(taskBreak: TimeRange) {

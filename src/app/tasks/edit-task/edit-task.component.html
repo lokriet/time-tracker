@@ -3,6 +3,17 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="form-inline">
+          
+          <button *ngIf="!tickingMode || isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPlayTickingTask()">
+            <fa-icon [icon]="faPlay"></fa-icon>
+          </button>
+          <button *ngIf="tickingMode && !isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPauseTickingTask()">
+            <fa-icon [icon]="faPause"></fa-icon>
+          </button>
+          <button *ngIf="tickingMode" class="btn btn-light mb-3 mr-2" type="button" (click)="onStopTickingTask()">
+            <fa-icon [icon]="faStop"></fa-icon>
+          </button>
+
           <input type="text" class="form-control mr-3 mb-3"
                  formControlName="description">
           <div class="mb-3">

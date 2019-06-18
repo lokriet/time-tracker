@@ -257,9 +257,9 @@ export class ReportsDataService {
     }
 
     const results = [];
-    for (let name of totalsMap.keys()) {
-      results.push({name, value: totalsMap.get(name)});
-    }
+    totalsMap.forEach((totalsValue: number, totalsName: string) => {
+      results.push({name: totalsName, value: totalsValue});
+    });
     return results;
   }
 

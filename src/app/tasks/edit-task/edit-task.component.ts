@@ -9,6 +9,9 @@ import {
   faCheck,
   faHeart as faFullHeart,
   faMugHot,
+  faPause,
+  faPlay,
+  faStop,
   faSyncAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
@@ -40,9 +43,17 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   faReload = faSyncAlt;
   faEmptyHeart = faHeart;
   faFullHeart = faFullHeart;
+  faPlay = faPlay;
+  faPause = faPause;
+  faStop = faStop;
 
   taskForm: FormGroup;
   editMode = false;
+
+  tickingMode = false;
+  isPaused = false;
+  taskTickerId: any = null;
+
   errorMessages: string[] = [];
 
   projects$: Observable<Project[]>;
@@ -78,6 +89,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   }
 
   private clearState() {
+    this.onStopTickingTask();
     this.tasksStore.setActive(null);
     this.initForm(null);
   }
@@ -174,9 +186,60 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     } else {
       this.clearState();
     }
+    this.tickingMode = false;
+    this.isPaused = false;
+  }
+
+  onPlayTickingTask() {
+    if (!this.tickingMode) {
+      // start ticking
+      this.tickingMode = true;
+      (this.taskForm.get('breaks') as FormArray).clear();
+      this.taskForm.get('workDate').setValue(this.calendar.getToday());
+
+      const startTime = new Date();
+      startTime.setSeconds(0, 0);
+      let endTime = new Date(startTime.getTime() + 1000);
+      this.taskForm.get('workHours').setValue(TimeRange.fromDates(startTime, endTime));
+
+      this.taskTickerId = setInterval(() => {
+        endTime = new Date(endTime.getTime() + 1000);
+        this.taskForm.get('workHours').setValue(TimeRange.fromDates(startTime, endTime));
+
+        if (this.isPaused) {
+          const lastIndex = (this.taskForm.get('breaks') as FormArray).length - 1;
+          const lastBreakControl = (this.taskForm.get('breaks') as FormArray).controls[lastIndex];
+          const startBreakTime = (lastBreakControl.value as TimeRange).startTime.date;
+          const endBreakTime = new Date((lastBreakControl.value as TimeRange).endTime.date.getTime() + 1000);
+          lastBreakControl.setValue(TimeRange.fromDates(startBreakTime, endBreakTime));
+        }
+      }, 1000);
+    } else {
+      // resume after break
+      this.isPaused = false;
+    }
+  }
+
+  onPauseTickingTask() {
+    const startBreakTime = new Date();
+    startBreakTime.setSeconds(0, 0);
+    const endBreakTime = new Date(startBreakTime.getTime());
+
+    (this.taskForm.get('breaks') as FormArray).push(
+      new FormControl(TimeRange.fromDates(startBreakTime, endBreakTime), Validators.required)
+    );
+
+    this.isPaused = true;
+  }
+
+  onStopTickingTask() {
+    this.tickingMode = false;
+    this.isPaused = false;
+    clearInterval(this.taskTickerId);
   }
 
   ngOnDestroy(): void {
     this.tasksStore.setActive(null);
+    this.onStopTickingTask();
   }
 }

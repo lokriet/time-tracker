@@ -1,7 +1,6 @@
-import { ValidatorFn, FormGroup, ValidationErrors, FormArray } from "@angular/forms";
-
-import { Time } from 'src/app/tasks/model/time.model';
+import { FormArray, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { TimeRange } from 'src/app/tasks/model/time-range.model';
+import { Time } from 'src/app/tasks/model/time.model';
 
 export const timeRangesValidator: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
   const workHours: TimeRange = control.get('workHours').value;
@@ -29,5 +28,5 @@ export const timeRangesValidator: ValidatorFn = (control: FormGroup): Validation
 };
 
 function isInRange(time: Time, timeRange: TimeRange):boolean {
-  return (time.date.getTime() > timeRange.startTime.date.getTime()) && (time.date.getTime() < timeRange.endTime.date.getTime());
+  return (time.date.getTime() >= timeRange.startTime.date.getTime()) && (time.date.getTime() <= timeRange.endTime.date.getTime());
 }

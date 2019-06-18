@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <form #f="ngForm" (ngSubmit)="onLogIn()" *ngIf="!alreadyLoggedIn">
+      <form #f="ngForm" (ngSubmit)="onLogIn()" *ngIf="!(isLoggedIn | async)">
         <input type="text" name="email" id="email" class="form-control mb-2" placeholder="E-mail" [(ngModel)]="email" autocomplete="username" required>
         <input type="password" name="password" id="password" class="form-control mb-2" placeholder="Password" [(ngModel)]="password" autocomplete="current-password" password>
         <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Log In</button>
       </form>
-      <div class="text-secondary" *ngIf="alreadyLoggedIn">You are already logged in</div>
+      <div class="text-secondary" *ngIf="(isLoggedIn | async)">You are already logged in</div>
     </div>
   </div>
 </div>
