@@ -39,7 +39,7 @@ export class TimeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    for (let propName in changes) {
+    for (const propName in changes) {
       if (propName === 'startTime') {
         if (this.startTime) {
           this.generateTimeOptions();
@@ -74,6 +74,8 @@ export class TimeComponent implements OnInit, OnChanges {
 
   onKeyPressed(event: KeyboardEvent) {
     if (event.keyCode === 13) { // enter
+      event.stopPropagation();
+
       this.checkAndReplaceInputFormat();
       const input = event.target as HTMLInputElement;
       this.onTimeSelected(input.value);

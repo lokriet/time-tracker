@@ -3,20 +3,21 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="form-inline">
-          
-          <button *ngIf="!tickingMode || isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPlayTickingTask()">
-            <fa-icon [icon]="faPlay"></fa-icon>
-          </button>
-          <button *ngIf="tickingMode && !isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPauseTickingTask()">
-            <fa-icon [icon]="faPause"></fa-icon>
-          </button>
-          <button *ngIf="tickingMode" class="btn btn-light mb-3 mr-2" type="button" (click)="onStopTickingTask()">
-            <fa-icon [icon]="faStop"></fa-icon>
-          </button>
+          <ng-container *ngIf="!editMode">
+            <button *ngIf="!tickingMode || isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPlayTickingTask()">
+              <fa-icon [icon]="faPlay"></fa-icon>
+            </button>
+            <button *ngIf="tickingMode && !isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPauseTickingTask()">
+              <fa-icon [icon]="faPause"></fa-icon>
+            </button>
+            <button *ngIf="tickingMode" class="btn btn-light mb-3 mr-2" type="button" (click)="onStopTickingTask()">
+              <fa-icon [icon]="faStop"></fa-icon>
+            </button>
+          </ng-container>
 
-          <input type="text" class="form-control mr-3 mb-3"
+          <input type="text" class="form-control mr-2 mb-3"
                  formControlName="description">
-          <div class="mb-3">
+          <div class="mb-3 mr-2">
             <ng-select [items]="projects$ | async"
                        bindLabel="projectName"
                        formControlName="project"
@@ -30,7 +31,7 @@
               </ng-template>
             </ng-select>
           </div>
-          <div class="input-group mx-3 mb-3">
+          <div class="input-group mr-2 mb-3">
               <input 
               class="form-control calendar" 
               placeholder="yyyy-mm-dd"
@@ -45,12 +46,12 @@
               </button>
             </div>
           </div>
-          <div class="input-group mb-3">
+          <div class="input-group mb-3 mr-1">
             <app-time-range 
               [id]="'work'" 
               formControlName="workHours"></app-time-range>
           </div>
-          <span class="text-muted mx-1 mb-3">{{ formatTaskLength() }}</span>
+          <span class="text-muted mr-2 mb-3">{{ formatTaskLength() }}</span>
           <button class="btn btn-light mr-1 mb-3" type="submit" [disabled]="!taskForm.valid">
             <fa-icon [icon]="faCheck"></fa-icon>
           </button>

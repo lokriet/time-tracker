@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
+import { ComponentCanDeactivate } from 'src/app/can-deactivate.component';
 
 import { AuthService } from '../../auth/store/auth.service';
 import { Project } from '../../projects/project.model';
@@ -28,12 +29,13 @@ import { TasksStore } from '../../tasks/store/tasks.store';
 import { TasksService } from '../store/tasks.service';
 import { timeRangesValidator } from './edit-task.validators';
 
+
 @Component({
   selector: 'app-edit-task',
   templateUrl: './edit-task.component.html',
   styleUrls: ['./edit-task.component.css']
 })
-export class EditTaskComponent implements OnInit, OnDestroy {
+export class EditTaskComponent extends ComponentCanDeactivate implements OnInit, OnDestroy {
   faCalendar = faCalendarAlt;
   faCoffee = faMugHot;
   faRightArrow = faAngleDoubleRight;
@@ -52,6 +54,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
   tickingMode = false;
   isPaused = false;
+  tickingBreakIndex: number = null;
   taskTickerId: any = null;
 
   errorMessages: string[] = [];
@@ -65,19 +68,20 @@ export class EditTaskComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               private authService: AuthService,
-              private projectsService: ProjectsService) { }
+              private projectsService: ProjectsService) {
+    super();
+  }
+
+  canDeactivate(): boolean {
+    return (this.editMode || !this.tickingMode);
+  }
 
   ngOnInit() {
-    console.log('initializing edit task component...');
     this.route.params.subscribe(
       (params: Params) => {
-        console.log('edit task page route param updated, processing...');
         this.tasksStore.setActive(params.id);
         const task = this.tasksQuery.getActive();
-        // const task = this.tasksQuery.getEntity(params.id);
-        console.log(`looking for a task ${params.id} in store... full count: ${this.tasksQuery.getCount()}`);
         if (params.id != null && !task) {
-          // task not found
           this.router.navigate(['/404']);
         }
 
@@ -88,13 +92,14 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid(), 'isFavorite', Order.DESC);
   }
 
-  private clearState() {
+
+  clearState() {
     this.onStopTickingTask();
     this.tasksStore.setActive(null);
     this.initForm(null);
   }
 
-  private initForm(task: Task) {
+  initForm(task: Task) {
     let description = '';
     let project = null;
     let workDate = null;
@@ -109,11 +114,11 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       let taskBreaks: TimeRange[];
       ({id, ownerId, description, project, workDate, workHours, breaks: taskBreaks} = task);
       if (taskBreaks) {
-        for (let taskBreak of taskBreaks) {
+        for (const taskBreak of taskBreaks) {
           breaks.push(new FormControl(taskBreak, Validators.required));
         }
       }
-    } 
+    }
 
     this.taskForm = new FormGroup({
       id: new FormControl(id),
@@ -131,7 +136,7 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     if (this.taskForm.value.workHours) {
       let taskLengthInMillis = getTimeRangeLength(this.taskForm.value.workHours);
       if (this.taskForm.value.breaks) {
-        for (let taskBreak of this.taskForm.value.breaks) {
+        for (const taskBreak of this.taskForm.value.breaks) {
           if (taskBreak) {
             taskLengthInMillis -= getTimeRangeLength(taskBreak);
           }
@@ -165,6 +170,12 @@ export class EditTaskComponent implements OnInit, OnDestroy {
 
   onRemoveBreak(i: number) {
     (this.taskForm.get('breaks') as FormArray).removeAt(i);
+
+    if (i < this.tickingBreakIndex) {
+      this.tickingBreakIndex--;
+    } else if (i === this.tickingBreakIndex) {
+      this.onPlayTickingTask(); // 'stop ticking break'
+    }
   }
 
   onSubmit() {
@@ -180,14 +191,13 @@ export class EditTaskComponent implements OnInit, OnDestroy {
   }
 
   onClearForm() {
-    if (this.editMode) {
-      this.clearState();
+    const needToNavigateAway = this.editMode;
+
+    this.clearState();
+
+    if (needToNavigateAway) {
       this.router.navigate(['tasks']);
-    } else {
-      this.clearState();
     }
-    this.tickingMode = false;
-    this.isPaused = false;
   }
 
   onPlayTickingTask() {
@@ -198,31 +208,37 @@ export class EditTaskComponent implements OnInit, OnDestroy {
       this.taskForm.get('workDate').setValue(this.calendar.getToday());
 
       const startTime = new Date();
-      startTime.setSeconds(0, 0);
-      let endTime = new Date(startTime.getTime() + 1000);
+      startTime.setSeconds(startTime.getSeconds(), 0);
+      const endTime = new Date(startTime.getTime() + 1000);
       this.taskForm.get('workHours').setValue(TimeRange.fromDates(startTime, endTime));
 
       this.taskTickerId = setInterval(() => {
-        endTime = new Date(endTime.getTime() + 1000);
-        this.taskForm.get('workHours').setValue(TimeRange.fromDates(startTime, endTime));
-
-        if (this.isPaused) {
-          const lastIndex = (this.taskForm.get('breaks') as FormArray).length - 1;
-          const lastBreakControl = (this.taskForm.get('breaks') as FormArray).controls[lastIndex];
-          const startBreakTime = (lastBreakControl.value as TimeRange).startTime.date;
-          const endBreakTime = new Date((lastBreakControl.value as TimeRange).endTime.date.getTime() + 1000);
-          lastBreakControl.setValue(TimeRange.fromDates(startBreakTime, endBreakTime));
-        }
+        this.processTick();
       }, 1000);
     } else {
       // resume after break
       this.isPaused = false;
+      this.tickingBreakIndex = null;
+    }
+  }
+
+  processTick() {
+    const startTime = (this.taskForm.get('workHours').value as TimeRange).startTime.date;
+    let endTime = new Date();
+    endTime.setSeconds(endTime.getSeconds(), 0);
+    endTime = new Date(endTime.getTime() + 1000);
+    this.taskForm.get('workHours').setValue(TimeRange.fromDates(startTime, endTime));
+
+    if (this.isPaused) {
+      const tickingBreakControl = (this.taskForm.get('breaks') as FormArray).controls[this.tickingBreakIndex];
+      const startBreakTime = (tickingBreakControl.value as TimeRange).startTime.date;
+      tickingBreakControl.setValue(TimeRange.fromDates(startBreakTime, endTime));
     }
   }
 
   onPauseTickingTask() {
     const startBreakTime = new Date();
-    startBreakTime.setSeconds(0, 0);
+    startBreakTime.setSeconds(startBreakTime.getSeconds(), 0);
     const endBreakTime = new Date(startBreakTime.getTime());
 
     (this.taskForm.get('breaks') as FormArray).push(
@@ -230,16 +246,18 @@ export class EditTaskComponent implements OnInit, OnDestroy {
     );
 
     this.isPaused = true;
+    this.tickingBreakIndex = (this.taskForm.get('breaks') as FormArray).length - 1;
   }
 
   onStopTickingTask() {
     this.tickingMode = false;
     this.isPaused = false;
+    this.tickingBreakIndex = null;
     clearInterval(this.taskTickerId);
   }
 
   ngOnDestroy(): void {
     this.tasksStore.setActive(null);
-    this.onStopTickingTask();
+    clearInterval(this.taskTickerId);
   }
 }

@@ -12,7 +12,12 @@ export class TimeRange {
   static fromDates(startTimeDate: Date, endTimeDate: Date) {
     const startTime = Time.fromDate(startTimeDate);
     const endTime = Time.fromDate(endTimeDate);
-    const isOvernight = startTime.date.getDay() < endTime.date.getDay();
+
+    let isOvernight = false;
+    if (startTime.date.getTime() > endTime.date.getTime()) {
+      isOvernight = true;
+      endTime.date.setDate(endTime.date.getDate() + 1);
+    }
 
     return new TimeRange(startTime, endTime, isOvernight);
   }
