@@ -33,7 +33,7 @@ export function compareTasks(a: Task, b: Task): number {
   }
 
   if (a.workHours.startTime.date.getTime() !== b.workHours.startTime.date.getTime()) {
-    return b.workHours.startTime.date.getTime() - a.workHours.startTime.date.getTime();
+    return a.workHours.startTime.date.getTime() - b.workHours.startTime.date.getTime();
   }
 
   return 0;
