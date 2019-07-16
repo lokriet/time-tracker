@@ -33,7 +33,7 @@ import { timeRangesValidator } from './edit-task.validators';
 @Component({
   selector: 'app-edit-task',
   templateUrl: './edit-task.component.html',
-  styleUrls: ['./edit-task.component.css']
+  styleUrls: ['./edit-task.component.scss']
 })
 export class EditTaskComponent extends ComponentCanDeactivate implements OnInit, OnDestroy {
   faCalendar = faCalendarAlt;

@@ -23,7 +23,7 @@ import { DataEntry, formatHours, ReportsDataService } from '../reports-data.serv
 @Component({
   selector: 'app-combo-chart',
   templateUrl: './combo-chart.component.html',
-  styleUrls: ['./combo-chart.component.css'],
+  styleUrls: ['./combo-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [

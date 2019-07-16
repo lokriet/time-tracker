@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found.component';
+import { ProfileComponent } from './profile/profile.component';
 import { ReportsComponent } from './reports/reports.component';
 import { TasksResolverService } from './tasks/tasks-resolver.service';
 
@@ -19,6 +20,7 @@ const routes: Routes = [
     path: 'projects',
     loadChildren: () => import('./projects/projects.module').then(mod => mod.ProjectsModule),
   },
+  { path: 'profile', canActivate: [ AuthGuard ], component: ProfileComponent },
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

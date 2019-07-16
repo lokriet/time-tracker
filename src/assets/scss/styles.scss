@@ -1,0 +1,27 @@
+@import "./partials/colors";
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One|Quicksand&display=swap');
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  background-color: $background-color;
+  font-family: 'Quicksand', Arial, sans-serif;
+}
+
+
+.btn:focus,
+.btn.focus,
+.btn:active,
+input[type="checkbox"]:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.favorite {
+  color: darkred;
+}

@@ -16,7 +16,7 @@ import { TasksUI } from '../../store/tasks.store';
 @Component({
   selector: 'app-task-row',
   templateUrl: './task-row.component.html',
-  styleUrls: ['./task-row.component.css'],
+  styleUrls: ['./task-row.component.scss'],
   animations: [
     // Each unique animation requires its own trigger. The first argument of the trigger function is the name
     trigger('rotatedState', [

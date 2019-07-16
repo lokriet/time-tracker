@@ -21,13 +21,17 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { ProjectsModule } from './projects/projects.module';
 import { ReportsModule } from './reports/reports.module';
 import { TasksModule } from './tasks/tasks.module';
+import { FooterComponent } from './footer/footer.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    MessagesComponent
+    MessagesComponent,
+    FooterComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

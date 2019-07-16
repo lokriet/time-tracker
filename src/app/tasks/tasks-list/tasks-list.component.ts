@@ -8,7 +8,7 @@ import { compareTasks, TasksQuery } from '../store/tasks.query';
 @Component({
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
-  styleUrls: ['./tasks-list.component.css']
+  styleUrls: ['./tasks-list.component.scss']
 })
 export class TasksListComponent implements OnInit {
   tasks$: Observable<Task[]>;

@@ -1,0 +1,18 @@
+@import "../assets/scss/partials/variables";
+
+.main {
+  display: grid;
+  height: 100%;
+  grid-template-rows: $header-height auto $footer-height;
+  grid-template-areas: "."
+                       "main"
+                       "footer"
+}
+
+main {
+  grid-area: main;
+}
+
+footer {
+  grid-area: footer;
+}

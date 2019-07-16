@@ -19,7 +19,7 @@ import { ReportsStore } from './store/reports.store';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.css']
+  styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent implements OnInit {
   faCheck = faCheck;

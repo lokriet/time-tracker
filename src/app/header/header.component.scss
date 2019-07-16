@@ -1,0 +1,150 @@
+@import "../../assets/scss/partials/colors";
+@import "../../assets/scss/partials/variables";
+@import "../../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $header-height;
+  background-color: $main-color;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  z-index: 100;
+}
+
+.align-baseline {
+  display: flex;
+  align-items: baseline;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.navbar-brand {
+  height: 2rem;
+  text-decoration: none;
+  margin-right: 0.5rem;
+
+  p {
+    font-family: 'Fredoka One', Arial, sans-serif;
+    letter-spacing: 0.07rem;
+    font-size: 1.5rem;
+    margin: 0;
+    color: white;
+  }
+
+  img {
+    height: 100%;
+  }
+}
+
+.align-baseline .navbar-brand {
+  @media(max-width: 40rem) {
+    flex-grow: 1;
+  }
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+
+  @media(max-width: 40rem) {
+    background-color: $main-color;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-around;
+    opacity: 0.7;
+    display: none;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    top: $header-height;
+    right: 0;
+    z-index: 100;
+    transition: height 400ms;
+
+    &.show {
+      display: flex;
+    }
+
+    &.nav-open {
+      height: 14rem;
+    }
+  }
+}
+
+.navbar-nav-group {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  @media(min-width: 40rem) {
+    flex-direction: row;
+    height: 100%;
+    width: unset;
+  }
+}
+
+.nav-item {
+  margin: 0;
+  height: 100%;
+  padding: 1.5rem 0.5rem 0 0.5rem;
+
+  @media(max-width: 40rem) {
+    align-self: flex-end;
+    padding: 0.5rem 1.5rem;
+    height: unset;
+    width: 100%;
+    text-align: right;
+  }
+
+  &:hover,
+  &.active {
+    background-color: lighten($main-color, 10%);
+  }
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-main {
+  @media(min-width: 40rem) {
+    flex-grow: 1;
+  }
+}
+
+.nav-toggle-button {
+  @media(min-width: 40rem) {
+    display: none;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  z-index: 99;
+  background-color: lighten($main-color, 30%);
+  opacity: 0.9;
+
+  @media(min-width: 40rem) {
+    display: none;
+  }
+}
+
+.backdrop-closed {
+  display: none;
+}

@@ -15,7 +15,7 @@ export const TIME_RANGE_VALUE_ACCESSOR: any = {
   selector: 'app-time-range',
   providers: [TIME_RANGE_VALUE_ACCESSOR],
   templateUrl: './time-range.component.html',
-  styleUrls: ['./time-range.component.css']
+  styleUrls: ['./time-range.component.scss']
 })
 export class TimeRangeComponent implements ControlValueAccessor {
   startTime: Time;

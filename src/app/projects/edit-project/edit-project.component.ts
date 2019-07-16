@@ -13,7 +13,7 @@ import { ProjectsStore } from '../store/projects.store';
 @Component({
   selector: 'app-edit-project',
   templateUrl: './edit-project.component.html',
-  styleUrls: ['./edit-project.component.css']
+  styleUrls: ['./edit-project.component.scss']
 })
 export class EditProjectComponent implements OnInit, OnDestroy {
   faCheck = faCheck;

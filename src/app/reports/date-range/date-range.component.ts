@@ -12,7 +12,7 @@ export const DATE_RANGE_VALUE_ACCESSOR: any = {
   selector: 'app-date-range',
   providers: [DATE_RANGE_VALUE_ACCESSOR],
   templateUrl: './date-range.component.html',
-  styleUrls: ['./date-range.component.css']
+  styleUrls: ['./date-range.component.scss']
 })
 export class DateRangeComponent implements ControlValueAccessor {
   fromDate: NgbDate;
