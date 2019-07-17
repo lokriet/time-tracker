@@ -1,11 +1,60 @@
-.calendar {
-  max-width: 120px;
+@import "../../../assets/scss/partials/forms";
+@import "../../../assets/scss/partials/variables";
+@import "../../../assets/scss/partials/colors";
+form {
+    margin: 2rem 0;
 }
 
-.form-control.ng-invalid.ng-touched {
-  border: 1px solid red;
+.task-description {
+    min-width: 15rem;
 }
 
-.form-control.ng-invalid.ng-touched:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255,0,0,.25);
+.calendar-group {
+    margin: 0 $input-x-margin;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.calendar-input {
+    width: 8rem;
+    margin: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.calendar-button {
+    margin: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-time-label {
+    color: $main-color;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.form-error {
+    display: inline-block;
+    margin: 0 $input-x-margin;
+    padding: 0.75rem 1rem;
+    border: $border-width solid $accent-color;
+    border-radius: $border-radius;
+    color: $accent-color--darker;
+}
+
+.project-item-icon {
+    margin-right: 0.5rem;
+}
+
+.ng-select {
+    margin: 0 $input-x-margin;
+    width: 7rem;
+}
+
+.time-range-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

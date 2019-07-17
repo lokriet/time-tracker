@@ -20,14 +20,16 @@ import { Time } from '../../model/time.model';
 })
 export class TimeComponent implements OnInit, OnChanges {
   timeOptions: string[] = [];
+  dropdownOpen = false;
+
   @Input() selectedTime: Time;
   @Input() id: string;
   @Input() startTime: Time;
+  @Input() placeholder: string;
   @Output() timeSelected = new EventEmitter<Time>();
 
-  @ViewChild('wrappingDiv', { static: true }) wrappingDiv: ElementRef;
   @ViewChild('timeInput', { static: true }) timeInput: ElementRef;
-  @ViewChild('dropdownDiv', { static: true }) dropdownDiv: ElementRef;
+  @ViewChild('dropdownControl', { static: true }) dropdownControl: ElementRef;
 
   constructor() { }
 
@@ -36,6 +38,12 @@ export class TimeComponent implements OnInit, OnChanges {
       this.startTime = Time.fromString('6:00am');
     }
     this.generateTimeOptions();
+
+    document.addEventListener('mouseup', (event: MouseEvent) => {
+      if (!this.dropdownControl.nativeElement.contains(event.target)) {
+        this.dropdownOpen = false;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -59,6 +67,7 @@ export class TimeComponent implements OnInit, OnChanges {
     }
   }
 
+
   onTimeSelected(timeOption: string) {
     if (timeOption) {
       if (this.validateTimeString(timeOption)) {
@@ -70,6 +79,12 @@ export class TimeComponent implements OnInit, OnChanges {
     } else {
       this.timeSelected.emit(null);
     }
+
+    this.dropdownOpen = false;
+  }
+
+  onOptionClick(timeOption: string) {
+    this.onTimeSelected(timeOption);
   }
 
   onKeyPressed(event: KeyboardEvent) {
@@ -80,13 +95,12 @@ export class TimeComponent implements OnInit, OnChanges {
       const input = event.target as HTMLInputElement;
       this.onTimeSelected(input.value);
 
-      // hide dropdown
-      this.wrappingDiv.nativeElement.classList.remove('show');
-      this.dropdownDiv.nativeElement.classList.remove('show');
-      this.timeInput.nativeElement.setAttribute('aria-expanded', 'false');
-
       // focus next :(
     }
+  }
+
+  onInputClicked() {
+    this.dropdownOpen = !this.dropdownOpen;
   }
 
   formatTime() {

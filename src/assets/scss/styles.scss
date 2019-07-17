@@ -1,6 +1,6 @@
 @import "./partials/colors";
+@import "./partials/variables";
 @import url('https://fonts.googleapis.com/css?family=Fredoka+One|Quicksand&display=swap');
-
 
 * {
   box-sizing: border-box;
@@ -13,15 +13,102 @@ body {
   font-family: 'Quicksand', Arial, sans-serif;
 }
 
-
-.btn:focus,
-.btn.focus,
-.btn:active,
-input[type="checkbox"]:focus {
-  outline: none !important;
-  box-shadow: none;
+.main {
+  display: flex;
+  justify-content: center;  
 }
 
 .favorite {
   color: darkred;
 }
+
+.tooltip-container {
+  position: relative;
+  
+
+  .tooltip  {
+    visibility: hidden;
+    z-index: 200;
+    opacity: .40;
+    
+    padding: 0.5rem 1rem;
+
+    background: $accent-color;
+    color: white;
+    
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 1rem;
+
+    border-radius:$border-radius;
+    font-size: 1rem;
+
+    transform: translate(-50%, 1rem);
+    transition: all 0.3s ease-in-out;
+    
+    &::after {
+      content: "";
+      
+      border-style: solid;
+      border-width: 0.5rem;
+      border-color: $accent-color transparent transparent transparent;
+
+      position: absolute;
+      left: calc(50% - 0.5rem);
+      bottom: -1rem;
+    }
+
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    transform: translate(-50%, 0);
+    opacity: 1;
+    transition: .3s linear;
+    animation: shake 500ms ease-in-out;
+  }
+}
+
+@keyframes shake {
+  0% {
+    opacity: 0;
+    transform: rotate(5deg) translate(-50%, 1rem);
+  }
+  50% {
+    transform: rotate(-4deg) translateX(-50%);
+  }
+  70% {
+    transform: rotate(4deg)  translateX(-50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) translate(-50%, 0);
+  }
+}
+
+// custom scrollbar
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: $main-color--lighter;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: $main-color;
+}
+
+// select text colors
+::selection {
+  background: $main-color; /* WebKit/Blink Browsers */
+  color: white;
+}
+::-moz-selection {
+  background: $main-color; /* Gecko Browsers */
+  color: white;
+}
+

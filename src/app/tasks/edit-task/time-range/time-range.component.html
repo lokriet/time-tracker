@@ -1,2 +1,13 @@
-<app-time [id]="id+'startTime'" (timeSelected)="onStartTimeSelected($event)" [selectedTime]="startTime"></app-time> -
-<app-time [id]="id+'endTime'" [startTime]="startTime" (timeSelected)="onEndTimeSelected($event)" [selectedTime]="endTime"></app-time>
+<div class="time-range">
+  <app-time [id]="id+'startTime'" 
+            [placeholder]="'From'"
+            (timeSelected)="onStartTimeSelected($event)" 
+            [selectedTime]="startTime" 
+            class="start-time"></app-time> - 
+  <app-time [id]="id+'endTime'" 
+            [placeholder]="'To'"
+            [startTime]="startTime" 
+            (timeSelected)="onEndTimeSelected($event)" 
+            [selectedTime]="endTime" 
+            class="end-time"></app-time>
+</div>

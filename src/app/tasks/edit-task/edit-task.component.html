@@ -1,104 +1,112 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-inline">
-          <ng-container *ngIf="!editMode">
-            <button *ngIf="!tickingMode || isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPlayTickingTask()">
-              <fa-icon [icon]="faPlay"></fa-icon>
-            </button>
-            <button *ngIf="tickingMode && !isPaused" class="btn btn-light mb-3 mr-2" type="button" (click)="onPauseTickingTask()">
-              <fa-icon [icon]="faPause"></fa-icon>
-            </button>
-            <button *ngIf="tickingMode" class="btn btn-light mb-3 mr-2" type="button" (click)="onStopTickingTask()">
-              <fa-icon [icon]="faStop"></fa-icon>
-            </button>
-          </ng-container>
+  <div class="form-group">
+    <ng-container *ngIf="!editMode">
+      <button 
+          *ngIf="!tickingMode || isPaused" 
+          type="button" 
+          class="form-button tooltip-container" 
+          (click)="onPlayTickingTask()">
+        <fa-icon [icon]="faPlay"></fa-icon>
+        <span class="tooltip">{{isPaused ? 'Resume task' : 'Start task timer'}}</span>
+      </button>
+      <button 
+          *ngIf="tickingMode && !isPaused" 
+          type="button" 
+          class="form-button tooltip-container" 
+          (click)="onPauseTickingTask()">
+        <fa-icon [icon]="faPause"></fa-icon>
+        <span class="tooltip">Have a break</span>
+      </button>
+      <button 
+          *ngIf="tickingMode" 
+          type="button" 
+          class="form-button tooltip-container" 
+          (click)="onStopTickingTask()">
+        <fa-icon [icon]="faStop"></fa-icon>
+        <span class="tooltip">Stop task timer</span>
+      </button>
+    </ng-container>
 
-          <input type="text" class="form-control mr-2 mb-3"
-                 formControlName="description">
-          <div class="mb-3 mr-2">
-            <ng-select [items]="projects$ | async"
-                       bindLabel="projectName"
-                       formControlName="project"
-                       style="width: 150px;"
-            >
-              <ng-template ng-option-tmp let-project="item" let-index="index" let-search="searchTerm">
-                  <span [hidden]="!project.isFavorite" class="mr-2 favorite">
-                    <fa-icon [icon]="faFullHeart"></fa-icon>
-                  </span>
-                  <span [ngOptionHighlight]="search">{{project.projectName}}</span>
-              </ng-template>
-            </ng-select>
-          </div>
-          <div class="input-group mr-2 mb-3">
-              <input 
-              class="form-control calendar" 
-              placeholder="yyyy-mm-dd"
-              name="dp" 
-              formControlName="workDate"
-              ngbDatepicker 
-              [maxDate]="getToday()"
-              #d="ngbDatepicker">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                <fa-icon [icon]="faCalendar"></fa-icon>
-              </button>
-            </div>
-          </div>
-          <div class="input-group mb-3 mr-1">
-            <app-time-range 
-              [id]="'work'" 
-              formControlName="workHours"></app-time-range>
-          </div>
-          <span class="text-muted mr-2 mb-3">{{ formatTaskLength() }}</span>
-          <button class="btn btn-light mr-1 mb-3" type="submit" [disabled]="!taskForm.valid">
-            <fa-icon [icon]="faCheck"></fa-icon>
-          </button>
-          <button class="btn btn-light mb-3" type="button" (click)="onClearForm()">
-            <fa-icon [icon]="faReload"></fa-icon>
-          </button>
-        </div>
+    <button 
+        type="button" 
+        class="form-button tooltip-container" 
+        (click)="onAddBreak()">
+      <fa-icon [icon]="faCoffee"></fa-icon>
+      <span class="tooltip">Add a break</span>
+    </button>
+    <button 
+        type="button" 
+        class="form-button tooltip-container" 
+        (click)="onClearForm()">
+      <fa-icon [icon]="faReload"></fa-icon>
+      <span class="tooltip">Clear form</span>
+    </button>
+    <button 
+        type="submit" 
+        [disabled]="!taskForm.valid" 
+        class="form-button form-button-submit tooltip-container">
+      <fa-icon [icon]="faCheck"></fa-icon>
+      <span class="tooltip">Submit</span>
+    </button>
+  </div>
+
+  <div class="form-group">
+    <input 
+        type="text" 
+        class="form-control task-description" 
+        formControlName="description" 
+        placeholder="What are you up to?">
+    <ng-select 
+        [items]="projects$ | async" 
+        bindLabel="projectName" 
+        formControlName="project" 
+        placeholder="Project">
+      <ng-template ng-option-tmp let-project="item" let-index="index" let-search="searchTerm">
+        <span [hidden]="!project.isFavorite" class="favorite project-item-icon">
+      <fa-icon [icon]="faFullHeart"></fa-icon>
+      </span>
+        <span [ngOptionHighlight]="search">{{project.projectName}}</span>
+      </ng-template>
+    </ng-select>
+
+    <div class="calendar-group">
+      <input 
+          class="form-control calendar-input" 
+          placeholder="yyyy-mm-dd" 
+          name="dp" 
+          formControlName="workDate" 
+          ngbDatepicker 
+          [maxDate]="getToday()" 
+          #d="ngbDatepicker">
+
+      <button type="button" class="form-button calendar-button" (click)="d.toggle()">
+      <fa-icon [icon]="faCalendar"></fa-icon>
+      </button>
+    </div>
+
+    <div class="time-range-group">
+      <app-time-range [id]="'work'" formControlName="workHours"></app-time-range> 
+      <span class="form-time-label">{{ formatTaskLength() }}</span>
+    </div>
+  </div>
+
+  <div formArrayName="breaks">
+    <div *ngFor="let breakControl of getBreakControls(); let i = index" class="form-group">
+      <button type="button" class="form-button" (click)="onRemoveBreak(i)">
+        <fa-icon [icon]="faDelete"></fa-icon>
+      </button>
+      <div class="time-range-group">
+        <app-time-range [id]="'break'+i" [formControlName]="i"></app-time-range>
+        <span class="form-time-label">{{ formatBreakLength(i) }}</span>
       </div>
     </div>
-    <div class="row my-2">
-      <div class="col-xs-12">
-        <button class="btn btn-light" (click)="onAddBreak()" type="button">
-            <fa-icon [icon]="faCoffee"></fa-icon><span> Add a break</span>
-        </button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12" formArrayName="breaks">
-        <div class="container">
-          <div class="row" 
-            *ngFor="let breakControl of getBreakControls(); let i = index"
-            style="margin-bottom: 7px;">
-            <div class="col-xs-10">
-              <app-time-range [id]="'break'+i" [formControlName]="i" ></app-time-range>
-              <span class="text-muted mx-1">{{ formatBreakLength(i) }}</span>
-            </div>
-            <div class="col-xs-2 ml-1">
-                <button 
-                  type="button"
-                  class="btn btn-light"
-                  (click)="onRemoveBreak(i)">
-                  <fa-icon [icon]="faDelete"></fa-icon>
-                </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="alert alert-danger" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimeOutsideOfWorkHours']">
-          <fa-icon [icon]="faBug"></fa-icon> Break time range should be inside of work time range.
-        </div>
-        <div class="alert alert-danger" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimesIntersect']">
-          <fa-icon [icon]="faBug"></fa-icon> Break time ranges should not intersect.
-        </div>
-      </div>
-    </div>
+  </div>
+
+
+  <div class="form-group form-error" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimeOutsideOfWorkHours']">
+    <fa-icon [icon]="faBug"></fa-icon> Break time range should be inside of work time range.
+  </div>
+  <div class="form-group form-error" *ngIf="!taskForm.valid && taskForm.errors && taskForm.errors['breakTimesIntersect']">
+    <fa-icon [icon]="faBug"></fa-icon> Break time ranges should not intersect.
   </div>
 </form>

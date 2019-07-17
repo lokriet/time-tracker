@@ -1,22 +1,72 @@
-.dropdown {
+@import "../../../../assets/scss/partials/forms";
+@import "../../../../assets/scss/partials/variables";
+
+.dropdown-control {
   display: inline-block;
-  width: 100px;
 }
 
-.dropdown-menu {
-  max-height: 200px;
-  overflow-x: hidden; 
+.form-control {
+  margin: 0;
+}
+
+input {
+  width: 5.5rem;
+  text-align: center;
+
+  &.ng-invalid {
+    border: $border-width solid $accent-color!important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($accent-color, .25);
+    }
+  }
+}
+
+.dropdown-area {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
   overflow-y: auto;
+  margin-top: 0.25rem;
+  border: none;
+  border-radius: $border-radius;
+  height: 0;
+  width: 6.5rem;
+  border: $border-width solid transparent;
+  transition: height 400ms, border-color 400ms;
+  z-index: 10;
+
+  &.show {
+    height: 12rem;
+    border-color: $main-color--lighter;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-.dropdown-toggle {
-  max-width: 100px;
+.dropdown-item {
+  background-color: white;
+  color: $main-color--darker;
+  font-family: 'Quicksand', Arial, sans-serif;
+  font-size: 1rem;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 11;
+
+  &:hover {
+    background-color: $main-color;
+    color: white;
+  }
+
+  &:active,
+  &:focus {
+    background-color: $main-color;
+    color: white;
+    outline: none !important;
+  }
 }
 
-input.ng-invalid {
-  border: 1px solid red;
-}
-
-input.ng-invalid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255,0,0,.25);
-}
