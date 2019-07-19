@@ -1,0 +1,28 @@
+<div class='days-view'>
+  <nav class="days-view-header">
+    <button type="button" class="button--switch-month" (click)="onShowPreviousMonth()">
+      <fa-icon [icon]="faLeft"></fa-icon>
+    </button>
+    <button type="button" class="button--switch-month" (click)="onShowMonthSelector()">
+      {{ getHeaderText() }}
+    </button>
+    <button type="button" class="button--switch-month" (click)="onShowNextMonth()">
+      <fa-icon [icon]="faRight"></fa-icon>
+    </button>
+  </nav>
+  <div class="day-names">
+    <div *ngFor="let dayOfWeek of daysOfWeek" class="day-name">{{ dayOfWeek }}</div>
+  </div>
+  <div class="days">
+    <div 
+        *ngFor="let day of daysToShow" 
+        class="day" 
+        [class.today]="isToday(day)"
+        [class.selected]="isSelectedDate(day)"
+        [class.outside-current-month]="!isThisMonth(day)"
+        [class.future]="isFuture(day)"
+        (click)="onDaySelected(day)">
+      {{ day.getDate() }}
+    </div>
+  </div>
+</div>

@@ -15,7 +15,6 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/store/auth.service';
 import { HeaderComponent } from './header/header.component';
-import { HomeModule } from './home/home.module';
 import { MessagesComponent } from './messages/messages.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { ProjectsModule } from './projects/projects.module';
@@ -23,22 +22,27 @@ import { ReportsModule } from './reports/reports.module';
 import { TasksModule } from './tasks/tasks.module';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
+import { DaysViewComponent } from './datepicker/days-view/days-view.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     HeaderComponent,
     PageNotFoundComponent,
     MessagesComponent,
     FooterComponent,
-    ProfileComponent
+    ProfileComponent,
+    DatepickerComponent,
+    DaysViewComponent
   ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    HomeModule,
     TasksModule,
     ProjectsModule,
     ReportsModule,
@@ -50,6 +54,7 @@ import { ProfileComponent } from './profile/profile.component';
         [] :
         [ AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot() ]
   ],
+  exports: [DatepickerComponent],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
