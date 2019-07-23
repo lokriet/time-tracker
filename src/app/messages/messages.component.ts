@@ -17,7 +17,7 @@ export class MessagesComponent implements OnInit {
   faCheck = faCheck;
   faAngryFace = faAngry;
   faClose = faTimes;
-  
+
   infoType = MessageType.INFO;
   errorType = MessageType.ERROR;
 

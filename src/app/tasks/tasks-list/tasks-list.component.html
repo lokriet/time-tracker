@@ -1,29 +1,23 @@
 
-<div class="container">
-  <hr>
-</div>
+<!-- <hr /> -->
 
 <div *ngIf="(tasks$ | async).length > 0; then tasksList else noTasks"></div>
 
 <ng-template #tasksList>
-  <ng-template ngFor let-task [ngForOf]="tasks$ | async" let-i="index" let-isFirst="first" let-isLast="last">
-    <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="container">
-      <div class="row border border-secondary bg-light p-2 rounded-sm">
-        <div class="col-xs-12">
-          {{task.workDate.year}}/{{task.workDate.month}}/{{task.workDate.day}}
-        </div>
+  <div class="tasks-list">
+    <ng-template ngFor let-task [ngForOf]="tasks$ | async" let-i="index" let-isFirst="first" let-isLast="last">
+      <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="date-header">
+          {{task.workDate.getFullYear()}}/{{task.workDate.getMonth() + 1}}/{{task.workDate.getDate()}}
       </div>
-    </div>
-    <app-task-row [task]="task" [index]="i"></app-task-row>
-    <div *ngIf="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])" class="container">
-      <hr />
-    </div>
-  </ng-template>
+      <app-task-row [task]="task" [index]="i" class="task-row"></app-task-row>
+      <div *ngIf="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])" class="date-footer" ></div>
+    </ng-template>
+  </div>
 </ng-template>
 
 
 <ng-template #noTasks>
-  <div class="container text-secondary">
+  <div class="empty-task-list">
     No tasks added yet
   </div>
 </ng-template>

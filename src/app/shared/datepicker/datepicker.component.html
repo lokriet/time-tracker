@@ -1,0 +1,39 @@
+<div class="calendar-group" #datePickerControl>
+  <input 
+      class="form-control calendar-input" 
+      placeholder="yyyy-mm-dd"
+      [value]="formatSelectedDate()"
+      (keyup)="onKeyPressed($event)"
+      #calendarInput>
+
+  <button type="button" class="form-button calendar-button" (click)="togglePopup()">
+    <fa-icon [icon]="faCalendar"></fa-icon>
+  </button>
+
+  <div class="datepicker">
+    <div class="datepicker-pointer" *ngIf="showPopup" [@pointerAnimation]></div>
+    <div class="datepicker-popup" *ngIf="showPopup" [@openAnimation]>
+      <app-days-view 
+          *ngIf="showDaysView()" 
+          [selectedDate]="selectedDate"
+          [selectedMonth]="viewMonth"
+          (showMonthSelector)="onShowMonthSelector($event)"
+          (dateSelected)="onDateSelectedInPopup($event)"
+          ></app-days-view>
+    
+      <app-months-view
+          *ngIf="showMonthsView()" 
+          [selectedYear]="viewYear" 
+          [selectedDate]="selectedDate"
+          (showDaySelector)="onShowDaySelector($event)"
+          (showYearSelector)="onShowYearSelector($event)"></app-months-view>
+    
+      <app-years-view 
+          *ngIf="showYearsView()" 
+          [selectedDecade]="viewYear" 
+          [selectedDate]="selectedDate"
+          (showMonthSelector)="onShowMonthSelector($event)"
+          ></app-years-view>
+    </div>
+  </div>
+</div>

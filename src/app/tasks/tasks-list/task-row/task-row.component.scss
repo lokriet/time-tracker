@@ -1,7 +1,116 @@
-.task-row:hover {
-  background-color: #E3E3E3;
+@import '../../../../assets/scss/partials/colors';
+@import '../../../../assets/scss/partials/variables';
+
+.task {
+  display: grid;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: $main-color--lighter;
+  border-left: $border-width solid $main-color--lighter;
+  border-right: $border-width solid $main-color--lighter;
+  grid-template-columns: 2rem 2fr 1fr 12rem 3.5rem 3.5rem;
+  grid-template-areas: "arrow description project length edit-button delete-button";
+
+  &.even {
+    background: lighten($main-color--lighter, 10%);
+  }
+
+  &:hover {
+    background: $background-color;
+  }
 }
 
-.transparentText {
-  color: rgba(255, 255, 255, 0);
+.task-button {
+  justify-self: center;
+  border-radius: $border-radius;
+  background: transparent;
+  color: black;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+
+}
+
+.arrow-button {
+  grid-area: arrow;
+  color: black;
+  background: transparent;
+  font-size: 1.5rem;
+
+  &.button-hidden {
+    visibility: hidden;
+  }
+}
+
+.task-description {
+  grid-area: description;
+}
+
+.task-project {
+  grid-area: project;
+}
+
+.task-length {
+  grid-area: length;
+}
+
+.edit-button {
+  grid-area: edit-button;
+
+  &:hover {
+    background: $main-color;
+    color: white;
+  }
+}
+
+.delete-button {
+  grid-area: delete-button;
+
+  &:hover {
+    background: $accent-color;
+    color: white;
+  }
+}
+
+.task-breaks {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  color: $main-color--darker;
+  padding: 0;
+  border-left: $border-width solid $main-color--lighter;
+  border-right: $border-width solid $main-color--lighter;
+  overflow: hidden;
+  max-height: 15rem;
+  transition: max-height 400ms ease-in;
+
+  &.collapsed {
+    max-height: 0;
+    transition: max-height 400ms ease-out;
+  }
+}
+
+.task-break {
+  display: flex;
+  align-content: baseline;
+  padding: 0.5rem 1.75rem;
+
+  &:first-child {
+    padding-top: 1rem;
+  }
+
+  &:last-child {
+    padding-bottom: 1rem;
+  }
+
+  .task-break-length {
+    margin-left: 0.5rem;
+  }
+
+  .break-icon fa-icon {
+    position: relative;
+    bottom: 0.1rem;
+  }
 }

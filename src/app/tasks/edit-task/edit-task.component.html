@@ -69,20 +69,7 @@
       </ng-template>
     </ng-select>
 
-    <div class="calendar-group">
-      <input 
-          class="form-control calendar-input" 
-          placeholder="yyyy-mm-dd" 
-          name="dp" 
-          formControlName="workDate" 
-          ngbDatepicker 
-          [maxDate]="getToday()" 
-          #d="ngbDatepicker">
-
-      <button type="button" class="form-button calendar-button" (click)="d.toggle()">
-        <fa-icon [icon]="faCalendar"></fa-icon>
-      </button>
-    </div>
+    <app-datepicker formControlName="workDate"></app-datepicker>
 
     <div class="time-range-group">
       <app-time-range [id]="'work'" formControlName="workHours"></app-time-range> 

@@ -1,45 +1,35 @@
-<div class="container task-row">
-  <div class="row w-100" 
-       (click)="onArrowClicked()"
-       data-toggle="collapse" 
-       [attr.data-target]="'#breaksList'+index"
-       [attr.aria-expanded]="initialExpandedValue" 
-       [attr.aria-controls]="'breaksList'+index">
-      <div class="d-inline-block">
-        <button class="btn bg-transparent {{(task.breaks && task.breaks.length > 0) ? '' : 'transparentText'}}"
-                type="button" 
-                [@rotatedState]="state">
-          <fa-icon [icon]="faArrowRight" ></fa-icon>
-        </button>
-      </div>
-      <div class="d-inline-block w-25 mt-2">
-        {{task.description}}
-      </div>
-      <div class="d-inline-block w-25 mt-2">
-        {{ task.project?.projectName }}
-      </div>
-      <div class="d-inline-block w-25 mt-2">
-        {{formatTimeRange(task.workHours)}} ({{formatTaskLength(task)}})
-      </div>
-      <div class="d-inline-block w-auto">
-        <button type="button" class="btn bg-transparent" (click)="onEditTask($event)">
-            <fa-icon [icon]="faEdit" ></fa-icon>
-        </button>
-        <button type="button" class="btn bg-transparent" (click)="onDeleteTask($event)">
-            <fa-icon [icon]="faDelete" ></fa-icon>
-        </button>
-      </div>
-    </div>
-    <div class="row" *ngIf="task.breaks && task.breaks.length > 0">
-      <div class="col-xs-12 w-100">
-        <div class="collapse {{initialExpandedValue ? 'show' : ''}}" [id]="'breaksList'+index">
-          <div class="card card-body">
-            <div class="row" *ngFor="let taskBreak of task.breaks">
-              <fa-icon [icon]="faCoffee"  class="ml-3"></fa-icon>
-              <div class="col-xs-12 ml-2">{{formatTimeRange(taskBreak)}} ({{formatBreakLength(taskBreak)}})</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="task" 
+     [class.even]="index % 2 === 1"
+     (click)="onArrowClicked()">
+  <button class="task-button arrow-button"
+          [class.button-hidden]="!task.breaks || task.breaks.length === 0"
+          type="button" 
+          [@rotatedState]="state">
+    <fa-icon [icon]="faArrowRight" ></fa-icon>
+  </button>
+  <div class="task-description">
+    {{task.description}}
+  </div>
+  <div class="task-project">
+    {{ task.project?.projectName }}
+  </div>
+  <div class="task-length">
+    {{formatTimeRange(task.workHours)}} ({{formatTaskLength(task)}})
+  </div>
+  <button type="button" class="task-button edit-button" (click)="onEditTask($event)">
+      <fa-icon [icon]="faEdit" ></fa-icon>
+  </button>
+  <button type="button" class="task-button delete-button" (click)="onDeleteTask($event)">
+      <fa-icon [icon]="faDelete" ></fa-icon>
+  </button>
+</div>
+<div 
+    *ngIf="task.breaks && task.breaks.length > 0" 
+    [id]="'breaksList'+index" 
+    class="task-breaks"
+    [class.collapsed]="!taskUIstate.isExpanded">
+  <div class="task-break" *ngFor="let taskBreak of task.breaks">
+    <div class="break-icon"><fa-icon [icon]="faCoffee"></fa-icon></div>
+    <div class="task-break-length"> {{ formatTimeRange(taskBreak)}} ({{formatBreakLength(taskBreak) }})</div>
+  </div>
 </div>

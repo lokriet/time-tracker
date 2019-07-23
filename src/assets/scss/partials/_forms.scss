@@ -3,6 +3,14 @@
 
 input {
   outline: none !important;
+
+  &.ng-invalid {
+    border: $border-width solid $accent-color!important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($accent-color, .25);
+    }
+  }
 }
 
 .form-group {

@@ -19,7 +19,7 @@ export class DaysViewComponent implements OnInit {
 
   @Input() selectedDate: Date;
   @Input() selectedMonth: Date;
-  @Output() showMonthSelector = new EventEmitter<Date>();
+  @Output() showMonthSelector = new EventEmitter<number>();
   @Output() dateSelected = new EventEmitter<Date>();
 
   constructor() { }
@@ -81,27 +81,27 @@ export class DaysViewComponent implements OnInit {
     return result;
   }
 
-  getWeekDayBaseMon(weekDayBaseSun: number) {
+  getWeekDayBaseMon(weekDayBaseSun: number): number {
     return (weekDayBaseSun + 6) % 7;
   }
 
-  isToday(date: Date) {
+  isToday(date: Date): boolean {
     return date.getTime() === this.today.getTime();
   }
 
-  isSelectedDate(date: Date) {
+  isSelectedDate(date: Date): boolean {
     return this.selectedDate && this.selectedDate.getTime() === date.getTime();
   }
 
-  isThisMonth(date: Date) {
+  isThisMonth(date: Date): boolean {
     return this.selectedMonth.getMonth() === date.getMonth() && this.selectedMonth.getFullYear() === date.getFullYear();
   }
 
-  isFuture(date: Date) {
+  isFuture(date: Date): boolean {
     return date.getTime() > this.today.getTime();
   }
 
-  getHeaderText() {
+  getHeaderText(): string {
     return this.months[this.selectedMonth.getMonth()] + ', ' + this.selectedMonth.getFullYear();
   }
 
@@ -118,7 +118,7 @@ export class DaysViewComponent implements OnInit {
   }
 
   onShowMonthSelector() {
-    this.showMonthSelector.emit(this.startDate);
+    this.showMonthSelector.emit(this.selectedMonth.getFullYear());
   }
 
   onDaySelected(date: Date) {
@@ -128,4 +128,11 @@ export class DaysViewComponent implements OnInit {
     }
   }
 
+  onSelectToday() {
+    this.selectedDate = this.today;
+    const selectedMonth = new Date(this.today);
+    selectedMonth.setDate(1);
+    this.init(this.selectedDate, selectedMonth);
+    this.dateSelected.emit(this.today);
+  }
 }

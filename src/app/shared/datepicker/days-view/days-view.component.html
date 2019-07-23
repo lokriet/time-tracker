@@ -1,0 +1,38 @@
+<div class='days-view'>
+  <nav class="view-header">
+    <button type="button" class="button--nav" (click)="onShowPreviousMonth()">
+      <fa-icon [icon]="faLeft"></fa-icon>
+    </button>
+    <button type="button" class="button--nav" (click)="onShowMonthSelector()">
+      {{ getHeaderText() }}
+    </button>
+    <button 
+        type="button" 
+        class="button--nav" 
+        [disabled]="isThisMonth(today)"
+        (click)="onShowNextMonth()">
+      <fa-icon [icon]="faRight"></fa-icon>
+    </button>
+  </nav>
+  <div class="day-names">
+    <div *ngFor="let dayOfWeek of daysOfWeek" class="day-name">{{ dayOfWeek }}</div>
+  </div>
+  <div class="days">
+    <button 
+        *ngFor="let day of daysToShow" 
+        type="button"
+        class="day button--nav" 
+        [class.current]="isToday(day)"
+        [class.selected]="isSelectedDate(day)"
+        [class.outside-current-range]="!isThisMonth(day)"
+        [class.future]="isFuture(day)"
+        (click)="onDaySelected(day)">
+      {{ day.getDate() }}
+    </button>
+  </div>
+  <nav class="view-footer">
+      <button type="button" class="button--nav" (click)="onSelectToday()">
+        Today
+      </button>
+  </nav>
+</div>

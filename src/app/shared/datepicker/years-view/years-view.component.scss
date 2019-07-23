@@ -1,0 +1,15 @@
+@import '../../../../assets/scss/partials/variables';
+@import '../../../../assets/scss/partials/colors';
+@import '../datepicker.view';
+
+.years {
+  display: grid;
+  grid-template-columns: repeat(4, 5rem);
+  margin: 0.5rem 0;
+}
+
+.button--nav.header {
+  color: $main-color--darker;
+  background: transparent;
+  cursor: default;
+}

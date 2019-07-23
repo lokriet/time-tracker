@@ -154,10 +154,6 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
     return '';
   }
 
-  getToday() {
-    return this.calendar.getToday();
-  }
-
   onAddBreak() {
     (this.taskForm.get('breaks') as FormArray).push(
       new FormControl(null, Validators.required)

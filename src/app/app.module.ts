@@ -6,7 +6,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,9 +21,8 @@ import { ReportsModule } from './reports/reports.module';
 import { TasksModule } from './tasks/tasks.module';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
-import { DatepickerComponent } from './datepicker/datepicker.component';
-import { DaysViewComponent } from './datepicker/days-view/days-view.component';
 import { HomeComponent } from './home/home.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -34,12 +32,11 @@ import { HomeComponent } from './home/home.component';
     PageNotFoundComponent,
     MessagesComponent,
     FooterComponent,
-    ProfileComponent,
-    DatepickerComponent,
-    DaysViewComponent
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
+    SharedModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -49,12 +46,10 @@ import { HomeComponent } from './home/home.component';
     AuthModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FontAwesomeModule,
     environment.production ?
         [] :
         [ AkitaNgDevtools.forRoot(), AkitaNgRouterStoreModule.forRoot() ]
   ],
-  exports: [DatepickerComponent],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })

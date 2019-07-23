@@ -1,0 +1,10 @@
+@import '../../../../assets/scss/partials/variables';
+@import '../../../../assets/scss/partials/colors';
+@import '../datepicker.view';
+
+.months {
+  display: grid;
+  grid-template-columns: repeat(3, 5rem);
+  margin: 0.5rem 0;
+}
+

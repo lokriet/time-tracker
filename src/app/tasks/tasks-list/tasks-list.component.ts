@@ -24,6 +24,6 @@ export class TasksListComponent implements OnInit {
   }
 
   sameDate(a: Task, b: Task) {
-    return a.workDate.year === b.workDate.year && a.workDate.month === b.workDate.month && a.workDate.day === b.workDate.day;
+    return a.workDate.getTime() === b.workDate.getTime();
   }
 }

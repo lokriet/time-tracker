@@ -1,0 +1,21 @@
+@import '../../../assets/scss/partials/colors';
+@import '../../../assets/scss/partials/variables';
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.25rem;
+  // grid-template-columns: [row-start arrow-start] 2.5rem [arrow-end description-start] auto [descrioption-end project-start] 8rem [project-end time-start] 12rem [time-end edit-button-start] 2.5rem [edit-button-end delete-button-start] 2.5rem [delete-button-end row-end];
+}
+
+.date-header {
+  background: $main-color;
+  color: white;
+  padding: 1rem 1.5rem;
+  letter-spacing: 0.1rem;
+  border-radius: $border-radius $border-radius 0 0;
+}
+
+.date-footer {
+  border-bottom: $border-width solid $main-color--lighter;
+}

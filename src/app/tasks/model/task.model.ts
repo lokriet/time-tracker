@@ -1,4 +1,3 @@
-import { SimpleDate } from './simple-date.model';
 import { TimeRange } from './time-range.model';
 import { ID } from '@datorama/akita';
 import { Project } from 'src/app/projects/project.model';
@@ -8,7 +7,7 @@ export class Task {
   ownerId: string;
   description: string;
   project: Project;
-  workDate: SimpleDate;
+  workDate: Date;
   workHours: TimeRange;
   breaks: TimeRange[];
 }
