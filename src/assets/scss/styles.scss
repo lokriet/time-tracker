@@ -19,7 +19,7 @@ body {
 }
 
 .favorite {
-  color: darkred;
+  color: $accent-color;
 }
 
 .tooltip-container {
@@ -27,6 +27,8 @@ body {
   
 
   .tooltip  {
+    text-align: center;
+
     visibility: hidden;
     z-index: 200;
     opacity: .40;

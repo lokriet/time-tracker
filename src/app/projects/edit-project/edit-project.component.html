@@ -1,23 +1,34 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
-        <div class="form-inline">
-          <input type="checkbox" formControlName="isFavorite" class="form-control favorite-checkbox" #favCheckbox>
-          <span class="favorite mr-3">
-            <fa-icon [icon]="favCheckbox.checked ? faFullHeart : faEmptyHeart" (click)="onSwitchFavorite()" ></fa-icon>
-          </span>
-          <input type="text" formControlName="projectName" class="form-control mr-3" >
-          <input type="checkbox" formControlName="isPaid" class="form-control mr-1"><span class="mr-3">Paid project</span>
-          <input type="number" formControlName="payRate" class="form-control mr-1" style="max-width: 100px;"><span class="mr-3">$/hour</span>
-          <button class="btn btn-light mr-1" type="submit" [disabled]="!projectForm.valid">
-            <fa-icon [icon]="faCheck"></fa-icon>
-          </button>
-          <button class="btn btn-light" type="button" (click)="onClearForm()">
-            <fa-icon [icon]="faReload"></fa-icon>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <input 
+      type="checkbox" 
+      formControlName="isFavorite" 
+      class="form-control favorite-checkbox" 
+      #favCheckbox>
+  <span class="checkbox-icon favorite tooltip-container">
+    <fa-icon [icon]="favCheckbox.checked ? faFullHeart : faEmptyHeart" (click)="onSwitchFavorite()" ></fa-icon>
+    <span class="tooltip">Mark as favorite</span>
+  </span>
+  <input 
+      type="text" 
+      formControlName="projectName"
+      class="form-control"
+      placeholder="Project name">
+  <input type="checkbox" formControlName="isPaid" class="form-control" #paidCheckbox>
+  <span class="checkbox-icon paid">
+    <fa-icon [icon]="faCheck" [class.checked]="paidCheckbox.checked" (click)="onSwitchPaid()"></fa-icon>
+  </span>
+  <label>Paid project</label>
+  <input 
+      type="text" 
+      formControlName="payRate" 
+      class="form-control project-pay-rate"
+      (keydown)="checkNumberInput($event)"><label>$/hour</label>
+  <button class="form-button tooltip-container button-clear" type="button" (click)="onClearForm()">
+    <fa-icon [icon]="faReload"></fa-icon>
+    <span class="tooltip">Clear form</span>
+  </button>
+  <button class="form-button form-button-submit tooltip-container" type="submit" [disabled]="!projectForm.valid">
+    <fa-icon [icon]="faCheck"></fa-icon>
+    <span class="tooltip">Submit</span>
+  </button>
+</form>
