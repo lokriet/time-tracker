@@ -1,53 +1,65 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <ng-container *ngIf="!editMode">
-      <button 
-          *ngIf="!tickingMode || isPaused" 
-          type="button" 
-          class="form-button tooltip-container" 
-          (click)="onPlayTickingTask()">
-        <fa-icon [icon]="faPlay"></fa-icon>
+      <div class="tooltip-container">
+        <button 
+            *ngIf="!tickingMode || isPaused" 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onPlayTickingTask()">
+          <fa-icon [icon]="faPlay"></fa-icon>
+        </button>
         <span class="tooltip">{{isPaused ? 'Resume task' : 'Start task timer'}}</span>
-      </button>
-      <button 
-          *ngIf="tickingMode && !isPaused" 
-          type="button" 
-          class="form-button tooltip-container" 
-          (click)="onPauseTickingTask()">
-        <fa-icon [icon]="faPause"></fa-icon>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            *ngIf="tickingMode && !isPaused" 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onPauseTickingTask()">
+          <fa-icon [icon]="faPause"></fa-icon>
+        </button>
         <span class="tooltip">Have a break</span>
-      </button>
-      <button 
-          *ngIf="tickingMode" 
-          type="button" 
-          class="form-button tooltip-container" 
-          (click)="onStopTickingTask()">
-        <fa-icon [icon]="faStop"></fa-icon>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            *ngIf="tickingMode" 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onStopTickingTask()">
+          <fa-icon [icon]="faStop"></fa-icon>
+        </button>
         <span class="tooltip">Stop task timer</span>
-      </button>
+      </div>
     </ng-container>
 
-    <button 
-        type="button" 
-        class="form-button tooltip-container" 
-        (click)="onAddBreak()">
-      <fa-icon [icon]="faCoffee"></fa-icon>
+    <div class="tooltip-container">
+      <button 
+          type="button" 
+          class="form-button tooltip-element" 
+          (click)="onAddBreak()">
+        <fa-icon [icon]="faCoffee"></fa-icon>
+      </button>
       <span class="tooltip">Add a break</span>
-    </button>
-    <button 
-        type="button" 
-        class="form-button tooltip-container" 
-        (click)="onClearForm()">
-      <fa-icon [icon]="faReload"></fa-icon>
+    </div>
+    <div class="tooltip-container">
+      <button 
+          type="button" 
+          class="form-button tooltip-element" 
+          (click)="onClearForm()">
+        <fa-icon [icon]="faReload"></fa-icon>
+      </button>
       <span class="tooltip">Clear form</span>
-    </button>
-    <button 
-        type="submit" 
-        [disabled]="!taskForm.valid" 
-        class="form-button form-button-submit tooltip-container">
-      <fa-icon [icon]="faCheck"></fa-icon>
+    </div>
+    <div class="tooltip-container">
+      <button 
+          type="submit" 
+          [disabled]="!taskForm.valid" 
+          class="form-button form-button-submit tooltip-element">
+        <fa-icon [icon]="faCheck"></fa-icon>
+      </button>
       <span class="tooltip">Submit</span>
-    </button>
+    </div>
   </div>
 
   <div class="form-group">

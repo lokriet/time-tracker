@@ -4,10 +4,12 @@
       formControlName="isFavorite" 
       class="form-control favorite-checkbox" 
       #favCheckbox>
-  <span class="checkbox-icon favorite tooltip-container">
-    <fa-icon [icon]="favCheckbox.checked ? faFullHeart : faEmptyHeart" (click)="onSwitchFavorite()" ></fa-icon>
+  <div class="tooltip-container">
+    <span class="checkbox-icon favorite tooltip-element">
+      <fa-icon [icon]="favCheckbox.checked ? faFullHeart : faEmptyHeart" (click)="onSwitchFavorite()"></fa-icon>
+    </span>
     <span class="tooltip">Mark as favorite</span>
-  </span>
+  </div>
   <input 
       type="text" 
       formControlName="projectName"
@@ -17,18 +19,22 @@
   <span class="checkbox-icon paid">
     <fa-icon [icon]="faCheck" [class.checked]="paidCheckbox.checked" (click)="onSwitchPaid()"></fa-icon>
   </span>
-  <label>Paid project</label>
+  <label class="form-label">Paid project</label>
   <input 
       type="text" 
       formControlName="payRate" 
       class="form-control project-pay-rate"
-      (keydown)="checkNumberInput($event)"><label>$/hour</label>
-  <button class="form-button tooltip-container button-clear" type="button" (click)="onClearForm()">
-    <fa-icon [icon]="faReload"></fa-icon>
+      (keydown)="checkNumberInput($event)"><label class="form-label pay-rate-label">$/hour</label>
+  <div class="tooltip-container">
+    <button class="form-button tooltip-element" type="button" (click)="onClearForm()">
+      <fa-icon [icon]="faReload"></fa-icon>
+    </button>
     <span class="tooltip">Clear form</span>
-  </button>
-  <button class="form-button form-button-submit tooltip-container" type="submit" [disabled]="!projectForm.valid">
-    <fa-icon [icon]="faCheck"></fa-icon>
+  </div>
+  <div class="tooltip-container">
+    <button class="form-button form-button-submit tooltip-element" type="submit" [disabled]="!projectForm.valid">
+      <fa-icon [icon]="faCheck"></fa-icon>
+    </button>
     <span class="tooltip">Submit</span>
-  </button>
+  </div>
 </form>

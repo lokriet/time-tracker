@@ -1,11 +1,7 @@
-<div class="container">
-  <hr>
-
-
   <div *ngIf="(projects$ | async).length > 0; then projectsList else noProjects"></div>
 
   <ng-template #projectsList>
-    <div class="row border border-secondary p-2 rounded-sm mb-3" *ngFor="let project of (projects$ | async)">
+    <div class="" *ngFor="let project of (projects$ | async)">
       <div class="col-xs-12 w-100">
         <div class="d-inline-block w-25 ml-3">
           {{ project.projectName }}
@@ -33,9 +29,7 @@
 
 
   <ng-template #noProjects>
-    <div class="container text-secondary">
+    <div class="empty-list">
       No projects added yet
     </div>
   </ng-template>
-
-</div>
