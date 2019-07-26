@@ -9,8 +9,11 @@
       <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="date-header">
           {{task.workDate.getFullYear()}}/{{task.workDate.getMonth() + 1}}/{{task.workDate.getDate()}}
       </div>
-      <app-task-row [task]="task" [index]="i" class="task-row"></app-task-row>
-      <div *ngIf="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])" class="date-footer" ></div>
+      <app-task-row 
+          [task]="task" 
+          [index]="i" 
+          class="task-row"
+          [class.last-in-day]="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])"></app-task-row>
     </ng-template>
   </div>
 </ng-template>

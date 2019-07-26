@@ -1,4 +1,5 @@
 $background-color: #f8f8f8;
+$background-color--darker: darken($background-color, 10%);
 $main-color: #50b6bb;
 $main-color--dark: #45969b;
 $main-color--darker: darken($main-color, 30%);

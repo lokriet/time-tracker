@@ -40,6 +40,10 @@ form.ng-dirty input.ng-invalid {
       box-shadow: 0 0 0 0.2rem rgba($accent-color, .25);
     }
   }
+
+  &:disabled {
+    background-color: darken($background-color, 3%);
+  }
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

@@ -5,18 +5,35 @@
   display: flex;
   flex-direction: column;
   padding: 0 0.25rem;
-  // grid-template-columns: [row-start arrow-start] 2.5rem [arrow-end description-start] auto [descrioption-end project-start] 8rem [project-end time-start] 12rem [time-end edit-button-start] 2.5rem [edit-button-end delete-button-start] 2.5rem [delete-button-end row-end];
 }
 
 .date-header {
   background: $main-color;
   color: white;
+  font-family: 'Fredoka One', Arial, sans-serif;
   padding: 1rem 1.5rem;
   letter-spacing: 0.1rem;
   border-radius: $border-radius $border-radius 0 0;
+  
+  // position: sticky;
+  // top: calc(#{$header-height} + 0.5rem);
 }
 
 .date-footer {
   border-bottom: $border-width solid $main-color--lighter;
+  margin-bottom: 2.5rem;
+}
+
+.task-row {
+  overflow: hidden;
+  border-left: $border-width solid $main-color--lighter;
+  border-right: $border-width solid $main-color--lighter;
+  
+  &.last-in-day {
+    border-radius: 0 0 $border-radius $border-radius;
+    border: $border-width solid $main-color--lighter;
+    border-top: none;
+    margin-bottom: 2.5rem;
+  }
 }
 

@@ -3,12 +3,10 @@
 
 .task {
   display: grid;
-  align-items: center;
+  align-items: baseline;
   padding: 0.5rem 1rem;
   background: $main-color--lighter;
-  border-left: $border-width solid $main-color--lighter;
-  border-right: $border-width solid $main-color--lighter;
-  grid-template-columns: 2rem 2fr 1fr 12rem 3.5rem 3.5rem;
+  grid-template-columns: 2rem 2fr 1fr 15rem 3.5rem 3.5rem;
   grid-template-areas: "arrow description project length edit-button delete-button";
 
   &.even {
@@ -37,7 +35,7 @@
   grid-area: arrow;
   color: black;
   background: transparent;
-  font-size: 1.5rem;
+  font-size: 1rem;
 
   &.button-hidden {
     visibility: hidden;
@@ -80,8 +78,6 @@
   background: white;
   color: $main-color--darker;
   padding: 0;
-  border-left: $border-width solid $main-color--lighter;
-  border-right: $border-width solid $main-color--lighter;
   overflow: hidden;
   max-height: 15rem;
   transition: max-height 400ms ease-in;
