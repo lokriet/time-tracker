@@ -55,8 +55,6 @@ export const DATEPICKER_VALUE_ACCESSOR: any = {
   ]
 })
 export class DatepickerComponent implements OnInit, ControlValueAccessor {
-  onChange;
-
   faCalendar = faCalendarAlt;
 
   selectedDate: Date;
@@ -67,6 +65,8 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   @ViewChild('datePickerControl', { static: true }) datePickerControl: ElementRef;
   @ViewChild('calendarInput', { static: true }) calendarInput: ElementRef;
+
+  onChange: any = () => { };
 
   constructor() { }
 

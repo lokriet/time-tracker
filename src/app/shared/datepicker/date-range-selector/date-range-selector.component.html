@@ -1,0 +1,23 @@
+<div class="date-range-selector">
+
+  <nav class="view-header">
+      <button type="button" class="button--nav" (click)="onShowPreviousMonth()">
+        <fa-icon [icon]="faLeft"></fa-icon>
+      </button>
+      <button type="button" class="button--nav" (click)="onShowMonthSelector()">
+        {{ getPreviousMonthHeader() }}
+      </button>
+      <button type="button" class="button--nav" (click)="onShowMonthSelector()">
+        {{ getSelectedMonthHeader() }}
+      </button>
+      <button 
+          type="button" 
+          class="button--nav" 
+          [disabled]="isCurrentMonthShown()"
+          (click)="onShowNextMonth()">
+        <fa-icon [icon]="faRight"></fa-icon>
+      </button>
+    </nav>
+  <app-days-range-view [selectedMonth]="selectedMonth" [dateRange]="dateRange"></app-days-range-view>
+
+</div>

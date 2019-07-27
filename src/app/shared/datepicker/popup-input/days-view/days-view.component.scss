@@ -1,0 +1,29 @@
+@import '../../../../../assets/scss/partials/variables';
+@import '../../../../../assets/scss/partials/colors';
+@import '../../datepicker.view';
+
+$cell-width: 2rem;
+
+.day-names {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 1rem;
+}
+
+.day-name {
+  width: $cell-width;
+  text-align: center;
+  color: $main-color;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, $cell-width);
+  margin: 0 1rem 1rem 1rem;
+}
+
+.button--nav.day {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
