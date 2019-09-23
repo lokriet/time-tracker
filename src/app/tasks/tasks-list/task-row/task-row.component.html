@@ -27,7 +27,7 @@
     *ngIf="task.breaks && task.breaks.length > 0" 
     [id]="'breaksList'+index" 
     class="task-breaks"
-    [class.collapsed]="!taskUIstate.isExpanded">
+    [@collapse]="taskUIstate.isExpanded ? 'rotated' : 'default'">
   <div class="task-break" *ngFor="let taskBreak of task.breaks">
     <div class="break-icon"><fa-icon [icon]="faCoffee"></fa-icon></div>
     <div class="task-break-length"> {{ formatTimeRange(taskBreak)}} ({{formatBreakLength(taskBreak) }})</div>

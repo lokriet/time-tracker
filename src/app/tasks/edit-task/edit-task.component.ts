@@ -14,7 +14,6 @@ import {
   faStop,
   faSyncAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { ComponentCanDeactivate } from 'src/app/can-deactivate.component';
 
@@ -61,8 +60,7 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
 
   projects$: Observable<Project[]>;
 
-  constructor(private calendar: NgbCalendar,
-              private tasksService: TasksService,
+  constructor(private tasksService: TasksService,
               private tasksQuery: TasksQuery,
               private tasksStore: TasksStore,
               private router: Router,
@@ -201,7 +199,9 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
       // start ticking
       this.tickingMode = true;
       (this.taskForm.get('breaks') as FormArray).clear();
-      this.taskForm.get('workDate').setValue(this.calendar.getToday());
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      this.taskForm.get('workDate').setValue(today);
 
       const startTime = new Date();
       startTime.setSeconds(startTime.getSeconds(), 0);

@@ -1,23 +1,72 @@
 <div class="date-range-selector">
 
   <nav class="view-header">
-      <button type="button" class="button--nav" (click)="onShowPreviousMonth()">
-        <fa-icon [icon]="faLeft"></fa-icon>
-      </button>
-      <button type="button" class="button--nav" (click)="onShowMonthSelector()">
-        {{ getPreviousMonthHeader() }}
-      </button>
-      <button type="button" class="button--nav" (click)="onShowMonthSelector()">
-        {{ getSelectedMonthHeader() }}
-      </button>
-      <button 
-          type="button" 
-          class="button--nav" 
-          [disabled]="isCurrentMonthShown()"
-          (click)="onShowNextMonth()">
-        <fa-icon [icon]="faRight"></fa-icon>
-      </button>
-    </nav>
-  <app-days-range-view [selectedMonth]="selectedMonth" [dateRange]="dateRange"></app-days-range-view>
+    <button type="button" class="button--nav nav-previous" (click)="onShowPreviousMonth()">
+      <fa-icon [icon]="faLeft"></fa-icon>
+    </button>
+    <button type="button" class="button--nav nav-previous-month" (click)="onShowPreviousMonthSelector()">
+      {{ getPreviousMonthHeader() }}
+    </button>
+    <button type="button" class="button--nav nav-selected-month" (click)="onShowSelectedMonthSelector()">
+      {{ getSelectedMonthHeader() }}
+    </button>
+    <button 
+        type="button" 
+        class="button--nav" 
+        [disabled]="isCurrentMonthShown()"
+        (click)="onShowNextMonth()">
+      <fa-icon [icon]="faRight"></fa-icon>
+    </button>
+  </nav>
+  <app-days-range-view 
+      [selectedMonth]="selectedMonth" 
+      [dateRange]="dateRange"
+      (dateRangeSelected)="onDateRangeSelected($event)"
+      >
+  </app-days-range-view>
 
+  <div class="month-selector-backdrop" 
+      *ngIf="view !== 'DAYS'"
+      [@backdropAnimation]
+      (click)="onBackdropClicked()">
+  </div>
+
+  <div 
+      class="month-selector previous-month"
+      [@slideLeftToRight]="{value: 'in'}"
+      *ngIf="view === 'MONTHS_PREVIOUS' || view === 'YEARS_PREVIOUS'">
+    <app-months-view 
+        *ngIf="view === 'MONTHS_PREVIOUS'"
+        [selectedYear]="selectedYear" 
+        [selectedDate]="dateRange?.endDate"
+        (showDaySelector)="onMonthSelected($event)"
+        (showYearSelector)="onShowYearSelector($event)"
+    ></app-months-view>
+    <app-years-view
+        *ngIf="view === 'YEARS_PREVIOUS'"
+        [selectedDecade]="selectedYear"
+        [selectedDate]="dateRange?.endDate"
+        (showMonthSelector)="onYearSelected($event)"
+    ></app-years-view>
+  </div>
+
+  <div 
+      class="month-selector selected-month"
+      [@slideRightToLeft]="{value: 'in'}"
+      *ngIf="view === 'MONTHS_SELECTED' || view === 'YEARS_SELECTED'">
+    <app-months-view 
+        *ngIf="view === 'MONTHS_SELECTED'"
+        [selectedYear]="selectedYear" 
+        [selectedDate]="dateRange?.endDate"
+        (showDaySelector)="onMonthSelected($event)"
+        (showYearSelector)="onShowYearSelector($event)"
+    ></app-months-view>
+    <app-years-view
+        *ngIf="view === 'YEARS_SELECTED'"
+        [selectedDecade]="selectedYear"
+        [selectedDate]="dateRange?.endDate"
+        (showMonthSelector)="onYearSelected($event)"
+    ></app-years-view>
+  </div>
 </div>
+

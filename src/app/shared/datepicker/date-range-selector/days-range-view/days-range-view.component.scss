@@ -11,18 +11,10 @@ $cell-width: 2rem;
   margin: 1rem;
 }
 
-.view-header {
-  color: $main-color--darker;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 1rem;
-  border-bottom: $border-width solid $main-color--lighter;
-}
-
 .day-names {
   display: flex;
   flex-wrap: nowrap;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .day-name {

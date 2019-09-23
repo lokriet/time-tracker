@@ -28,7 +28,7 @@ import { TasksUI } from '../../store/tasks.store';
 
     trigger('collapse', [
       state('default', style({ height: 0 })),
-      state('rotated', style({ height: 'auto' })),
+      state('rotated', style({ height: '*' })),
       transition('rotated => default', animate('400ms ease-out')),
       transition('default => rotated', animate('400ms ease-in'))
   ])

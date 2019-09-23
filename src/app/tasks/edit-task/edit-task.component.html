@@ -75,8 +75,8 @@
         placeholder="Project">
       <ng-template ng-option-tmp let-project="item" let-index="index" let-search="searchTerm">
         <span [hidden]="!project.isFavorite" class="favorite project-item-icon">
-      <fa-icon [icon]="faFullHeart"></fa-icon>
-      </span>
+          <fa-icon [icon]="faFullHeart"></fa-icon>
+        </span>
         <span [ngOptionHighlight]="search">{{project.projectName}}</span>
       </ng-template>
     </ng-select>

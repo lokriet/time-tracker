@@ -1,7 +1,6 @@
 <div class='days-view'>
   <div class="calendars">
     <div class="calendar">
-      <div class="view-header">{{ getHeaderText(previousMonth) }}</div>
       <div class="day-names">
         <div *ngFor="let dayOfWeek of daysOfWeek" class="day-name">{{ dayOfWeek }}</div>
       </div>
@@ -23,7 +22,6 @@
       </div>
     </div>
     <div class="calendar">
-      <div class="view-header">{{ getHeaderText(selectedMonth) }}</div>
       <div class="day-names">
         <div *ngFor="let dayOfWeek of daysOfWeek" class="day-name">{{ dayOfWeek }}</div>
       </div>

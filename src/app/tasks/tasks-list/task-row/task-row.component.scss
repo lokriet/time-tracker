@@ -79,13 +79,7 @@
   color: $main-color--darker;
   padding: 0;
   overflow: hidden;
-  max-height: 15rem;
-  transition: max-height 400ms ease-in;
-
-  &.collapsed {
-    max-height: 0;
-    transition: max-height 400ms ease-out;
-  }
+  // max-height: 15rem;
 }
 
 .task-break {

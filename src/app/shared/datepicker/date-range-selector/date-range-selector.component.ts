@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 export const DATE_RANGE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -8,11 +9,49 @@ export const DATE_RANGE_SELECTOR_VALUE_ACCESSOR: any = {
   multi: true,
 };
 
+enum View {
+  DAYS = 'DAYS',
+  MONTHS_SELECTED = 'MONTHS_SELECTED',
+  MONTHS_PREVIOUS = 'MONTHS_PREVIOUS',
+  YEARS_SELECTED = 'YEARS_SELECTED',
+  YEARS_PREVIOUS = 'YEARS_PREVIOUS'
+}
+
 @Component({
   selector: 'app-date-range-selector',
   providers: [DATE_RANGE_SELECTOR_VALUE_ACCESSOR],
   templateUrl: './date-range-selector.component.html',
-  styleUrls: ['./date-range-selector.component.scss']
+  styleUrls: ['./date-range-selector.component.scss'],
+  animations: [
+    trigger(
+      'backdropAnimation', [
+        transition(':enter', [
+          style({opacity: 0}),
+          animate('400ms', style({opacity: 1}))
+        ]),
+        transition(':leave', [
+          style({opacity: 1}),
+          animate('400ms', style({opacity: 0}))
+        ])
+      ]
+    ),
+
+    trigger(
+      'slideLeftToRight', [
+        state('in', style({ transform: 'translateX(0)', opacity: 1})),
+        state('void', style({ transform: 'translateX(-100%)', opacity: 0.8})),
+        transition('* <=> *', animate(400)),
+      ]
+    ),
+
+    trigger(
+      'slideRightToLeft', [
+        state('in', style({ transform: 'translateX(0)', opacity: 1})),
+        state('void', style({ transform: 'translateX(100%)', opacity: 0.8})),
+        transition('* <=> *', animate(400)),
+      ]
+    )
+  ]
 })
 export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor {
   faRight = faChevronRight;
@@ -24,12 +63,16 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
   _selectedMonth: Date;
   previousMonth: Date;
   dateRange: {startDate: Date, endDate: Date};
+  view: View;
+  selectedYear: number;
 
   onChange: any = () => { };
 
   constructor() { }
 
   ngOnInit() {
+    this.view = View.DAYS;
+
     if (!this.selectedMonth) {
       this.selectedMonth = new Date();
     } else {
@@ -53,17 +96,61 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
   }
 
   onShowPreviousMonth() {
-    this._selectedMonth.setMonth(this._selectedMonth.getMonth() - 1);
-    this.previousMonth.setMonth(this.previousMonth.getMonth() - 1);
+    const newMonth = new Date(this._selectedMonth);
+    newMonth.setMonth(newMonth.getMonth() - 1);
+    this.selectedMonth = newMonth;
   }
 
   onShowNextMonth() {
-    this._selectedMonth.setMonth(this._selectedMonth.getMonth() + 1);
-    this.previousMonth.setMonth(this.previousMonth.getMonth() + 1);
+    const newMonth = new Date(this._selectedMonth);
+    newMonth.setMonth(newMonth.getMonth() + 1);
+    this.selectedMonth = newMonth;
   }
 
-  onShowMonthSelector() {
-    // TODO
+  onShowSelectedMonthSelector() {
+    this.selectedYear = this.selectedMonth.getFullYear();
+    this.view = View.MONTHS_SELECTED;
+  }
+
+  onShowPreviousMonthSelector() {
+    this.selectedYear = this.previousMonth.getFullYear();
+    this.view = View.MONTHS_PREVIOUS;
+  }
+
+  onMonthSelected(month: Date) {
+    const selectedMonth = new Date(month);
+    if (this.view === View.MONTHS_PREVIOUS) {
+      selectedMonth.setMonth(selectedMonth.getMonth() + 1);
+    }
+    this.selectedMonth = selectedMonth;
+    this.view = View.DAYS;
+  }
+
+  onShowYearSelector(year: number) {
+    this.selectedYear = year;
+    if (this.view === View.MONTHS_PREVIOUS) {
+      this.view = View.YEARS_PREVIOUS;
+    } else {
+      this.view = View.YEARS_SELECTED;
+    }
+  }
+
+  onYearSelected(year: number) {
+    this.selectedYear = year;
+    if (this.view === View.YEARS_PREVIOUS) {
+      this.view = View.MONTHS_PREVIOUS;
+    } else {
+      this.view = View.MONTHS_SELECTED;
+    }
+  }
+
+  onDateRangeSelected(dateRange: {startDate: Date, endDate: Date}) {
+    this.onChange(dateRange);
+  }
+
+  onBackdropClicked() {
+    this.view = View.DAYS;
+    this.selectedYear = null;
   }
 
   get selectedMonth() {

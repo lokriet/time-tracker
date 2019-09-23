@@ -31,10 +31,10 @@ export const DATEPICKER_VALUE_ACCESSOR: any = {
       'openAnimation', [
         transition(':enter', [
           style({height: 0, borderColor: 'transparent'}),
-          animate('400ms', style({height: '20rem', borderColor: '#bee4e6'}))
+          animate('400ms', style({height: '*', borderColor: '#bee4e6'}))
         ]),
         transition(':leave', [
-          style({height: '20rem', borderColor: '#bee4e6'}),
+          style({height: '*', borderColor: '#bee4e6'}),
           animate('400ms', style({height: 0, borderColor: 'transparent'}))
         ])
       ]
