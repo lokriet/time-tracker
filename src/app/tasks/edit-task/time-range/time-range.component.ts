@@ -23,9 +23,9 @@ export class TimeRangeComponent implements ControlValueAccessor {
   isOvernight = false;
   timeRange: TimeRange;
 
-  onChange;
-
   @Input() id: string;
+
+  onChange: any = () => { };
 
   constructor() { }
 

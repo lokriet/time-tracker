@@ -70,7 +70,7 @@
         placeholder="What are you up to?">
     <ng-select 
         [items]="projects$ | async" 
-        bindLabel="projectName" 
+        bindLabel="projectName"
         formControlName="project" 
         placeholder="Project">
       <ng-template ng-option-tmp let-project="item" let-index="index" let-search="searchTerm">
@@ -80,6 +80,28 @@
         <span [ngOptionHighlight]="search">{{project.projectName}}</span>
       </ng-template>
     </ng-select>
+    <!-- <div class="form-dropdown task-project" #projectDropdown>
+      <input 
+          type="text" 
+          class="form-control dropdown-input"
+          [class.open]="projectsDropdownOpen"
+          formControlName="project"
+          placeholder="Project"
+          (click)="onProjectInputClicked()"
+          >
+      <div class="dropdown-area" [class.open]="projectsDropdownOpen">
+        <button
+          type="button" 
+          class="dropdown-item"
+          *ngFor="let project of (projects$ | async)" 
+          (click)="onProjectSelected(project)">
+            <span [hidden]="!project.isFavorite" class="favorite project-item-icon">
+              <fa-icon [icon]="faFullHeart"></fa-icon>
+            </span>
+            <span>{{project.projectName}}</span>
+        </button>
+      </div>
+    </div> -->
 
     <app-datepicker formControlName="workDate"></app-datepicker>
 

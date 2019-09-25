@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Order } from '@datorama/akita';
@@ -50,6 +50,9 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
 
   taskForm: FormGroup;
   editMode = false;
+
+  // @ViewChild('projectDropdown', { static: true }) projectDropdown: ElementRef;
+  // projectsDropdownOpen = false;
 
   tickingMode = false;
   isPaused = false;
@@ -129,6 +132,14 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
     }, { validators: timeRangesValidator });
   }
 
+  // onProjectSelected(project: Project) {
+  //   this.taskForm.get('project').setValue(project);
+  //   this.projectsDropdownOpen = false;
+  // }
+
+  // onProjectInputClicked() {
+  //   this.projectsDropdownOpen = !this.projectsDropdownOpen;
+  // }
 
   formatTaskLength() {
     if (this.taskForm.value.workHours) {

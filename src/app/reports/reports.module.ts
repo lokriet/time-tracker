@@ -11,6 +11,7 @@ import { ComboChartComponent } from './combo-chart/combo-chart.component';
 import { LineSeriesComponent } from './combo-chart/line-series.component';
 import { DateRangeComponent } from './date-range/date-range.component';
 import { ReportsComponent } from './reports.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ReportsComponent } from './reports.component';
     LineSeriesComponent],
   imports: [
     CommonModule,
+    SharedModule,
     NgxChartsModule,
     NgbDatepickerModule,
     FormsModule,

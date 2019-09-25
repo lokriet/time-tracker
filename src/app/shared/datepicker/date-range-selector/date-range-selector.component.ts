@@ -2,6 +2,7 @@ import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { DateRange } from './date-range.model';
 
 export const DATE_RANGE_SELECTOR_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -62,7 +63,7 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
   // tslint:disable-next-line: variable-name
   _selectedMonth: Date;
   previousMonth: Date;
-  dateRange: {startDate: Date, endDate: Date};
+  dateRange: DateRange;
   view: View;
   selectedYear: number;
 
@@ -144,7 +145,7 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
     }
   }
 
-  onDateRangeSelected(dateRange: {startDate: Date, endDate: Date}) {
+  onDateRangeSelected(dateRange: DateRange) {
     this.onChange(dateRange);
   }
 
@@ -168,7 +169,7 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
     this.previousMonth.setMonth(this.previousMonth.getMonth() - 1);
   }
 
-  writeValue(value: {startDate: Date, endDate: Date}): void {
+  writeValue(value: DateRange): void {
     this.dateRange = value;
   }
 

@@ -1,0 +1,22 @@
+<div class="form-dropdown task-project" #dropdownElement>
+  <input 
+      type="text" 
+      class="form-control dropdown-input"
+      [class.open]="dropdownOpen"
+      [placeholder]="placeholder"
+      (click)="onDropdownInputClicked()"
+      (keyup)="onDropdownInputKey($event)"
+      [value]="selectedItem ? (displayProperty ? selectedItem[displayProperty] : selectedItem) : ''"
+      >
+  <div class="dropdown-area" [class.open]="dropdownOpen" #optionsListElement>
+    <button
+      type="button" 
+      class="dropdown-item"
+      *ngFor="let item of items; let i = index" 
+      [class.selected]="i === hoveredItemIndex"
+      (click)="onItemSelected(i)"
+      (mouseenter)="onItemHovered(i)">
+        {{ displayProperty ? item[displayProperty] : item }}
+    </button>
+  </div>
+</div>

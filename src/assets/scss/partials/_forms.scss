@@ -92,4 +92,63 @@ form.ng-dirty input.ng-invalid {
   }
 }
 
+.form-dropdown {
+  .dropdown-input {
+    width: 100%;
+    transition: border-radius 400ms;
+  
+    &.open {
+      border-radius: $border-radius $border-radius 0 0;
+    }
+  }
+
+  .dropdown-area {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 0.1rem;
+    border: none;
+    border-radius: 0 0 $border-radius $border-radius;
+    height: 0;
+    width: inherit;
+    border: $border-width solid transparent;
+    transition: height 400ms, border-color 400ms;
+    z-index: 10;
+  
+    &.open {
+      height: 12rem;
+      border-color: $main-color--lighter;
+    }
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .dropdown-item {
+    background-color: white;
+    color: $main-color--darker;
+    font-family: $main-font;
+    font-size: 1rem;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 11;
+  
+    &.selected {
+      background-color: $main-color;
+      color: white;
+    }
+  
+    &:active,
+    &:focus {
+      background-color: $main-color;
+      color: white;
+      outline: none !important;
+    }
+  }
+}
+
 

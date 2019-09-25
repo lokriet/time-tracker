@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { DateRange } from '../date-range.model';
 
 
 @Component({
@@ -13,7 +14,7 @@ export class DaysRangeViewComponent implements OnInit {
   // tslint:disable-next-line: variable-name
   private _selectedMonth: Date;
 
-  @Output() dateRangeSelected = new EventEmitter<{startDate: Date, endDate: Date}>();
+  @Output() dateRangeSelected = new EventEmitter<DateRange>();
   startDate: Date;
   endDate: Date;
 
@@ -181,7 +182,7 @@ export class DaysRangeViewComponent implements OnInit {
   }
 
   @Input()
-  set dateRange(value: {startDate: Date, endDate: Date} ) {
+  set dateRange(value: DateRange) {
     if (value) {
       this.startDate = new Date(value.startDate);
       this.startDate.setHours(0, 0, 0, 0);

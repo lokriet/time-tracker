@@ -2,7 +2,6 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ID, Order } from '@datorama/akita';
 import { faBackward, faCheck, faCircle, faForward, faHeart } from '@fortawesome/free-solid-svg-icons';
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { colorSets } from '@swimlane/ngx-charts/release/utils';
 import { fromEvent, Observable } from 'rxjs';
 import { auditTime, map } from 'rxjs/operators';
@@ -10,7 +9,7 @@ import { auditTime, map } from 'rxjs/operators';
 import { AuthService } from '../auth/store/auth.service';
 import { Project } from '../projects/project.model';
 import { ProjectsService } from '../projects/store/projects.service';
-import { DateRange } from './date-range/date-range.model';
+import { DateRange } from '../shared/datepicker/date-range-selector/date-range.model';
 import { DateSelectionMode, DateSelector } from './date-selector.model';
 import { formatHours, ReportsDataService } from './reports-data.service';
 import { ReportsQuery } from './store/reports.query';
@@ -48,7 +47,6 @@ export class ReportsComponent implements OnInit {
   faFullHeart = faHeart;
 
   constructor(private reportsDataService: ReportsDataService,
-              private calendar: NgbCalendar,
               @Inject('windowObject') private window: Window,
               private currencyPipe: CurrencyPipe,
               private projectsService: ProjectsService,
@@ -60,7 +58,7 @@ export class ReportsComponent implements OnInit {
     this.projects$ = this.projectsService.getProjectsByOwnerId(this.authService.getCurrentUserUid(), 'isFavorite', Order.DESC);
 
     this.scheme = colorSets.find(s => s.name === 'vivid');
-    this.dateSelector = new DateSelector(this.calendar);
+    this.dateSelector = new DateSelector();
 
     this.windowWidth = this.window.innerWidth - 20;
     fromEvent(window, 'resize').pipe(
@@ -89,30 +87,30 @@ export class ReportsComponent implements OnInit {
   onBuildReport() {
     switch (this.reportType) {
       case 'hours':
-        this.data = this.reportsDataService.getHoursBarReportData(this.dates.fromDate,
-                                                                  this.dates.toDate,
+        this.data = this.reportsDataService.getHoursBarReportData(this.dates.startDate,
+                                                                  this.dates.endDate,
                                                                   { projects: this.filterProjects });
         this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
         this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
         break;
       case 'money':
-        this.data = this.reportsDataService.getMoneyBarReportData(this.dates.fromDate,
-                                                                  this.dates.toDate,
+        this.data = this.reportsDataService.getMoneyBarReportData(this.dates.startDate,
+                                                                  this.dates.endDate,
                                                                   { projects: this.filterProjects });
         this.totalsData = this.reportsDataService.getBarReportDataTotals(this.data);
         this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.length * 25 + 20));
         break;
       case 'combined':
         this.data = {
-          hours: this.reportsDataService.getHoursBarReportData(this.dates.fromDate, this.dates.toDate, { projects: this.filterProjects }),
-          money: this.reportsDataService.getMoneyLineReportData(this.dates.fromDate, this.dates.toDate, { projects: this.filterProjects })
+          hours: this.reportsDataService.getHoursBarReportData(this.dates.startDate, this.dates.endDate, { projects: this.filterProjects }),
+          money: this.reportsDataService.getMoneyLineReportData(this.dates.startDate, this.dates.endDate, { projects: this.filterProjects })
         };
         this.graphWidth = Math.min(this.windowWidth, Math.max(400, this.data.hours.length * 25 + 20));
         this.totalsData = {
           hours: this.reportsDataService.getBarReportDataTotals(this.data.hours),
           money: this.reportsDataService.getBarReportDataTotals(
-                                            this.reportsDataService.getMoneyBarReportData(this.dates.fromDate,
-                                                                                          this.dates.toDate,
+                                            this.reportsDataService.getMoneyBarReportData(this.dates.startDate,
+                                                                                          this.dates.endDate,
                                                                                           { projects: this.filterProjects }))
         };
         break;

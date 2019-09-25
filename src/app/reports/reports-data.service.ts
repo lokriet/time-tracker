@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 import { Task } from '../tasks/model/task.model';
 import { getTaskLength } from '../tasks/model/time-formatter.service';
@@ -69,7 +68,7 @@ export class ReportsDataService {
 //     }
 //   ]
 //   */
-  getMoneyBarReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
+  getMoneyBarReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
 //     const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
 //     const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
 //     const tasks = this.tasksQuery.getAll({
@@ -140,7 +139,7 @@ return null;
 //     }
 //   ]
 //   */
-  getHoursBarReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
+  getHoursBarReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
 //     const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
 //     const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
 //     const tasks = this.tasksQuery.getAll({
@@ -205,7 +204,7 @@ return null;
 //     }
 //   ]
 //   */
-  getMoneyLineReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
+  getMoneyLineReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
 //     const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
 //     const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
 //     const tasks = this.tasksQuery.getAll({
