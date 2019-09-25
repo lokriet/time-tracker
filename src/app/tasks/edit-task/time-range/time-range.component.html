@@ -2,12 +2,12 @@
   <app-time [id]="id+'startTime'" 
             [placeholder]="'From'"
             (timeSelected)="onStartTimeSelected($event)" 
-            [selectedTime]="startTime" 
+            [selectedItem]="startTime" 
             class="start-time"></app-time> - 
   <app-time [id]="id+'endTime'" 
             [placeholder]="'To'"
             [startTime]="startTime" 
             (timeSelected)="onEndTimeSelected($event)" 
-            [selectedTime]="endTime" 
+            [selectedItem]="endTime" 
             class="end-time"></app-time>
 </div>

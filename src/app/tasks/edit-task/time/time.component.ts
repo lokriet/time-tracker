@@ -12,38 +12,29 @@ import {
 
 import { formatTime } from '../../model/time-formatter.service';
 import { Time } from '../../model/time.model';
+import { DropdownComponent } from 'src/app/shared/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-time',
   templateUrl: './time.component.html',
   styleUrls: ['./time.component.scss']
 })
-export class TimeComponent implements OnInit, OnChanges {
-  timeOptions: string[] = [];
-  dropdownOpen = false;
-
-  @Input() selectedTime: Time;
+export class TimeComponent extends DropdownComponent implements OnInit, OnChanges {
   @Input() id: string;
   @Input() startTime: Time;
-  @Input() placeholder: string;
   @Output() timeSelected = new EventEmitter<Time>();
 
   @ViewChild('timeInput', { static: true }) timeInput: ElementRef;
-  @ViewChild('dropdownControl', { static: true }) dropdownControl: ElementRef;
 
-  constructor() { }
 
   ngOnInit() {
     if (!this.startTime) {
       this.startTime = Time.fromString('6:00am');
     }
-    this.generateTimeOptions();
 
-    document.addEventListener('mouseup', (event: MouseEvent) => {
-      if (!this.dropdownControl.nativeElement.contains(event.target)) {
-        this.dropdownOpen = false;
-      }
-    });
+    this.generateTimeOptions();
+    super.ngOnInit();
+    this.findMatchingSelectedItemIndex();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -52,27 +43,42 @@ export class TimeComponent implements OnInit, OnChanges {
         if (this.startTime) {
           this.generateTimeOptions();
         }
+      } else if (propName === 'selectedItem') {
+        this.findMatchingSelectedItemIndex();
+      }
+    }
+  }
+
+  private findMatchingSelectedItemIndex() {
+    this.selectedItemIndex = 0;
+    if (this.selectedItem) {
+      const selectedItemString = formatTime(this.selectedItem);
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i] === selectedItemString) {
+          this.selectedItemIndex = i;
+          break;
+        }
       }
     }
   }
 
   private generateTimeOptions() {
-    this.timeOptions = [];
-    this.timeOptions.push(formatTime(this.startTime));
+    this.items = [];
+    this.items.push(formatTime(this.startTime));
 
     const date = new Date(this.startTime.date);
     for (let i = 0; i < 47; i++) {
       date.setMinutes(date.getMinutes() + 30);
-      this.timeOptions.push(formatTime(Time.fromDate(date)));
+      this.items.push(formatTime(Time.fromDate(date)));
     }
   }
 
 
-  onTimeSelected(timeOption: string) {
+  private onTimeSelected(timeOption: string) {
     if (timeOption) {
       if (this.validateTimeString(timeOption)) {
-        this.selectedTime = Time.fromString(timeOption);
-        this.timeSelected.emit(this.selectedTime);
+        this.selectedItem = Time.fromString(timeOption);
+        this.timeSelected.emit(this.selectedItem);
       } else {
         this.timeSelected.emit(null);
       }
@@ -83,36 +89,35 @@ export class TimeComponent implements OnInit, OnChanges {
     this.dropdownOpen = false;
   }
 
-  onOptionClick(timeOption: string) {
-    this.onTimeSelected(timeOption);
+  onItemSelected(i: number) {
+    this.onTimeSelected(/*timeOption*/this.items[i]);
+    this.selectedItemIndex = i;
   }
 
-  onKeyPressed(event: KeyboardEvent) {
+  onDropdownInputKey(event: KeyboardEvent) {
     if (event.keyCode === 13) { // enter
-      event.stopPropagation();
+      event.stopPropagation(); // don't submit the form
 
       this.checkAndReplaceInputFormat();
       const input = event.target as HTMLInputElement;
       this.onTimeSelected(input.value);
 
       // focus next :(
+    } else {
+      super.onDropdownInputKey(event);
     }
   }
 
-  onInputClicked() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
   formatTime() {
-    if (this.selectedTime) {
-      return formatTime(this.selectedTime);
+    if (this.selectedItem) {
+      return formatTime(this.selectedItem);
     }
 
     return '';
   }
 
 
-  checkAndReplaceInputFormat() {
+  private checkAndReplaceInputFormat() {
     const inputPattern = /^(\d?\d)(:\d\d)?(am|pm)?$/gi;
 
     if (inputPattern.test(this.timeInput.nativeElement.value)) {
@@ -152,7 +157,7 @@ export class TimeComponent implements OnInit, OnChanges {
 
   }
 
-  validateTimeString(timeString: string): boolean {
+  private validateTimeString(timeString: string): boolean {
     const acceptedPattern = /^(\d?\d):(\d\d)(am|pm)$/gi;
     if (!acceptedPattern.test(timeString)) {
       this.timeInput.nativeElement.classList.remove('ng-valid');

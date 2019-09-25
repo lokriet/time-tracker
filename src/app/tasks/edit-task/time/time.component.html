@@ -1,22 +1,25 @@
-<div class="form-dropdown" #dropdownControl>
+<div class="form-dropdown task-project" #dropdownElement>
   <input 
-      type="text" 
+      type="text"
+      id="{{id}}"
       [pattern]="'^/d?/d:/d/d[am|AM|pm|PM]$'"
       class="form-control dropdown-input"
       [class.open]="dropdownOpen"
-      id="{{id}}"
-      [value]="formatTime()"
-      (keyup)="onKeyPressed($event)"
-      (click)="onInputClicked()"
       [placeholder]="placeholder"
-      #timeInput>
-  <div class="dropdown-area" [class.open]="dropdownOpen">
+      (click)="onDropdownInputClicked()"
+      (keyup)="onDropdownInputKey($event)"
+      [value]="formatTime()"
+      #timeInput
+      >
+  <div class="dropdown-area" [class.open]="dropdownOpen" #optionsListElement>
     <button
       type="button" 
       class="dropdown-item"
-      *ngFor="let timeOption of timeOptions" 
-      (click)="onOptionClick(timeOption)">
-          {{ timeOption }}
+      *ngFor="let item of items; let i = index" 
+      [class.selected]="i === hoveredItemIndex"
+      (click)="onItemSelected(i)"
+      (mouseenter)="onItemHovered(i)">
+        {{ item }}
     </button>
   </div>
 </div>

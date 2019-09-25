@@ -53,8 +53,8 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
 
   private openDropdown() {
     this.dropdownOpen = true;
-    this.hoveredItemIndex = this.selectedItem ? this.selectedItemIndex : 0;
-    this.optionsListElement.nativeElement.children[this.hoveredItemIndex].scrollIntoView(true);
+    this.hoveredItemIndex = Math.max(this.selectedItem ? this.selectedItemIndex : 0, 0);
+    this.scrollIntoViewIfNeeded(this.optionsListElement.nativeElement.children[this.hoveredItemIndex]);
   }
 
   onDropdownInputKey(event: KeyboardEvent) {
@@ -92,17 +92,13 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
 
   private scrollIntoViewIfNeeded(element) {
     const parent = element.parentNode;
-    const parentComputedStyle = window.getComputedStyle(parent, null);
-    const parentBorderTopWidth = parseInt(parentComputedStyle.getPropertyValue('border-top-width'));
-    // const overTop = element.offsetTop - parent.offsetTop < parent.scrollTop;
-    // const overBottom = (element.offsetTop - parent.offsetTop + element.clientHeight - parentBorderTopWidth) > (parent.scrollTop + parent.clientHeight);
     const overTop = element.offsetTop < parent.scrollTop;
     const overBottom = (element.offsetTop + element.clientHeight) > (parent.clientHeight + parent.scrollTop);
 
-    const alignWithTop = overTop && !overBottom;
-
-    if (overTop || overBottom) {
-      element.scrollIntoView(alignWithTop);
+    if (overTop) {
+      parent.scrollTop = element.offsetTop;
+    } else if (overBottom) {
+      parent.scrollTop = element.offsetTop + parent.clientHeight;
     }
   }
 

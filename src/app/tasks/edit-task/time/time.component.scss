@@ -1,9 +1,16 @@
 @import "../../../../assets/scss/partials/forms";
-@import "../../../../assets/scss/partials/variables";
 
 .form-dropdown {
-  display: inline-block;
+  // display: inline-block;
   width: 5.5rem;
+  
+  .dropdown-area {
+    margin: 0.1rem 0 0 0;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 0.5rem;
+  }
 }
 
 .form-control {
