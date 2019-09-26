@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ID, Order } from '@datorama/akita';
 import { faBackward, faCheck, faCircle, faForward, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { colorSets } from '@swimlane/ngx-charts/release/utils';
@@ -18,6 +18,7 @@ import { ReportsStore } from './store/reports.store';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
+  // encapsulation: ViewEncapsulation.None,
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent implements OnInit {
@@ -25,6 +26,7 @@ export class ReportsComponent implements OnInit {
   faTwoLeft = faBackward;
   faTwoRight = faForward;
   faCircle = faCircle;
+  faFullHeart = faHeart;
 
   reportType = 'hours';
 
@@ -44,7 +46,9 @@ export class ReportsComponent implements OnInit {
   filterProjects: ID[];
   projects$: Observable<Project[]>;
 
-  faFullHeart = faHeart;
+  dateSelectionModes = [DateSelectionMode.WEEKLY,
+                        DateSelectionMode.BIWEEKLY,
+                        DateSelectionMode.MONTHLY];
 
   constructor(private reportsDataService: ReportsDataService,
               @Inject('windowObject') private window: Window,
@@ -117,8 +121,17 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  onChangeDateSelectionMode(value: string) {
+  set dateSelectionMode(value: string) {
     this.dateSelector.dateSelectionMode = DateSelectionMode[value];
+    this.dates = this.dateSelector.getCurrentPeriod();
+    this.onBuildReport();
+
+    this.reportsStore.updateDateSelectionMode(this.dateSelector.dateSelectionMode);
+    this.reportsStore.updateSelectedDates(this.dates);
+  }
+
+  onChangeDateSelectionMode(value: DateSelectionMode) {
+    this.dateSelector.dateSelectionMode = value;
     this.dates = this.dateSelector.getCurrentPeriod();
     this.onBuildReport();
 
@@ -145,6 +158,11 @@ export class ReportsComponent implements OnInit {
     this.onBuildReport();
 
     this.reportsStore.updateSelectedDates(this.dates);
+  }
+
+  canSelectNextPeriod(): boolean {
+    return !this.dateSelector.isNextPeriodEndFuture();
+    // return true;
   }
 
   onDatesSelected(dates: DateRange) {

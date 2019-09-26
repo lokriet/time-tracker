@@ -4,6 +4,7 @@
 @import '../datepicker.view';
 
 .date-range-selector {
+  display: inline-block;
   background-color: white;
   position: relative;
   border-radius: $border-radius;

@@ -171,6 +171,18 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
 
   writeValue(value: DateRange): void {
     this.dateRange = value;
+
+    if (value) {
+      this.selectedMonth = value.endDate;
+      // if (value.endDate.getTime() > this.previousMonth.getTime()) {
+      //   this.selectedMonth = value.endDate;
+      // } else {
+      //   const lastVisibleDate = new Date(this.selectedMonth);
+      //   lastVisibleDate.setMonth(lastVisibleDate.getMonth() + 1);
+      //   lastVisibleDate.setDate(lastVisibleDate.getDate())
+      //   this.selectedMonth = value.endDate;
+      // }
+    }
   }
 
   registerOnChange(fn: any): void {

@@ -13,11 +13,19 @@ import {
 import { formatTime } from '../../model/time-formatter.service';
 import { Time } from '../../model/time.model';
 import { DropdownComponent } from 'src/app/shared/dropdown/dropdown.component';
+import { trigger, state, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-time',
   templateUrl: './time.component.html',
-  styleUrls: ['./time.component.scss']
+  styleUrls: ['./time.component.scss'],
+  animations: [
+    trigger('collapsed', [
+      state('true', style({ height: 0 })),
+      state('false', style({ height: '*' })),
+      transition('true => false', animate('400ms ease-in')),
+      transition('false => true', animate('400ms ease-out'))
+  ])]
 })
 export class TimeComponent extends DropdownComponent implements OnInit, OnChanges {
   @Input() id: string;

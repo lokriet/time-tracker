@@ -11,7 +11,11 @@
       [value]="formatTime()"
       #timeInput
       >
-  <div class="dropdown-area" [class.open]="dropdownOpen" #optionsListElement>
+  <div 
+      class="dropdown-area" 
+      [class.open]="dropdownOpen" 
+      [@collapsed]="!dropdownOpen"
+      #optionsListElement>
     <button
       type="button" 
       class="dropdown-item"

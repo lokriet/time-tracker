@@ -1,5 +1,107 @@
-<div class="date-range-selector">
-  <app-date-range-selector [ngModel]="dates"></app-date-range-selector>
+<div class="date-range-selector--container">
+  <app-date-range-selector [ngModel]="dates" (ngModelChange)="onDatesSelected($event);"></app-date-range-selector>
+
+  <div class="date-selection-nav">
+    <label for="date-selection-mode" class="form-label">Dates range</label>
+    <app-dropdown
+      class="date-selection-mode--dropdown"
+      [items]="dateSelectionModes"
+      
+      [ngModel]="dateSelector.dateSelectionMode"
+      name="date-selection-mode"
+      (ngModelChange)="onChangeDateSelectionMode($event)" #dateSelectionMode>
+    </app-dropdown>
+    <div class="date-selection-nav--buttons">
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectPreviousPeriod()">
+          <fa-icon [icon]="faTwoLeft"></fa-icon>
+        </button>
+        <span class="tooltip">Previous period</span>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectCurrentPeriod()">
+          <fa-icon [icon]="faCircle"></fa-icon>
+        </button>
+        <span class="tooltip">Current period</span>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectNextPeriod()"
+            [disabled]="!canSelectNextPeriod()">
+          <fa-icon [icon]="faTwoRight"></fa-icon>
+        </button>
+        <span class="tooltip">Next period</span>
+      </div>
+    </div>
+
+    <label for="report-type" class="form-label report-type-label">Report type</label>
+    <div class="report-type-selector">
+        <label class="report-type-button form-button" [class.active]="hours.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="hours" 
+              #hours 
+              (change)=reportTypeChanged()>
+          Hours
+        </label>
+        <label class="report-type-button form-button" [class.active]="money.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="money" 
+              #money 
+              (change)=reportTypeChanged()>
+          Money
+        </label>
+        <label class="report-type-button form-button" [class.active]="combined.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="combined" 
+              #combined 
+              (change)=reportTypeChanged()>
+          Combined
+        </label>
+    </div>
+
+    <ng-select
+        class="tasks-filter-dropdown"
+        name="tasks-filter"
+        [items]="projects$ | async"
+        [multiple]="true"
+        bindLabel="projectName"
+        groupBy="ownerId"
+        [selectableGroup]="true"
+        [selectableGroupAsModel]="false"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [placeholder]="'Filter tasks'"
+        [(ngModel)]="filterProjects"
+        (change)="onFilterProjectsSelected()">
+      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+        <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
+        <span [hidden]="!item.isFavorite" class="ml-2 favorite">
+          <fa-icon [icon]="faFullHeart"></fa-icon>
+        </span>
+        {{item.projectName}}
+      </ng-template>
+    </ng-select>
+  </div>
 </div>
 
 
@@ -27,9 +129,8 @@
 
 
 
-
  <div class="container">
-  <form (ngSubmit)="onBuildReport()">
+  <!-- <form (ngSubmit)="onBuildReport()">
   <div class="row">
     <div class="col-auto">
         <app-date-range [ngModel]="dates" name="dates" (ngModelChange)="onDatesSelected($event);"></app-date-range>
@@ -107,9 +208,9 @@
           
         </div>
       </div>
-    </div>
+    </div> -->
 
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-xs-12 w-100">
       <ngx-charts-bar-vertical-stacked
         *ngIf="reportType === 'hours' || reportType === 'money'"
@@ -182,6 +283,6 @@
         [tooltipText]="moneyPieTooltipText"
       >
       </ngx-charts-pie-chart>
-    </div>
-  </div>
+    </div> 
+  </div>-->
 </div> 

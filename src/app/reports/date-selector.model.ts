@@ -4,9 +4,9 @@
 import { DateRange } from '../shared/datepicker/date-range-selector/date-range.model';
 
 export enum DateSelectionMode {
-  WEEKLY,
-  BIWEEKLY,
-  MONTHLY
+  WEEKLY = 'Weekly',
+  BIWEEKLY = 'Bi-Weekly',
+  MONTHLY = 'Monthly'
 }
 
 export class DateSelector {
@@ -76,6 +76,40 @@ export class DateSelector {
         break;
     }
     return this.currentSelectedDateRange;
+  }
+
+  isNextPeriodEndFuture(): boolean {
+    let dateToCheck;
+    if (!this.currentSelectedDateRange) {
+      this.setCurrentPeriod();
+      dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+      this.setSelectedPeriod(null);
+    } else {
+      dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+    }
+
+    if (dateToCheck.getTime() > this.getToday().getTime()) {
+      return true;
+    } else {
+      switch (this.dateSelectionMode) {
+        case DateSelectionMode.WEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 7);
+          break;
+        case DateSelectionMode.BIWEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 14);
+          break;
+        case DateSelectionMode.MONTHLY:
+          dateToCheck.setDate(1);
+          dateToCheck.setMonth(dateToCheck.getMonth() + 2);
+          dateToCheck.setDate(dateToCheck.getDate() - 1);
+          break;
+      }
+
+      const nextMonth = this.getToday();
+      nextMonth.setDate(1);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      return dateToCheck.getTime() > nextMonth.getTime();
+    }
   }
 
   private setCurrentPeriod() {
@@ -180,9 +214,9 @@ export class DateSelector {
   }
 
   private setNextMonth() {
-    let isDecember = this.currentSelectedDateRange.startDate.getMonth() === 11;
-    const first = new Date(isDecember ? this.currentSelectedDateRange.startDate.getFullYear() + 1 : this.currentSelectedDateRange.startDate.getFullYear(),
-                                         isDecember ? 0 : this.currentSelectedDateRange.startDate.getMonth() + 1,
+    let isDecember = this.currentSelectedDateRange.endDate.getMonth() === 11;
+    const first = new Date(isDecember ? this.currentSelectedDateRange.endDate.getFullYear() + 1 : this.currentSelectedDateRange.endDate.getFullYear(),
+                                         isDecember ? 0 : this.currentSelectedDateRange.endDate.getMonth() + 1,
                                          1);
     isDecember = first.getMonth() === 11;
     let last = new Date(isDecember ? first.getFullYear() + 1 : first.getFullYear(),

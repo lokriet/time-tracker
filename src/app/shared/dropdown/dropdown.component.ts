@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { DateSelectionMode } from 'src/app/reports/date-selector.model';
+import { trigger, state, transition, style, animate } from '@angular/animations';
 
 export const DROPDOWN_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -13,7 +15,15 @@ export const DROPDOWN_VALUE_ACCESSOR: any = {
   selector: 'app-dropdown',
   providers: [DROPDOWN_VALUE_ACCESSOR],
   templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss']
+  styleUrls: ['./dropdown.component.scss'],
+  animations: [
+    trigger('collapsed', [
+      state('true', style({ height: 0 })),
+      state('false', style({ height: '*' })),
+      transition('true => false', animate('400ms ease-in')),
+      transition('false => true', animate('400ms ease-out'))
+  ])
+  ]
 })
 export class DropdownComponent implements OnInit, ControlValueAccessor {
   @Input() items = [];
@@ -26,6 +36,8 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
   dropdownOpen = false;
   hoveredItemIndex = -1;
   selectedItemIndex = -1;
+
+  dateSelectionMode: DateSelectionMode;
 
   onChange: any = () => { };
 
@@ -115,6 +127,9 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
 
   writeValue(obj: any): void {
     this.selectedItem = obj;
+    if (this.selectedItem) {
+      this.selectedItemIndex = this.items.indexOf(this.selectedItem);
+    }
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;

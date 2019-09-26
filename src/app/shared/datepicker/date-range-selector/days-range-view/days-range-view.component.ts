@@ -163,6 +163,10 @@ export class DaysRangeViewComponent implements OnInit {
     this.hoveredDate = null;
   }
 
+  getColumnNo(day: Date): number {
+    return day.getDay() === 0 ? 7 : day.getDay();
+  }
+
   isToday(day: Date): boolean {
     return this.today.getTime() === day.getTime();
   }
