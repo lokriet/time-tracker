@@ -1,0 +1,50 @@
+
+<br>
+<br>
+
+
+<div class="chart-container">
+  <!-- y axis labels and lines -->
+  <div class="y-axis">
+    <div 
+        class="y-axis-row" 
+        [style.height]="getBarHeightPercent(hourBarHeight, maxTotal)"
+        *ngFor="let hour of hours">
+      <div class="hour-label">{{hour}}</div>
+      <div class="hour-line"></div>
+    </div>
+  </div>
+
+  <!-- data -->
+  <div class="main-grid" #dataGrid>
+    <div 
+        *ngFor="let dataStack of data; let i = index"
+        class="data-bar-stack"
+        [style.height]="getBarHeightPercent(totals[i], maxTotal)">
+      <div 
+          *ngFor="let dataBar of dataStack.series"
+          class="data-bar"
+          [style.height]="getBarHeightPercent(dataBar?.value, totals[i])"
+          >
+      </div>
+    </div>
+  </div>
+
+  <div class="x-axis" #xAxis>
+    <div 
+        *ngFor="let dataStack of data; let i = index"
+        class="date-label"
+        [class.rotate]="rotateDateLabels()"
+        [style.left]="getDatePosition(i)">
+      {{ dataStack.name }}
+    </div>
+  </div>
+</div>
+
+
+
+<!-- <div class="test-grid">
+  <div class="test-column"></div>
+  <div class="test-column"></div>
+  <div class="test-column"></div>
+</div> -->

@@ -12,6 +12,7 @@ import { LineSeriesComponent } from './combo-chart/line-series.component';
 import { DateRangeComponent } from './date-range/date-range.component';
 import { ReportsComponent } from './reports.component';
 import { SharedModule } from '../shared/shared.module';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SharedModule } from '../shared/shared.module';
     DateRangeComponent,
     ComboChartComponent,
     BarSeriesComponent,
-    LineSeriesComponent],
+    LineSeriesComponent,
+    BarChartComponent],
   imports: [
     CommonModule,
     SharedModule,
