@@ -8,10 +8,10 @@
   <div class="y-axis">
     <div 
         class="y-axis-row" 
-        [style.height]="getBarHeightPercent(hourBarHeight, maxTotal)"
-        *ngFor="let hour of hours">
-      <div class="hour-label">{{hour}}</div>
-      <div class="hour-line"></div>
+        [style.height]="getBarHeightPercent(yBarHeight, maxTotal)"
+        *ngFor="let label of yAxisLabels">
+      <div class="y-axis-label">{{label}}</div>
+      <div class="y-axis-line"></div>
     </div>
   </div>
 
@@ -37,8 +37,10 @@
             >
           <div class="face-box"><div class="face">:)</div></div>
           <div class="bar-tooltip">
-            Hi! I'm a task {{ dataBar.name === 'no project' ? 'with no project' : 'for ' + dataBar.name + ' project' }}. 
-            I last {{ dataBar.value | number:'1.0-2' }} {{ dataBar.value === 1 ? 'hr' : 'hrs' }}</div>
+            <!-- Hi! I'm a task {{ dataBar.name === 'no project' ? 'with no project' : 'for ' + dataBar.name + ' project' }}. 
+            I last {{ dataBar.value | number:'1.0-2' }} {{ dataBar.value === 1 ? 'hr' : 'hrs' }} -->
+            {{ getBarTooltipText(dataBar.name, dataBar.value) }}
+          </div>
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.scss']
+  styleUrls: ['./bar-chart.component.scss'],
+  providers: [DecimalPipe]
 })
 export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
 
@@ -34,11 +36,12 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   ]
   */
   @Input() data: any[];
+  @Input() chartType: string;
 
   totals: number[];
   maxTotal: number;
-  hours: string[]; // labels for y axis
-  hourBarHeight: number;
+  yAxisLabels: string[]; // labels for y axis
+  yBarHeight: number;
 
   // date labels positioning
   needRecalc = false;
@@ -50,7 +53,7 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('dataGrid', { static: true }) dataGrid: ElementRef;
   @ViewChild('xAxis', { static: true }) xAxis: ElementRef;
 
-  constructor() { }
+  constructor(private decimals: DecimalPipe) { }
 
   ngOnInit() {
     this.init();
@@ -87,15 +90,29 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
     }
 
 
-    this.hours = [];
-    this.hourBarHeight = this.maxTotal > 12 ? 2 : 1;
-    for (let i = 1; i < this.maxTotal; i++) {
-      if (this.maxTotal > 12 && (i % 2 === 1)) {
-        continue;
+    this.yAxisLabels = [];
+
+    if (this.isHourChart()) {
+      this.yBarHeight = this.maxTotal > 12 ? 2 : 1;
+      for (let i = 1; i < this.maxTotal; i++) {
+        if (this.maxTotal > 12 && (i % 2 === 1)) {
+          continue;
+        }
+
+        const label = i + (i === 1 ? ' hr' : ' hrs');
+        this.yAxisLabels.push(label);
+      }
+    } else if (this.isMoneyChart() && this.maxTotal >= 1) {
+      const order = (Math.floor(this.maxTotal) + '').length - 1;
+      const showHalfOrders = parseFloat((this.maxTotal + '').charAt(0)) < 5;
+      this.yBarHeight = Math.pow(10, order);
+      if (showHalfOrders) {
+        this.yBarHeight /= 2;
       }
 
-      const label = i + (i === 1 ? ' hr' : ' hrs');
-      this.hours.push(label);
+      for (let nextBar = this.yBarHeight; nextBar < this.maxTotal; nextBar += this.yBarHeight) {
+        this.yAxisLabels.push('$' + nextBar);
+      }
     }
   }
 
@@ -132,11 +149,6 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
       }
 
     }
-    // barElement.getBoundingClientRect();
-    // tooltipElement.getBoundingClientRect();
-    // window.innerWidth, window.innerHeight;
-
-    
   }
 
   private calculateDimensions() {
@@ -155,6 +167,25 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
     }
 
     this.needRecalc = false;
+  }
+
+  isHourChart(): boolean {
+    return this.chartType === 'hours';
+  }
+
+  isMoneyChart(): boolean {
+    return this.chartType === 'money';
+  }
+
+  getBarTooltipText(projectName: string, value: number): string {
+    const projectDesc = projectName === 'no project' ? 'with no project' : 'for ' + projectName + ' project';
+    let valueDesc = '';
+    if (this.isHourChart()) {
+      valueDesc = `I last ${this.decimals.transform(value, '1.0-2')}  ${value === 1 ? 'hr' : 'hrs'}`;
+    } else if (this.isMoneyChart()) {
+      valueDesc = `I'm worth $${this.decimals.transform(value, '1.0-2')}`;
+    }
+    return `Hi! I'm a task ${projectDesc}. ${valueDesc}`;
   }
 
 }

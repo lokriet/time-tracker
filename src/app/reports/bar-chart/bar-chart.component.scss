@@ -1,7 +1,7 @@
 @import '../../../assets/scss/partials/colors';
 @import '../../../assets/scss/partials/variables';
 
-$hours-label-width: 4rem;
+$y-label-width: 4rem;
 
 .chart-container {
   position: relative;
@@ -29,9 +29,9 @@ $hours-label-width: 4rem;
     display: flex;
   }
 
-  .hour-label {
+  .y-axis-label {
     color: $main-color;
-    width: $hours-label-width;
+    width: $y-label-width;
     padding-right: 0.5rem;
     margin-top: -0.7rem;
 
@@ -40,7 +40,7 @@ $hours-label-width: 4rem;
     justify-content: flex-end;
   }
 
-  .hour-line {
+  .y-axis-line {
     flex-grow: 1;
     border-top: $border-width solid $main-color--lighter;
   }
@@ -59,18 +59,18 @@ $hours-label-width: 4rem;
 .scrollable-data-container {
     position: relative;
     top: 0;
-    left: calc(#{$hours-label-width} + 1rem);
+    left: calc(#{$y-label-width} + 1rem);
     display: flex;
     flex-direction: column;
     overflow-x: auto;
     overflow-y: visible;
-    width: calc(100% - #{$hours-label-width} - 1rem);
+    width: calc(100% - #{$y-label-width} - 1rem);
 
   .main-grid {
     display: flex;
     align-items: flex-end;
     height: 25rem;
-    width: calc(100% - #{$hours-label-width} - 2rem);
+    width: calc(100% - #{$y-label-width} - 2rem);
     z-index: 2;
   
     .data-bar-stack {
@@ -154,7 +154,7 @@ $hours-label-width: 4rem;
   
   .x-axis {
     position: relative;
-    width: calc(100% - #{$hours-label-width} - 2rem);
+    width: calc(100% - #{$y-label-width} - 2rem);
     height: 5rem;
   
     .date-label {
