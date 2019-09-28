@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
 
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
+
   /*
   [
     {
@@ -32,13 +33,19 @@ export class BarChartComponent implements OnInit {
     }
   ]
   */
-  // tslint:disable-next-line: variable-name
-  _data: any[];
+  @Input() data: any[];
 
   totals: number[];
   maxTotal: number;
   hours: string[]; // labels for y axis
   hourBarHeight: number;
+
+  // date labels positioning
+  needRecalc = false;
+  barStackWidth: number;
+  dateLabelWidth: number;
+  dateLabelPositions: string[];
+  rotateDateLabels = true;
 
   @ViewChild('dataGrid', { static: true }) dataGrid: ElementRef;
   @ViewChild('xAxis', { static: true }) xAxis: ElementRef;
@@ -47,6 +54,24 @@ export class BarChartComponent implements OnInit {
 
   ngOnInit() {
     this.init();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    for (const propName in changes) {
+      if (propName === 'data') {
+        this.init();
+        this.needRecalc = true;
+      }
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this.needRecalc) {
+      setTimeout(() => {
+        this.calculateDimensions();
+        this.setDataLabelPositions();
+      }, 0); // tick
+    }
   }
 
   private init() {
@@ -78,29 +103,58 @@ export class BarChartComponent implements OnInit {
     return (barValue * 100 / totalValue) + '%';
   }
 
-  getDatePosition(dataStackIndex: number): string {
+  onBarHovered(event: MouseEvent) {
+    const barElement = event.currentTarget as HTMLElement;
+    const barDimensions = barElement.getBoundingClientRect();
+    const tooltipElement = barElement.getElementsByClassName('bar-tooltip')[0] as HTMLElement;
+    const tooltipDimensions = tooltipElement.getBoundingClientRect();
+
+    const rem = parseFloat(window.getComputedStyle(tooltipElement).fontSize);
+
+    if (barDimensions.top > (tooltipDimensions.height + 2 * rem) &&
+        barDimensions.left > ((tooltipDimensions.width / 2) + rem)) {
+          tooltipElement.style.top = (barDimensions.top - tooltipDimensions.height - rem) + 'px';
+          tooltipElement.style.left = (barDimensions.left + (barDimensions.width / 2) - (tooltipDimensions.width / 2)) + 'px';
+    } else {
+      let top = Math.max(rem, barDimensions.top);
+      if ((top + tooltipDimensions.height > window.innerHeight) && tooltipDimensions.height < window.innerHeight) {
+        top = window.innerHeight - tooltipDimensions.height - rem;
+      }
+      tooltipElement.style.top = top + 'px';
+
+
+      if ((window.innerWidth - barDimensions.right + 2 * rem) > tooltipDimensions.width) {
+        tooltipElement.style.left = (barDimensions.right + rem) + 'px';
+      } else if ((barDimensions.left + 2 * rem) > tooltipDimensions.width) {
+        tooltipElement.style.left = (barDimensions.left - 2 * rem - tooltipDimensions.width) + 'px';
+      } else {
+        tooltipElement.style.left = rem + 'px';
+      }
+
+    }
+    // barElement.getBoundingClientRect();
+    // tooltipElement.getBoundingClientRect();
+    // window.innerWidth, window.innerHeight;
+
+    
+  }
+
+  private calculateDimensions() {
     const firstDataStack = this.dataGrid.nativeElement.querySelector('.data-bar-stack');
     const style = firstDataStack.currentStyle || window.getComputedStyle(firstDataStack);
-    const dataStackWidth = firstDataStack.offsetWidth + parseFloat(style.marginRight);
-    return (dataStackIndex * dataStackWidth) + 'px';
+    this.barStackWidth = firstDataStack.offsetWidth + parseFloat(style.marginRight);
+
+    this.dateLabelWidth = 6 * parseFloat(style.fontSize); // 6rem
   }
 
-  rotateDateLabels(): boolean {
-    const firstDataStack = this.dataGrid.nativeElement.querySelector('.data-bar-stack');
-    const style = firstDataStack.currentStyle || window.getComputedStyle(firstDataStack);
-    const dataStackWidth = firstDataStack.offsetWidth + parseFloat(style.marginRight);
+  private setDataLabelPositions() {
+    this.rotateDateLabels = this.dateLabelWidth > this.barStackWidth;
+    this.dateLabelPositions = [];
+    for (let i = 0; i < this.data.length; i++) {
+      this.dateLabelPositions.push(i * this.barStackWidth + 'px');
+    }
 
-    const rem = parseFloat(style.fontSize);
-    return 6 * rem < dataStackWidth;
-  }
-
-  @Input() set data(data: any[]) {
-    this._data = data;
-    this.init();
-  }
-
-  get data(): any[] {
-    return this._data;
+    this.needRecalc = false;
   }
 
 }

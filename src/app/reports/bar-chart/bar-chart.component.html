@@ -15,36 +15,44 @@
     </div>
   </div>
 
-  <!-- data -->
-  <div class="main-grid" #dataGrid>
-    <div 
-        *ngFor="let dataStack of data; let i = index"
-        class="data-bar-stack"
-        [style.height]="getBarHeightPercent(totals[i], maxTotal)">
-      <div 
-          *ngFor="let dataBar of dataStack.series"
-          class="data-bar"
-          [style.height]="getBarHeightPercent(dataBar?.value, totals[i])"
-          >
-      </div>
-    </div>
+  <div
+      *ngIf="maxTotal === 0" 
+      class="no-data">
+    <p>No data in this period. Check filters or add some tasks!</p>
   </div>
 
-  <div class="x-axis" #xAxis>
-    <div 
-        *ngFor="let dataStack of data; let i = index"
-        class="date-label"
-        [class.rotate]="rotateDateLabels()"
-        [style.left]="getDatePosition(i)">
-      {{ dataStack.name }}
+  <div class="scrollable-data-container">
+
+    <!-- data -->
+    <div class="main-grid" #dataGrid>
+      <div 
+          *ngFor="let dataStack of data; let i = index"
+          class="data-bar-stack"
+          [style.height]="getBarHeightPercent(totals[i], maxTotal)">
+        <div 
+            *ngFor="let dataBar of dataStack.series; let j = index"
+            class="data-bar"
+            [style.height]="getBarHeightPercent(dataBar?.value, totals[i])"
+            (mouseover)="onBarHovered($event)"
+            >
+          <div class="face-box"><div class="face">:)</div></div>
+          <div class="bar-tooltip">
+            Hi! I'm a task {{ dataBar.name === 'no project' ? 'with no project' : 'for ' + dataBar.name + ' project' }}. 
+            I last {{ dataBar.value | number:'1.0-2' }} {{ dataBar.value === 1 ? 'hr' : 'hrs' }}</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- x axis - date labels -->
+    <div class="x-axis" #xAxis>
+      <div 
+          *ngFor="let dataStack of data; let i = index"
+          class="date-label"
+          [class.rotate]="rotateDateLabels"
+          [style.left]="dateLabelPositions ? dateLabelPositions[i] : 0">
+        {{ dataStack.name }}
+      </div>
     </div>
   </div>
 </div>
 
-
-
-<!-- <div class="test-grid">
-  <div class="test-column"></div>
-  <div class="test-column"></div>
-  <div class="test-column"></div>
-</div> -->

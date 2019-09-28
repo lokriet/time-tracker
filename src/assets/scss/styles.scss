@@ -28,44 +28,6 @@ body {
 
 .tooltip-container {
   position: relative;
-  
-
-  .tooltip  {
-    text-align: center;
-
-    visibility: hidden;
-    z-index: 200;
-    opacity: .40;
-    
-    padding: 0.5rem 1rem;
-
-    background: $accent-color;
-    color: white;
-    
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-bottom: 1rem;
-
-    border-radius:$border-radius;
-    font-size: 1rem;
-
-    // transform: translate(-50%, 1rem);
-    transform: translateX(-50%);
-    transition: all 0.3s ease-in-out;
-    
-    &::after {
-      content: "";
-      
-      border-style: solid;
-      border-width: 0.5rem;
-      border-color: $accent-color transparent transparent transparent;
-
-      position: absolute;
-      left: calc(50% - 0.5rem);
-      bottom: -1rem;
-    }
-  }
 
   .tooltip-element:hover+.tooltip {
     visibility: visible;
@@ -73,6 +35,43 @@ body {
     opacity: 1;
     transition: .3s linear;
     animation: shake 500ms linear;
+  }
+}
+
+.tooltip  {
+  text-align: center;
+
+  visibility: hidden;
+  z-index: 200;
+  opacity: .40;
+  
+  padding: 0.5rem 1rem;
+
+  background: $accent-color;
+  color: white;
+  
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 1rem;
+
+  border-radius:$border-radius;
+  font-size: 1rem;
+
+  // transform: translate(-50%, 1rem);
+  transform: translateX(-50%);
+  transition: all 0.3s ease-in-out;
+  
+  &::after {
+    content: "";
+    
+    border-style: solid;
+    border-width: 0.5rem;
+    border-color: $accent-color transparent transparent transparent;
+
+    position: absolute;
+    left: calc(50% - 0.5rem);
+    bottom: -1rem;
   }
 }
 
