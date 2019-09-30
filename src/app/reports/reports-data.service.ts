@@ -198,8 +198,6 @@ export class ReportsDataService {
 //   ]
 //   */
   getMoneyLineReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
-//     const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
-//     const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
     const tasks = this.tasksQuery.getAll({
       filterBy: (task: Task) => reportToDate.getTime() >= task.workDate.getTime() &&
                                 reportFromDate.getTime() <= task.workDate.getTime() &&
@@ -288,7 +286,7 @@ export class ReportsDataService {
  formatDate(dateString: string): string {
     const datePattern = /^(\d+)\/(\d+)\/(\d+)$/gi;
 
-    const [_, year, month, day] = datePattern.exec(dateString); 
+    const [_, year, month, day] = datePattern.exec(dateString);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

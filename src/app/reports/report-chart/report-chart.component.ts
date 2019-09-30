@@ -1,13 +1,23 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ReportType } from '../reports.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
-  selector: 'app-bar-chart',
-  templateUrl: './bar-chart.component.html',
-  styleUrls: ['./bar-chart.component.scss'],
-  providers: [DecimalPipe]
+  selector: 'app-report-chart',
+  templateUrl: './report-chart.component.html',
+  styleUrls: ['./report-chart.component.scss'],
+  providers: [DecimalPipe],
+  animations: [
+    trigger('barJumpAnimation', [
+      transition(':enter', [
+        style({height: 0}),
+        animate('400ms', style({height: '*'}))
+      ])
+    ])
+  ]
 })
-export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
+export class ReportChartComponent implements OnInit, OnChanges, AfterViewChecked {
 
   /*
   [
@@ -35,11 +45,13 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
     }
   ]
   */
-  @Input() data: any[];
+  barData: any[];
+  lineData: any[];
+  // @Input() data: any[];
   @Input() chartType: string;
 
-  totals: number[];
-  maxTotal: number;
+  barTotals: number[];
+  maxBarTotal: number;
   yAxisLabels: string[]; // labels for y axis
   yBarHeight: number;
 
@@ -54,6 +66,16 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   @ViewChild('xAxis', { static: true }) xAxis: ElementRef;
 
   constructor(private decimals: DecimalPipe) { }
+
+  @Input() set data(data: any) {
+    if (!this.isCombinedChart()) {
+      this.barData = data;
+      this.lineData = null;
+    } else {
+      this.barData = data.hours;
+      this.lineData = data.money;
+    }
+  }
 
   ngOnInit() {
     this.init();
@@ -78,39 +100,40 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   private init() {
-    this.maxTotal = 0;
-    this.totals = [];
-    for (const dayData of this.data) {
+    this.maxBarTotal = 0;
+    this.barTotals = [];
+
+    for (const dayBarData of this.barData) {
       let dayTotal = 0;
-      for (const task of dayData.series) {
+      for (const task of dayBarData.series) {
         dayTotal += task.value;
       }
-      this.totals.push(dayTotal)
-      this.maxTotal = Math.max(this.maxTotal, dayTotal);
+      this.barTotals.push(dayTotal)
+      this.maxBarTotal = Math.max(this.maxBarTotal, dayTotal);
     }
 
 
     this.yAxisLabels = [];
 
     if (this.isHourChart()) {
-      this.yBarHeight = this.maxTotal > 12 ? 2 : 1;
-      for (let i = 1; i < this.maxTotal; i++) {
-        if (this.maxTotal > 12 && (i % 2 === 1)) {
+      this.yBarHeight = this.maxBarTotal > 12 ? 2 : 1;
+      for (let i = 1; i < this.maxBarTotal; i++) {
+        if (this.maxBarTotal > 12 && (i % 2 === 1)) {
           continue;
         }
 
         const label = i + (i === 1 ? ' hr' : ' hrs');
         this.yAxisLabels.push(label);
       }
-    } else if (this.isMoneyChart() && this.maxTotal >= 1) {
-      const order = (Math.floor(this.maxTotal) + '').length - 1;
-      const showHalfOrders = parseFloat((this.maxTotal + '').charAt(0)) < 5;
+    } else if (this.isMoneyChart() && this.maxBarTotal >= 1) {
+      const order = (Math.floor(this.maxBarTotal) + '').length - 1;
+      const showHalfOrders = parseFloat((this.maxBarTotal + '').charAt(0)) < 5;
       this.yBarHeight = Math.pow(10, order);
       if (showHalfOrders) {
         this.yBarHeight /= 2;
       }
 
-      for (let nextBar = this.yBarHeight; nextBar < this.maxTotal; nextBar += this.yBarHeight) {
+      for (let nextBar = this.yBarHeight; nextBar < this.maxBarTotal; nextBar += this.yBarHeight) {
         this.yAxisLabels.push('$' + nextBar);
       }
     }
@@ -162,7 +185,7 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   private setDataLabelPositions() {
     this.rotateDateLabels = this.dateLabelWidth > this.barStackWidth;
     this.dateLabelPositions = [];
-    for (let i = 0; i < this.data.length; i++) {
+    for (let i = 0; i < this.barData.length; i++) {
       this.dateLabelPositions.push(i * this.barStackWidth + 'px');
     }
 
@@ -170,17 +193,21 @@ export class BarChartComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   isHourChart(): boolean {
-    return this.chartType === 'hours';
+    return this.chartType === ReportType.HOURS;
   }
 
   isMoneyChart(): boolean {
-    return this.chartType === 'money';
+    return this.chartType === ReportType.MONEY;
+  }
+
+  isCombinedChart(): boolean {
+    return this.chartType === ReportType.COMBINED;
   }
 
   getBarTooltipText(projectName: string, value: number): string {
     const projectDesc = projectName === 'no project' ? 'with no project' : 'for ' + projectName + ' project';
     let valueDesc = '';
-    if (this.isHourChart()) {
+    if (this.isHourChart() || this.isCombinedChart) {
       valueDesc = `I last ${this.decimals.transform(value, '1.0-2')}  ${value === 1 ? 'hr' : 'hrs'}`;
     } else if (this.isMoneyChart()) {
       valueDesc = `I'm worth $${this.decimals.transform(value, '1.0-2')}`;

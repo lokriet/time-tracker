@@ -6,13 +6,13 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
+import { SharedModule } from '../shared/shared.module';
 import { BarSeriesComponent } from './combo-chart/bar-series.component';
 import { ComboChartComponent } from './combo-chart/combo-chart.component';
 import { LineSeriesComponent } from './combo-chart/line-series.component';
 import { DateRangeComponent } from './date-range/date-range.component';
+import { ReportChartComponent } from './report-chart/report-chart.component';
 import { ReportsComponent } from './reports.component';
-import { SharedModule } from '../shared/shared.module';
-import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,7 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     ComboChartComponent,
     BarSeriesComponent,
     LineSeriesComponent,
-    BarChartComponent],
+    ReportChartComponent],
   imports: [
     CommonModule,
     SharedModule,

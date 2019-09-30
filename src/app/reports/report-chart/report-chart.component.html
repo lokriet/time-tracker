@@ -1,14 +1,9 @@
-
-<br>
-<br>
-
-
 <div class="chart-container">
   <!-- y axis labels and lines -->
   <div class="y-axis">
     <div 
         class="y-axis-row" 
-        [style.height]="getBarHeightPercent(yBarHeight, maxTotal)"
+        [style.height]="getBarHeightPercent(yBarHeight, maxBarTotal)"
         *ngFor="let label of yAxisLabels">
       <div class="y-axis-label">{{label}}</div>
       <div class="y-axis-line"></div>
@@ -16,7 +11,7 @@
   </div>
 
   <div
-      *ngIf="maxTotal === 0" 
+      *ngIf="maxBarTotal === 0" 
       class="no-data">
     <p>No data in this period. Check filters or add some tasks!</p>
   </div>
@@ -26,19 +21,19 @@
     <!-- data -->
     <div class="main-grid" #dataGrid>
       <div 
-          *ngFor="let dataStack of data; let i = index"
+          *ngFor="let dataBarStack of barData; let i = index"
           class="data-bar-stack"
-          [style.height]="getBarHeightPercent(totals[i], maxTotal)">
+          [style.height]="getBarHeightPercent(barTotals[i], maxBarTotal)">
         <div 
-            *ngFor="let dataBar of dataStack.series; let j = index"
+            *ngFor="let dataBar of dataBarStack.series; let j = index"
             class="data-bar"
-            [style.height]="getBarHeightPercent(dataBar?.value, totals[i])"
+            [style.height]="getBarHeightPercent(dataBar?.value, barTotals[i])"
             (mouseover)="onBarHovered($event)"
+            [@barJumpAnimation]
             >
+            <!-- (mouseover)="onBarHovered($event)" -->
           <div class="face-box"><div class="face">:)</div></div>
           <div class="bar-tooltip">
-            <!-- Hi! I'm a task {{ dataBar.name === 'no project' ? 'with no project' : 'for ' + dataBar.name + ' project' }}. 
-            I last {{ dataBar.value | number:'1.0-2' }} {{ dataBar.value === 1 ? 'hr' : 'hrs' }} -->
             {{ getBarTooltipText(dataBar.name, dataBar.value) }}
           </div>
         </div>
@@ -48,11 +43,11 @@
     <!-- x axis - date labels -->
     <div class="x-axis" #xAxis>
       <div 
-          *ngFor="let dataStack of data; let i = index"
+          *ngFor="let dataBarStack of barData; let i = index"
           class="date-label"
           [class.rotate]="rotateDateLabels"
           [style.left]="dateLabelPositions ? dateLabelPositions[i] : 0">
-        {{ dataStack.name }}
+        {{ dataBarStack.name }}
       </div>
     </div>
   </div>
