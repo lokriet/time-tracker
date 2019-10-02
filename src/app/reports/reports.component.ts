@@ -163,7 +163,8 @@ export class ReportsComponent implements OnInit {
   }
 
   canSelectNextPeriod(): boolean {
-    return !this.dateSelector.isNextPeriodEndFuture();
+    // return !this.dateSelector.isNextPeriodEndFuture();
+    return !this.dateSelector.isNextPeriodStartFuture();
   }
 
   onDatesSelected(dates: DateRange) {

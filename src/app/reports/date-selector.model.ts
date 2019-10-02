@@ -112,6 +112,43 @@ export class DateSelector {
     }
   }
 
+  isNextPeriodStartFuture(): boolean {
+    let dateToCheck;
+    const currentPeriodWasSet = !!this.currentSelectedDateRange;
+    let result;
+    if (!currentPeriodWasSet) {
+      this.setCurrentPeriod();
+    }
+    dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+
+    const today = this.getToday().getTime()
+    if (dateToCheck.getTime() > today) {
+      result = true;
+    } else {
+      dateToCheck = new Date(this.currentSelectedDateRange.startDate);
+      switch (this.dateSelectionMode) {
+        case DateSelectionMode.WEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 7);
+          break;
+        case DateSelectionMode.BIWEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 14);
+          break;
+        case DateSelectionMode.MONTHLY:
+          dateToCheck.setDate(1);
+          dateToCheck.setMonth(dateToCheck.getMonth() + 2);
+          dateToCheck.setDate(dateToCheck.getDate() - 1);
+          break;
+      }
+      result = dateToCheck.getTime() > today;
+    }
+
+    if (!currentPeriodWasSet) {
+      this.setSelectedPeriod(null);
+    }
+
+    return result;
+  }
+
   private setCurrentPeriod() {
     switch (this.dateSelectionMode) {
       case DateSelectionMode.WEEKLY:

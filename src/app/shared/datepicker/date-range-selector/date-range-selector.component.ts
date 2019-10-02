@@ -96,6 +96,15 @@ export class DateRangeSelectorComponent implements OnInit, ControlValueAccessor 
     return today.getFullYear() === this._selectedMonth.getFullYear() && today.getMonth() === this._selectedMonth.getMonth();
   }
 
+  isNextMonthFuture(): boolean {
+    const today = new Date();
+    const nextMonth = new Date(this.selectedMonth);
+    nextMonth.setDate(1);
+    nextMonth.setHours(0, 0, 0, 0);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    return today.getTime() < nextMonth.getTime();
+  }
+
   onShowPreviousMonth() {
     const newMonth = new Date(this._selectedMonth);
     newMonth.setMonth(newMonth.getMonth() - 1);

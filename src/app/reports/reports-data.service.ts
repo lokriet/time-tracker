@@ -208,7 +208,7 @@ export class ReportsDataService {
     const dataItemName = 'Money earned';
     const dataSeries = [];
 
-    const date = reportToDate;
+    const date = new Date(reportToDate);
     let index = 0;
     while (date.getTime() >= reportFromDate.getTime()) {
       const seriesItemName = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();

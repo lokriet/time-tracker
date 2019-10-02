@@ -16,40 +16,100 @@
     <p>No data in this period. Check filters or add some tasks!</p>
   </div>
 
-  <div class="scrollable-data-container">
-
-    <!-- data -->
-    <div class="main-grid" #dataGrid>
-      <div 
-          *ngFor="let dataBarStack of barData; let i = index"
-          class="data-bar-stack"
-          [style.height]="getBarHeightPercent(barTotals[i], maxBarTotal)">
-        <div 
-            *ngFor="let dataBar of dataBarStack.series; let j = index"
-            class="data-bar"
-            [style.height]="getBarHeightPercent(dataBar?.value, barTotals[i])"
-            (mouseover)="onBarHovered($event)"
-            [@barJumpAnimation]
-            >
-            <!-- (mouseover)="onBarHovered($event)" -->
-          <div class="face-box"><div class="face">:)</div></div>
-          <div class="bar-tooltip">
-            {{ getBarTooltipText(dataBar.name, dataBar.value) }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="scrollable-data-container">
+      <!-- data -->
+      <div class="main-grid" #dataGrid>
   
-    <!-- x axis - date labels -->
-    <div class="x-axis" #xAxis>
-      <div 
-          *ngFor="let dataBarStack of barData; let i = index"
-          class="date-label"
-          [class.rotate]="rotateDateLabels"
-          [style.left]="dateLabelPositions ? dateLabelPositions[i] : 0">
-        {{ dataBarStack.name }}
+        <!-- bar graph -->
+        <div 
+            *ngFor="let dataBarStack of barData; let i = index"
+            class="data-bar-stack"
+            (mouseenter)="onBarStackHovered($event, i)"
+            (mousemove)="onBarStackHovered($event, i)"
+        >
+          <div
+              *ngIf="isCombinedChart()" 
+              class="bar-tooltip"
+              [class.show-stack-tooltip]="!barHovered"
+          >
+              {{ getBarStackTooltipText(i) }}
+          </div>
+          
+          <div class="hairline-items"
+                *ngIf="showLineGraph()">
+            <div class="hairline"></div>
+            <div class="data-point"
+                  [style.top]="lineDataCoords ? lineDataCoords[i]?.y + 'px' : ''"></div>
+          </div>
+            
+          <div 
+              *ngFor="let dataBar of dataBarStack.series; let j = index"
+              class="data-bar"
+              [style.height]="getBarHeightPercent(dataBar?.value, maxBarTotal)"
+              (mouseenter)="onBarHovered($event)"
+              (mouseleave)="onBarUnhovered()"
+  
+              [@barJumpAnimation]
+              >
+              <!-- [style.height]="getBarHeightPercent(dataBar?.value, barTotals[i])" -->
+            <div class="face-box"><div class="face">:)</div></div>
+            <div class="bar-tooltip">
+              {{ getBarTooltipText(dataBar.name, dataBar.value, i) }}
+            </div>
+          </div>
+
+        </div>
+  
+        <!-- line graph -->
+        <div 
+            *ngIf="maxBarTotal > 0"
+            class="svg-graph-container"
+            [style.width]="lineGraphWidth + 'px'">
+          <svg 
+              viewbox="0 0 100 100" 
+              preserveAspectRatio="none" 
+              class="svg-graph-line"
+              [attr.width]="lineGraphWidth"
+              [attr.height]="lineGraphHeight">
+            <svg:path 
+                *ngIf="showLineGraph()" 
+                [attr.d]="linePath"></svg:path>
+          </svg>
+        </div>
+        <!-- <div class="hairlines">
+          <div 
+              class="hairline" 
+              *ngFor="let lineCoord of lineDataCoords"
+              [style.left]="lineCoord.x + 'px'">
+            
+          </div>
+          <div 
+              *ngFor="let lineCoord of lineDataCoords"
+              class="data-point"
+              [style.left]="lineCoord.x + 'px'"
+              [style.top]="lineCoord.y + 'px'">
+    
+          </div>
+        </div> -->
+      </div>
+  
+      
+    
+      <!-- x axis - date labels -->
+      <div class="x-axis" 
+          #xAxis>
+          <div *ngIf="maxBarTotal > 0; then dateLabels else noLabels"></div>
+          <ng-template #dateLabels>
+            <div  
+                *ngFor="let dataBarStack of barData; let i = index"
+                class="date-label"
+                [class.rotate]="rotateDateLabels"
+                [style.left]="dateLabelPositions ? dateLabelPositions[i] : 0">
+              {{ dataBarStack.name }}
+            </div>
+          </ng-template>
+          <ng-template #noLabels></ng-template>
       </div>
     </div>
-  </div>
 </div>
 
