@@ -154,4 +154,28 @@ form.ng-dirty input.ng-invalid {
   }
 }
 
+/* Hidding the checkboxes */
+input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox-icon {
+  cursor: pointer; 
+  margin: 0 0.25rem;
+  font-size: 1rem;
+  color: $background-color;
+  background-color: white;
+  border: $border-width solid $main-color--lighter;
+  border-radius: $border-radius / 2;
+  padding: 0.25rem 0.5rem;
+
+  .checked {
+    color: $accent-color;
+  }
+}
+
+.form-label {
+  margin: 0 0.25rem;
+  color: $main-color--darker;
+}
 

@@ -9,34 +9,11 @@ form {
   justify-content: center;
 }
 
-
-/* Hidding the radiobuttons & checkboxes */
-input[type='checkbox'] {
-  display: none;
-}
-
-.checkbox-icon {
+.checkbox-icon.favorite {
+  background-color: transparent;
+  border: none;
+  color: $accent-color;
   font-size: 1.5rem;
-  cursor: pointer; 
-  margin: 0 0.25rem;
-
-  &.paid {
-    font-size: 1rem;
-    color: $background-color;
-    background-color: white;
-    border: $border-width solid $main-color--lighter;
-    border-radius: $border-radius / 2;
-    padding: 0.25rem 0.5rem;
-
-    .checked {
-      color: $accent-color;
-    }
-  }
-}
-
-.form-label {
-  margin: 0 0.25rem;
-  color: $main-color--darker;
 }
 
 .pay-rate-label {

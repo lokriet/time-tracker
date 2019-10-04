@@ -104,6 +104,12 @@
   </div>
 </div>
 
+<app-multiple-select-dropdown
+    [items]="projects$ | async"
+    [displayProperty]="'projectName'">
+
+</app-multiple-select-dropdown>
+
 <div class="container">
   <app-report-chart [data]="data" [chartType]="reportType"></app-report-chart>
 </div> 

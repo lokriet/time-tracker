@@ -1,6 +1,4 @@
-
-
-<div class="form-dropdown task-project" #dropdownElement>
+<div class="form-dropdown" #dropdownElement>
   <input 
       type="text" 
       class="form-control dropdown-input"
@@ -8,7 +6,7 @@
       [placeholder]="placeholder"
       (click)="onDropdownInputClicked()"
       (keyup)="onDropdownInputKey($event)"
-      [value]="selectedItem ? (displayProperty ? selectedItem[displayProperty] : selectedItem) : ''"
+      [value]="selectedItem ? getItemDisplayString(selectedItem) : ''"
       #dropdownInput
       >
   <div 
@@ -34,19 +32,8 @@
             </ng-container>
             <ng-template #dropdownItemDefault let-displayText="displayText" let-searchTerm="searchTerm">
               <span [innerHTML]="displayText | filterString: filterString"></span>
-              <!-- {{ displayName | filterString: filterString }} -->
             </ng-template>
-            
         </button>
-    <!-- <button
-      type="button" 
-      class="dropdown-item"
-      *ngFor="let item of items; let i = index" 
-      [class.selected]="i === hoveredItemIndex"
-      (click)="onItemSelected(i)"
-      (mouseenter)="onItemHovered(i)">
-        {{ displayProperty ? item[displayProperty] : item }}
-    </button> -->
   </div>
 </div>
 

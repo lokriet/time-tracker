@@ -9,6 +9,7 @@ import { DateRangeSelectorComponent } from './datepicker/date-range-selector/dat
 import { DaysRangeViewComponent } from './datepicker/date-range-selector/days-range-view/days-range-view.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { FilterStringPipe } from './dropdown/filter-string.pipe';
+import { MultipleSelectDropdownComponent } from './dropdown/multiple-select-dropdown/multiple-select-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FilterStringPipe } from './dropdown/filter-string.pipe';
     DateRangeSelectorComponent,
     DaysRangeViewComponent,
     DropdownComponent,
-    FilterStringPipe
+    FilterStringPipe,
+    MultipleSelectDropdownComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { FilterStringPipe } from './dropdown/filter-string.pipe';
     DatepickerComponent,
     DateRangeSelectorComponent,
     DropdownComponent,
-    FilterStringPipe
+    FilterStringPipe,
+    MultipleSelectDropdownComponent
   ]
 })
 export class SharedModule { }

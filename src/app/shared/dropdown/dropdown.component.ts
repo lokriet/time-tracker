@@ -95,7 +95,7 @@ export class DropdownComponent implements OnInit, OnChanges, ControlValueAccesso
     this.hoveredItemIndex = -1;
   }
 
-  private getItemDisplayString(item: any): string {
+  getItemDisplayString(item: any): string {
     return (this.displayProperty ? item[this.displayProperty] : item) as string;
   }
 
@@ -107,7 +107,7 @@ export class DropdownComponent implements OnInit, OnChanges, ControlValueAccesso
     }
   }
 
-  private openDropdown() {
+  openDropdown() {
     this.dropdownOpen = true;
     this.hoveredItemIndex = Math.max(this.selectedItem ? this.selectedItemIndex : 0, 0);
     this.scrollIntoViewIfNeeded(this.optionsListElement.nativeElement.children[this.hoveredItemIndex]);
@@ -160,7 +160,7 @@ export class DropdownComponent implements OnInit, OnChanges, ControlValueAccesso
     }
   }
 
-  private scrollIntoViewIfNeeded(element) {
+  scrollIntoViewIfNeeded(element) {
     const parent = element.parentNode;
     const overTop = element.offsetTop < parent.scrollTop;
     const overBottom = (element.offsetTop + element.clientHeight) > (parent.clientHeight + parent.scrollTop);
@@ -190,9 +190,11 @@ export class DropdownComponent implements OnInit, OnChanges, ControlValueAccesso
       this.selectedItemIndex = this.items.indexOf(this.selectedItem);
     }
   }
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     // TODO
   }
