@@ -1,3 +1,5 @@
+
+
 <div class="form-dropdown task-project" #dropdownElement>
   <input 
       type="text" 
@@ -7,13 +9,36 @@
       (click)="onDropdownInputClicked()"
       (keyup)="onDropdownInputKey($event)"
       [value]="selectedItem ? (displayProperty ? selectedItem[displayProperty] : selectedItem) : ''"
+      #dropdownInput
       >
   <div 
       class="dropdown-area" 
       [class.open]="dropdownOpen"
       [@collapsed]="!dropdownOpen"
-      #optionsListElement>
-    <button
+      #optionsList>
+      <button
+          type="button" 
+          class="dropdown-item"
+          *ngFor="let filteredItem of filteredItems; let i = index" 
+          [class.selected]="i === hoveredItemIndex"
+          (click)="onItemSelected(filteredItem.index)"
+          (mouseenter)="onItemHovered(i)">
+            <ng-container 
+                *ngTemplateOutlet="dropdownItemTemplate ? dropdownItemTemplate : dropdownItemDefault;
+                                  context: {
+                                              displayText: filteredItem.value, 
+                                              item: items[filteredItem.index],
+                                              searchTerm: filterString
+                                           }" >
+
+            </ng-container>
+            <ng-template #dropdownItemDefault let-displayText="displayText" let-searchTerm="searchTerm">
+              <span [innerHTML]="displayText | filterString: filterString"></span>
+              <!-- {{ displayName | filterString: filterString }} -->
+            </ng-template>
+            
+        </button>
+    <!-- <button
       type="button" 
       class="dropdown-item"
       *ngFor="let item of items; let i = index" 
@@ -21,6 +46,7 @@
       (click)="onItemSelected(i)"
       (mouseenter)="onItemHovered(i)">
         {{ displayProperty ? item[displayProperty] : item }}
-    </button>
+    </button> -->
   </div>
 </div>
+

@@ -32,7 +32,7 @@ export class TimeComponent extends DropdownComponent implements OnInit, OnChange
   @Input() startTime: Time;
   @Output() timeSelected = new EventEmitter<Time>();
 
-  @ViewChild('timeInput', { static: true }) timeInput: ElementRef;
+  // @ViewChild('dropdownInput', { static: true }) timeInput: ElementRef;
 
 
   ngOnInit() {
@@ -128,10 +128,10 @@ export class TimeComponent extends DropdownComponent implements OnInit, OnChange
   private checkAndReplaceInputFormat() {
     const inputPattern = /^(\d?\d)(:\d\d)?(am|pm)?$/gi;
 
-    if (inputPattern.test(this.timeInput.nativeElement.value)) {
+    if (inputPattern.test(this.dropdownInput.nativeElement.value)) {
       inputPattern.lastIndex = 0;
 
-      let [_, hoursString, minutesString, ampm] = inputPattern.exec(this.timeInput.nativeElement.value);
+      let [_, hoursString, minutesString, ampm] = inputPattern.exec(this.dropdownInput.nativeElement.value);
 
       let hoursNo = +hoursString;
 
@@ -158,7 +158,7 @@ export class TimeComponent extends DropdownComponent implements OnInit, OnChange
 
       if (!(hoursNo < 0 || hoursNo > 12 || minutesNo < 0 || minutesNo > 59)) {
         const replaceString = String(hoursNo) + ':' +  String(minutesNo).padStart(2, '0') + ampm;
-        this.timeInput.nativeElement.value = replaceString;
+        this.dropdownInput.nativeElement.value = replaceString;
       }
 
     }
@@ -168,8 +168,8 @@ export class TimeComponent extends DropdownComponent implements OnInit, OnChange
   private validateTimeString(timeString: string): boolean {
     const acceptedPattern = /^(\d?\d):(\d\d)(am|pm)$/gi;
     if (!acceptedPattern.test(timeString)) {
-      this.timeInput.nativeElement.classList.remove('ng-valid');
-      this.timeInput.nativeElement.classList.add('ng-invalid');
+      this.dropdownInput.nativeElement.classList.remove('ng-valid');
+      this.dropdownInput.nativeElement.classList.add('ng-invalid');
       return false;
     } else {
       acceptedPattern.lastIndex = 0;
@@ -178,12 +178,12 @@ export class TimeComponent extends DropdownComponent implements OnInit, OnChange
       const minutesNo = +minutesString;
 
       if (!(hoursNo < 0 || hoursNo > 12 || minutesNo < 0 || minutesNo > 59)) {
-        this.timeInput.nativeElement.classList.remove('ng-invalid');
-        this.timeInput.nativeElement.classList.add('ng-valid');
+        this.dropdownInput.nativeElement.classList.remove('ng-invalid');
+        this.dropdownInput.nativeElement.classList.add('ng-valid');
         return true;
       } else {
-        this.timeInput.nativeElement.classList.remove('ng-valid');
-        this.timeInput.nativeElement.classList.add('ng-invalid');
+        this.dropdownInput.nativeElement.classList.remove('ng-valid');
+        this.dropdownInput.nativeElement.classList.add('ng-invalid');
         return false;
       }
     }

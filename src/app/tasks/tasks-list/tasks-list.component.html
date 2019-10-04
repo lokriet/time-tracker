@@ -1,20 +1,18 @@
-<div *ngIf="(tasks$ | async).length > 0; then tasksList else noTasks"></div>
 
-<ng-template #tasksList>
-  <div class="tasks-list">
-    <ng-template ngFor let-task [ngForOf]="tasks$ | async" let-i="index" let-isFirst="first" let-isLast="last">
-      <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="date-header">
-          {{task.workDate.getFullYear()}}/{{task.workDate.getMonth() + 1}}/{{task.workDate.getDate()}}
-      </div>
-      <app-task-row 
-          [task]="task" 
-          [index]="i" 
-          class="task-row"
-          [class.last-in-day]="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])"></app-task-row>
-    </ng-template>
-  </div>
-</ng-template>
-
+<div 
+    *ngIf="(tasks$ | async).length > 0 else noTasks"
+    class="tasks-list">
+  <ng-template ngFor let-task [ngForOf]="tasks$ | async" let-i="index" let-isFirst="first" let-isLast="last">
+    <div *ngIf="isFirst || !sameDate((tasks$ | async)[i], (tasks$ | async)[i-1])" class="date-header">
+        {{task.workDate.getFullYear()}}/{{task.workDate.getMonth() + 1}}/{{task.workDate.getDate()}}
+    </div>
+    <app-task-row 
+        [task]="task" 
+        [index]="i" 
+        class="task-row"
+        [class.last-in-day]="isLast || !sameDate((tasks$ | async)[i], (tasks$ | async)[i+1])"></app-task-row>
+  </ng-template>
+</div>
 
 <ng-template #noTasks>
   <div class="empty-list">

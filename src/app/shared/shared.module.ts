@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DateRangeSelectorComponent } from './datepicker/date-range-selector/date-range-selector.component';
 import { DaysRangeViewComponent } from './datepicker/date-range-selector/days-range-view/days-range-view.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
+import { FilterStringPipe } from './dropdown/filter-string.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { DropdownComponent } from './dropdown/dropdown.component';
     YearsViewComponent,
     DateRangeSelectorComponent,
     DaysRangeViewComponent,
-    DropdownComponent
+    DropdownComponent,
+    FilterStringPipe
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { DropdownComponent } from './dropdown/dropdown.component';
     FontAwesomeModule,
     DatepickerComponent,
     DateRangeSelectorComponent,
-    DropdownComponent
+    DropdownComponent,
+    FilterStringPipe
   ]
 })
 export class SharedModule { }

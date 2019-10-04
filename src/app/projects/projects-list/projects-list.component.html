@@ -1,6 +1,4 @@
-  <div *ngIf="(projects$ | async).length > 0; then projectsList else noProjects"></div>
-
-  <ng-template #projectsList>
+  <ng-container *ngIf="(projects$ | async).length > 0 else noProjects">
     <div class="project" *ngFor="let project of (projects$ | async); let i=index">
       <div class="project-name">
         {{ project.projectName }}
@@ -21,7 +19,7 @@
         <fa-icon [icon]="faDelete" ></fa-icon>
       </button>
     </div>
-  </ng-template>
+  </ng-container>
 
 
   <ng-template #noProjects>

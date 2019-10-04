@@ -1,7 +1,16 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { DateSelectionMode } from 'src/app/reports/date-selector.model';
-import { trigger, state, transition, style, animate } from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const DROPDOWN_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -25,19 +34,24 @@ export const DROPDOWN_VALUE_ACCESSOR: any = {
   ])
   ]
 })
-export class DropdownComponent implements OnInit, ControlValueAccessor {
+export class DropdownComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() items = [];
   @Input() selectedItem: any;
   @Input() displayProperty: string;
   @Input() placeholder = '';
+  @Input() dropdownItemTemplate: TemplateRef<any>;
+
   @ViewChild('dropdownElement', { static: true }) dropdownElement: ElementRef;
-  @ViewChild('optionsListElement', { static: true }) optionsListElement: ElementRef;
+  @ViewChild('optionsList', { static: true }) optionsListElement: ElementRef;
+  @ViewChild('dropdownInput', {static: true}) dropdownInput: ElementRef;
 
   dropdownOpen = false;
   hoveredItemIndex = -1;
   selectedItemIndex = -1;
 
-  dateSelectionMode: DateSelectionMode;
+  unfilteredItems: {value: string, index: number}[];
+  filteredItems: {value: string, index: number}[];
+  filterString: string;
 
   onChange: any = () => { };
 
@@ -50,9 +64,39 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
       }
     });
 
+    this.unfilteredItems =  this.items.map((item, index) => {
+      const value = this.getItemDisplayString(item);
+      return {value, index};
+    });
+
+    this.resetDropdownState();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    for (const propName in changes) {
+      if (propName === 'items') {
+        this.unfilteredItems =  this.items.map((item, index) => {
+          const value = this.getItemDisplayString(item);
+          return {value, index};
+        });
+
+        this.resetDropdownState();
+      }
+    }
+  }
+
+  private resetDropdownState() {
     if (this.selectedItem) {
       this.selectedItemIndex = this.items.indexOf(this.selectedItem);
     }
+
+    this.filterString = null;
+    this.filteredItems = [...this.unfilteredItems];
+    this.hoveredItemIndex = -1;
+  }
+
+  private getItemDisplayString(item: any): string {
+    return (this.displayProperty ? item[this.displayProperty] : item) as string;
   }
 
   onDropdownInputClicked() {
@@ -75,9 +119,11 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
       event.stopPropagation(); // don't submit the form
 
       if (this.dropdownOpen && this.hoveredItemIndex !== -1) {
-        this.selectedItem = this.items[this.hoveredItemIndex];
-        this.selectedItemIndex = this.hoveredItemIndex;
+        this.selectedItem = this.items[this.filteredItems[this.hoveredItemIndex].index];
+        this.resetDropdownState();
         this.dropdownOpen = false;
+
+        this.onChange(this.selectedItem);
       }
     } else if (event.keyCode === 38) { // arrow up
       if (this.dropdownOpen && this.hoveredItemIndex > 0) {
@@ -85,7 +131,7 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
         this.scrollIntoViewIfNeeded(this.optionsListElement.nativeElement.children[this.hoveredItemIndex]);
       }
     } else if (event.keyCode === 40) { // arrow down
-      if (this.dropdownOpen && this.hoveredItemIndex < (this.items.length - 1)) {
+      if (this.dropdownOpen && this.hoveredItemIndex < (this.filteredItems.length - 1)) {
         this.hoveredItemIndex++;
         this.scrollIntoViewIfNeeded(this.optionsListElement.nativeElement.children[this.hoveredItemIndex]);
       } else if (!this.dropdownOpen) {
@@ -95,9 +141,21 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
       if (this.dropdownOpen) {
         this.dropdownOpen = false;
       }
-    } else {
+    } else { // entering characters in input control => filter items in the dropdown
       if (!this.dropdownOpen) {
         this.openDropdown();
+      }
+
+      this.filterString = this.dropdownInput.nativeElement.value.toLowerCase();
+      this.filteredItems = this.unfilteredItems
+                              .filter(item => !this.filterString || item.value.toLowerCase().includes(this.filterString));
+
+      this.selectedItemIndex = -1;
+      this.hoveredItemIndex = 0;
+      if (this.selectedItem) {
+        this.selectedItemIndex =
+            this.filteredItems.findIndex(filteredItem => filteredItem.value === this.getItemDisplayString(this.selectedItem));
+        this.hoveredItemIndex = Math.max(this.selectedItemIndex, 0);
       }
     }
   }
@@ -114,15 +172,16 @@ export class DropdownComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  onItemSelected(itemIndex) {
+  onItemSelected(itemIndex: number) {
     this.dropdownOpen = false;
     this.selectedItem = this.items[itemIndex];
-    this.selectedItemIndex = itemIndex;
+    this.resetDropdownState();
+
     this.onChange(this.selectedItem);
   }
 
-  onItemHovered(index: number) {
-    this.hoveredItemIndex = index;
+  onItemHovered(listIndex: number) {
+    this.hoveredItemIndex = listIndex;
   }
 
   writeValue(obj: any): void {

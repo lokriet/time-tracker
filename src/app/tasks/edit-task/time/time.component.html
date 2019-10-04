@@ -9,13 +9,13 @@
       (click)="onDropdownInputClicked()"
       (keyup)="onDropdownInputKey($event)"
       [value]="formatTime()"
-      #timeInput
+      #dropdownInput
       >
   <div 
       class="dropdown-area" 
       [class.open]="dropdownOpen" 
       [@collapsed]="!dropdownOpen"
-      #optionsListElement>
+      #optionsList>
     <button
       type="button" 
       class="dropdown-item"

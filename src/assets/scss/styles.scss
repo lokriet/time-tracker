@@ -6,9 +6,16 @@
   box-sizing: border-box;
 }
 
-button::-moz-focus-inner {
-  border: 0;
+:focus {
+  outline:none;
 }
+::-moz-focus-inner {
+  border:0;
+}
+
+// button::-moz-focus-inner {
+//   border: 0;
+// }
 
 body {
   height: 100vh;
