@@ -6,7 +6,7 @@ It was made as an exercise in html, css and Angular components, and thus contain
 
 Live demo can be found here: https://time-tracker-770a9.firebaseapp.com/
 
-Technologies used:
+# Technologies used:
 
 Angular
 
