@@ -1,27 +1,15 @@
 # TimeTracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
+Time tracking application with flexible time and money reports.
 
-## Development server
+It was made as an exercise in html, css and Angular components, and thus contains custom made dropdowns, calendars and report graphs.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Live demo can be found here: https://time-tracker-770a9.firebaseapp.com/
 
-## Code scaffolding
+Technologies used:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Angular
 
-## Build
+Akita for state management
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Firebase as database, authentication and hosting provider
