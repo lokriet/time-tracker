@@ -7,7 +7,7 @@ export interface ProjectsState extends EntityState<Project>, ActiveState {}
 
 const initialState = {
   active: null
-}
+};
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({name: 'projects', resettable: true})
