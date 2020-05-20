@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ID } from '@datorama/akita';
-import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 import { Task } from '../tasks/model/task.model';
 import { getTaskLength } from '../tasks/model/time-formatter.service';
@@ -43,52 +42,49 @@ export function formatHours(hours: number): string {
   providedIn: 'root'
 })
 export class ReportsDataService {
-  constructor(private tasksQuery: TasksQuery,
-              private calendar: NgbCalendar) {
+  constructor(private tasksQuery: TasksQuery) {
 
   }
 
-  /*
-  [
-    {
-      "name": "2019/6/10",
-      "series": []
-    },
-    {
-      "name": "2019/6/11",
-      "series": [
-        {
-          "name": "work",
-          "value": 119
-        }
-        {
-          "name": "meow",
-          "value": 2.5
-        }
-      ]
-    }
-  ]
-  */
-  getMoneyBarReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
-    const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
-    const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
+//   /*
+//   [
+//     {
+//       "name": "2019/6/10",
+//       "series": []
+//     },
+//     {
+//       "name": "2019/6/11",
+//       "series": [
+//         {
+//           "name": "work",
+//           "value": 119
+//         }
+//         {
+//           "name": "meow",
+//           "value": 2.5
+//         }
+//       ]
+//     }
+//   ]
+//   */
+  getMoneyBarReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
     const tasks = this.tasksQuery.getAll({
-        filterBy: (task: Task) => afterLast.after(task.workDate) &&
-                                  beforeFirst.before(task.workDate) &&
-                                  this.filtersApply(task, reportFilters)
+      filterBy: (task: Task) => reportToDate.getTime() >= task.workDate.getTime() &&
+                                reportFromDate.getTime() <= task.workDate.getTime() &&
+                                this.filtersApply(task, reportFilters)
     });
 
     const data = [];
 
-    let date = reportToDate;
+    const date = new Date(reportToDate);
     let index = 0;
-    while (date.after(beforeFirst)) {
-      const dataItemName = date.year + '/' + date.month + '/' + date.day;
+    while (date.getTime() >= reportFromDate.getTime()) {
+      const dataItemName = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
       const dataSeriesMap = new Map<string, number>();
-      while ((tasks.length > index) && date.before(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() < tasks[index].workDate.getTime()) {
         index++;
       }
-      while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() === tasks[index].workDate.getTime()) {
         if (!!tasks[index].project && tasks[index].project.isPaid) {
           if (dataSeriesMap.has(this.projectName(tasks[index]))) {
             dataSeriesMap.set(this.projectName(tasks[index]),
@@ -107,58 +103,56 @@ export class ReportsDataService {
         });
 
       data.unshift({name: dataItemName, series: dataSeries});
-      date = this.calendar.getPrev(date, 'd', 1);
+      date.setDate(date.getDate() - 1);
     }
 
     return data;
   }
 
-  /*
-  [
-    {
-      "name": "2019/6/10",
-      "series": [
-        {
-          "name": "study",
-          "value": 9.5
-        }
-      ]
-    },
-    {
-      "name": "2019/6/11",
-      "series": [
-        {
-          "name": "work",
-          "value": 8.5
-        },
-        {
-          "name": "sleep",
-          "value": 8
-        }
-      ]
-    }
-  ]
-  */
-  getHoursBarReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
-    const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
-    const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
+//   /*
+//   [
+//     {
+//       "name": "2019/6/10",
+//       "series": [
+//         {
+//           "name": "study",
+//           "value": 9.5
+//         }
+//       ]
+//     },
+//     {
+//       "name": "2019/6/11",
+//       "series": [
+//         {
+//           "name": "work",
+//           "value": 8.5
+//         },
+//         {
+//           "name": "sleep",
+//           "value": 8
+//         }
+//       ]
+//     }
+//   ]
+//   */
+  getHoursBarReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
     const tasks = this.tasksQuery.getAll({
-      filterBy: (task: Task) => afterLast.after(task.workDate) &&
-                                beforeFirst.before(task.workDate) &&
+      filterBy: (task: Task) => reportToDate.getTime() >= task.workDate.getTime() &&
+                                reportFromDate.getTime() <= task.workDate.getTime() &&
                                 this.filtersApply(task, reportFilters)
     });
 
     const data = [];
 
-    let date = reportToDate;
+    const date = new Date(reportToDate);
     let index = 0;
-    while (date.after(beforeFirst)) {
-      const dataItemName = date.year + '/' + date.month + '/' + date.day;
+    while (date.getTime() >= reportFromDate.getTime()) {
+      const dataItemName = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
       const dataSeriesMap = new Map<string, number>();
-      while ((tasks.length > index) && date.before(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() < tasks[index].workDate.getTime()) {
         index++;
       }
-      while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() === tasks[index].workDate.getTime()) {
         if (dataSeriesMap.has(this.projectName(tasks[index]))) {
           dataSeriesMap.set(this.projectName(tasks[index]),
                             dataSeriesMap.get(this.projectName(tasks[index])) + this.taskLength(tasks[index]));
@@ -175,40 +169,38 @@ export class ReportsDataService {
         });
 
       data.unshift({name: dataItemName, series: dataSeries});
-      date = this.calendar.getPrev(date, 'd', 1);
+      date.setDate(date.getDate() - 1);
     }
 
     return data;
   }
 
 
-  /*
-  [
-    {
-      "name": "Money earned",
-      "series": [
-        {
-          "name": "2019/6/11",
-          "value": 119
-        }
-        {
-          "name": "2019/6/12",
-          "value": 2.5
-        }
-        {
-          "name": "2019/6/13",
-          "value": 0
-        }
-      ]
-    }
-  ]
-  */
-  getMoneyLineReportData(reportFromDate: NgbDate, reportToDate: NgbDate, reportFilters: ReportFilters): DataEntry[] {
-    const afterLast = this.calendar.getNext(reportToDate, 'd', 1);
-    const beforeFirst = this.calendar.getPrev(reportFromDate, 'd', 1);
+//   /*
+//   [
+//     {
+//       "name": "Money earned",
+//       "series": [
+//         {
+//           "name": "2019/6/11",
+//           "value": 119
+//         }
+//         {
+//           "name": "2019/6/12",
+//           "value": 2.5
+//         }
+//         {
+//           "name": "2019/6/13",
+//           "value": 0
+//         }
+//       ]
+//     }
+//   ]
+//   */
+  getMoneyLineReportData(reportFromDate: Date, reportToDate: Date, reportFilters: ReportFilters): DataEntry[] {
     const tasks = this.tasksQuery.getAll({
-      filterBy: (task: Task) => afterLast.after(task.workDate) &&
-                                beforeFirst.before(task.workDate) &&
+      filterBy: (task: Task) => reportToDate.getTime() >= task.workDate.getTime() &&
+                                reportFromDate.getTime() <= task.workDate.getTime() &&
                                 this.filtersApply(task, reportFilters)
     });
 
@@ -216,19 +208,17 @@ export class ReportsDataService {
     const dataItemName = 'Money earned';
     const dataSeries = [];
 
-    let date = reportToDate;
+    const date = new Date(reportToDate);
     let index = 0;
-    while (date.after(beforeFirst)) {
-      const seriesItemName = date.year + '/' + date.month + '/' + date.day;
-
-
+    while (date.getTime() >= reportFromDate.getTime()) {
+      const seriesItemName = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
       let currentDaySum = 0;
 
-      while ((tasks.length > index) && date.before(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() < tasks[index].workDate.getTime()) {
         index++;
       }
 
-      while ((tasks.length > index) && date.equals(tasks[index].workDate)) {
+      while ((tasks.length > index) && date.getTime() === tasks[index].workDate.getTime()) {
         if (!!tasks[index].project && tasks[index].project.isPaid) {
           currentDaySum += this.taskWorth(tasks[index]);
         }
@@ -236,7 +226,7 @@ export class ReportsDataService {
       }
       dataSeries.unshift({name: seriesItemName, value: currentDaySum});
 
-      date = this.calendar.getPrev(date, 'd', 1);
+      date.setDate(date.getDate() - 1);
     }
 
     data.push({name: dataItemName, series: dataSeries});
@@ -246,8 +236,8 @@ export class ReportsDataService {
 
   getBarReportDataTotals(reportData: DataEntry[]) {
     const totalsMap = new Map<string, number>();
-    for (let dataEntry of reportData) {
-      for (let seriesEntry of dataEntry.series) {
+    for (const dataEntry of reportData) {
+      for (const seriesEntry of dataEntry.series) {
         if (totalsMap.has(seriesEntry.name)) {
           totalsMap.set(seriesEntry.name, totalsMap.get(seriesEntry.name) + seriesEntry.value);
         } else {
@@ -295,12 +285,12 @@ export class ReportsDataService {
 
  formatDate(dateString: string): string {
     const datePattern = /^(\d+)\/(\d+)\/(\d+)$/gi;
-  
-    const [_, year, month, day] = datePattern.exec(dateString); 
+
+    const [_, year, month, day] = datePattern.exec(dateString);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
-    const date = new NgbDate(+year, +month, +day);
-    return months[date.month - 1] + ' ' + date.day + ', ' + weekdays[this.calendar.getWeekday(date) - 1];
+
+    const date = new Date(+year, +month - 1, +day);
+    return months[date.getMonth()] + ' ' + date.getDate() + ', ' + weekdays[date.getDay()];
   }
 }

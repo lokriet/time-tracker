@@ -1,0 +1,54 @@
+@import '../../../../assets/scss/partials/variables';
+@import '../../../../assets/scss/partials/colors';
+@import '../../../../assets/scss/partials/forms';
+
+.calendar-group {
+  margin: 0 $input-x-margin;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+}
+
+.calendar-input {
+  width: 8rem;
+  margin: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.calendar-button {
+  margin: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.datepicker {
+  position: relative;
+}
+
+.datepicker-popup {
+  position: absolute;
+  top: 2.25rem;
+  right: -0.5rem;
+  border: $border-width solid $main-color--lighter;
+  border-radius: $border-radius;
+  background-color: white;
+  z-index: 2;
+  overflow: hidden;
+
+}
+
+.datepicker-pointer {
+  position: absolute;
+  top: 2.25rem - 0.37rem;
+  right: 1.5rem;
+  border-style: solid;
+  border-width: $border-width;
+  border-color: $main-color--lighter transparent transparent $main-color--lighter ;
+  background-color: white;
+  width: 0.75rem;
+  height: 0.75rem;
+  transform: rotate(45deg);
+  z-index: 3;
+}

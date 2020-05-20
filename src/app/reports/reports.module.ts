@@ -2,27 +2,19 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { BarSeriesComponent } from './combo-chart/bar-series.component';
-import { ComboChartComponent } from './combo-chart/combo-chart.component';
-import { LineSeriesComponent } from './combo-chart/line-series.component';
-import { DateRangeComponent } from './date-range/date-range.component';
+import { SharedModule } from '../shared/shared.module';
+import { ReportChartComponent } from './report-chart/report-chart.component';
 import { ReportsComponent } from './reports.component';
 
 @NgModule({
   declarations: [
     ReportsComponent,
-    DateRangeComponent,
-    ComboChartComponent,
-    BarSeriesComponent,
-    LineSeriesComponent],
+    ReportChartComponent],
   imports: [
     CommonModule,
-    NgxChartsModule,
-    NgbDatepickerModule,
+    SharedModule,
     FormsModule,
     FontAwesomeModule,
     NgSelectModule

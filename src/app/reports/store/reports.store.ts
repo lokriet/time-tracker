@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ID, Store, StoreConfig } from '@datorama/akita';
 
-import { DateRange } from '../date-range/date-range.model';
+import { DateRange } from '../../shared/datepicker/date-range-selector/date-range.model';
 import { DateSelectionMode } from '../date-selector.model';
 import { ReportFilters } from '../reports-data.service';
 

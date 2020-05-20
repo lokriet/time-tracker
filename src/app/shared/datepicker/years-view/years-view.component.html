@@ -1,0 +1,35 @@
+<div class="years-view">
+    <div class="view-header">
+      <button type="button" class="button--nav" (click)="onShowPreviousDecade()">
+        <fa-icon [icon]="faLeft"></fa-icon>
+      </button>
+      <div class="button--nav header">
+        {{ getHeaderText() }}
+      </div>
+      <button 
+          type="button" 
+          class="button--nav" 
+          [disabled]="isNextDecadeFuture()"
+          (click)="onShowNextDecade()">
+        <fa-icon [icon]="faRight"></fa-icon>
+      </button>
+    </div>
+    <div class="years">
+      <button 
+          *ngFor="let year of yearsToShow; first as isFirst; last as isLast" 
+          type="button"
+          class="button--nav"
+          [class.current]="isCurrentYear(year)"
+          [class.selected]="isSelectedYear(year)"
+          [class.outside-current-range]="isFirst || isLast"
+          [disabled]="isFuture(year)"
+          (click)="onSelectYear(year)">
+        {{ year }}
+      </button>
+    </div>
+    <div class="view-footer">
+      <button type="button" class="button--nav" (click)="onSelectCurrentYear()">
+        Current Year
+      </button>
+    </div>
+  </div>

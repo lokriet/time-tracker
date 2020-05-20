@@ -1,0 +1,58 @@
+
+@import '../../../../assets/scss/partials/variables';
+@import '../../../../assets/scss/partials/colors';
+@import '../datepicker.view';
+
+.date-range-selector {
+  display: inline-block;
+  background-color: white;
+  position: relative;
+  border-radius: $border-radius;
+  border: $border-width solid $main-color--lighter;
+  overflow: hidden;
+}
+
+.nav-previous-month {
+  margin-right: 3rem;
+}
+
+.nav-selected-month {
+  margin-left: 3rem;
+}
+
+.month-selector-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.month-selector-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba($main-color, 40%) 0%, white 45%, white 55%, rgba($main-color, 40%) 100%);
+  z-index: 10;
+}
+
+.month-selector {
+  background: white;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  z-index: 11;
+
+  &.previous-month {
+    left: 0;
+    transform: trnaslateX(-100%);
+  }
+
+  &.selected-month {
+    right: 0;
+    transform: trnaslateX(100%);
+  }
+}

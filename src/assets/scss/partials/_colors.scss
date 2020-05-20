@@ -1,0 +1,9 @@
+$background-color: #f8f8f8;
+$background-color--darker: darken($background-color, 10%);
+$main-color: #50b6bb;
+$main-color--dark: #45969b;
+$main-color--darker: darken($main-color, 30%);
+$main-color--lighter: lighten($main-color, 30%);
+$accent-color: #f96d15;
+$accent-color--lighter: lighten($accent-color, 30%);
+$accent-color--darker: darken($accent-color, 30%);

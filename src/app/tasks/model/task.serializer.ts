@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ProjectsQuery } from '../../projects/store/projects.query';
-import { SimpleDate } from './simple-date.model';
 import { createTask, Task } from './task.model';
 import { TimeRange } from './time-range.model';
 import { Time } from './time.model';
@@ -33,12 +32,8 @@ export class TaskSerializer {
     };
   }
 
-  private serializeDate(date: SimpleDate) {
-    return {
-      day: date.day,
-      month: date.month,
-      year: date.year
-    };
+  private serializeDate(date: Date) {
+    return date.getTime();
   }
 
   private serializeTimeRange(timeRange: TimeRange): any {
@@ -82,7 +77,7 @@ export class TaskSerializer {
                                 ownerId: taskObject.ownerId,
                                 description: taskObject.description,
                                 project,
-                                workDate: taskObject.workDate,
+                                workDate: new Date(taskObject.workDate),
                                 workHours,
                                 breaks});
 

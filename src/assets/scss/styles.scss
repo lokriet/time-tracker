@@ -1,0 +1,134 @@
+@import "./partials/colors";
+@import "./partials/variables";
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One|Quicksand&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+:focus {
+  outline:none;
+}
+::-moz-focus-inner {
+  border:0;
+}
+
+// button::-moz-focus-inner {
+//   border: 0;
+// }
+
+body {
+  height: 100vh;
+  margin: 0;
+  background-color: $background-color;
+  font-family: $main-font;
+}
+
+.main {
+  display: flex;
+  justify-content: center;  
+}
+
+.favorite {
+  color: $accent-color;
+}
+
+.tooltip-container {
+  position: relative;
+
+  .tooltip-element:hover+.tooltip {
+    visibility: visible;
+    transform: translateX(-50%);
+    opacity: 1;
+    transition: .3s linear;
+    animation: shake 500ms linear;
+  }
+}
+
+.tooltip  {
+  text-align: center;
+
+  visibility: hidden;
+  z-index: 200;
+  opacity: .40;
+  
+  padding: 0.5rem 1rem;
+
+  background: $accent-color;
+  color: white;
+  
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 1rem;
+
+  border-radius:$border-radius;
+  font-size: 1rem;
+
+  // transform: translate(-50%, 1rem);
+  transform: translateX(-50%);
+  transition: all 0.3s ease-in-out;
+  
+  &::after {
+    content: "";
+    
+    border-style: solid;
+    border-width: 0.5rem;
+    border-color: $accent-color transparent transparent transparent;
+
+    position: absolute;
+    left: calc(50% - 0.5rem);
+    bottom: -1rem;
+  }
+}
+
+@keyframes shake {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg) translateX(-50%);// translate(-50%, 1rem);
+  }
+  20% {
+    transform: rotate(10deg) translateX(-50%);// translateX(-50%);
+  }
+  70% {
+    transform: rotate(-8deg) translateX(-50%);//  translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) translateX(-50%);// translate(-50%, 0);
+  }
+}
+
+// custom scrollbar
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: $main-color--lighter;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: $main-color;
+}
+
+// select text colors
+::selection {
+  background: $main-color; /* WebKit/Blink Browsers */
+  color: white;
+}
+::-moz-selection {
+  background: $main-color; /* Gecko Browsers */
+  color: white;
+}
+
+.empty-list {
+  display: flex;
+  justify-content: center;
+  color: $main-color--lighter;
+}
+
+
+

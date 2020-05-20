@@ -1,5 +1,12 @@
-<app-header></app-header>
-<div class="mx-3">
-  <router-outlet></router-outlet>
+<div class="main">
+  <header>
+    <app-header></app-header>
+  </header>
+  <main>
+    <router-outlet></router-outlet>
+    <app-messages></app-messages>
+  </main>
+  <footer>
+    <app-footer></app-footer>
+  </footer>
 </div>
-<app-messages></app-messages>

@@ -1,0 +1,92 @@
+@import '../../../assets/scss/partials/colors';
+@import '../../../assets/scss/partials/variables';
+
+.project {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: [project-name-start] 20rem 
+                         [project-name-end project-paid-start] 3rem 
+                         [project-paid-end pay-rate-start] 8rem 
+                         [pay-rate-end favorite-start] 3rem
+                         [favorite-end edit-start] 3rem
+                         [edit-end delete-start] 3rem [delete-end];
+  grid-template-areas: "project-name project-paid pay-rate favorite edit delete";
+  background: white;
+  color: $main-color--darker;
+  border: $border-width solid $main-color--lighter;
+  border-radius: $border-radius;
+  padding: 0;
+  margin: 1rem 0.5rem;
+  transition: all 200ms ease-in 150ms;
+  
+  // &:hover {
+  //   padding: 0.5rem;
+  //   margin: 1rem 0;
+  // }
+}
+
+.project-name {
+  grid-area: project-name;
+  margin-left: 1rem;
+}
+
+.project-is-paid {
+  grid-area: project-paid;
+  color: $background-color--darker;
+  justify-self: center;
+
+  &.paid-true {
+    color: $main-color;
+  }
+}
+
+.pay-rate {
+  grid-area: pay-rate;
+}
+
+.project-button {
+  background: transparent;
+  border: none;
+  border-radius: $border-radius;
+  color: inherit;
+  font-size: 1rem;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  justify-self: center;
+  cursor: pointer;
+  transition: padding 200ms ease-in, margin 200ms ease-in;
+
+  &:hover {
+    padding: 0.75rem 1rem;
+    margin: 0;
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+  }
+}
+
+.favorite-button {
+  grid-area: favorite;
+  color: $accent-color;
+}
+
+
+.edit-button {
+  grid-area: edit;
+
+  &:hover {
+    background-color: $main-color;
+    color: white;
+  }
+}
+
+.delete-button {
+  grid-area: delete;
+  &:hover {
+    background-color: $accent-color;
+    color: white;
+  }
+}

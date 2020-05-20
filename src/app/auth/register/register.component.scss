@@ -1,0 +1,15 @@
+@import '../../../assets/scss/partials/forms';
+
+
+.retister-form {
+  width: 80vw;
+  max-width: 20rem;
+  min-width: 10rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  &>* {
+    margin-bottom: 1rem;
+  }
+}

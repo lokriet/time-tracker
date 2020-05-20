@@ -1,0 +1,35 @@
+@import '../../../../assets/scss/partials/forms';
+
+.form-dropdown.multiple-dropdown .dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  &:active,
+  &:focus {
+    background-color: white;
+    color: $main-color--darker;
+
+    &.selected{
+      background-color: $main-color;
+      color: white;
+    }
+  }
+
+  &.hovered {
+    background-color: $main-color;
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .checkbox-icon {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.25rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.dropdown-item {
+  padding-left: 2rem;
+}
+

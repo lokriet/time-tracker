@@ -1,157 +1,118 @@
-<div class="container">
-  <form (ngSubmit)="onBuildReport()">
-  <div class="row">
-    <div class="col-auto">
-        <app-date-range [ngModel]="dates" name="dates" (ngModelChange)="onDatesSelected($event);"></app-date-range>
-      </div>
-      <div class="col-auto">
-        <div class="form-group mb-2">
-          <label for="dateSelectionMode">Dates range</label>
-          <select class="form-control" id="dateSelectionMode" (change)="onChangeDateSelectionMode(dateSelectionMode.value)" #dateSelectionMode>
-            <option value='WEEKLY' [selected]="dateSelector.dateSelectionMode === 0">Weekly</option>
-            <option value='BIWEEKLY' [selected]="dateSelector.dateSelectionMode === 1">Bi-Weekly</option>
-            <option value='MONTHLY' [selected]="dateSelector.dateSelectionMode === 2">Monthly</option>
-          </select>
-        </div>
-        <button class="btn btn-light mb-2" (click)="onSelectPreviousPeriod()">
+<div class="date-range-selector--container">
+  <app-date-range-selector [ngModel]="dates" (ngModelChange)="onDatesSelected($event);"></app-date-range-selector>
+
+  <div class="date-selection-nav">
+    <label for="date-selection-mode" class="form-label">Dates range</label>
+    <app-dropdown
+      class="date-selection-mode--dropdown"
+      [items]="dateSelectionModes"
+      
+      [ngModel]="dateSelector.dateSelectionMode"
+      name="date-selection-mode"
+      (ngModelChange)="onChangeDateSelectionMode($event)" #dateSelectionMode>
+    </app-dropdown>
+    <div class="date-selection-nav--buttons">
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectPreviousPeriod()">
           <fa-icon [icon]="faTwoLeft"></fa-icon>
         </button>
-        <button class="btn btn-light mb-2" (click)="onSelectCurrentPeriod()">
+        <span class="tooltip">Previous period</span>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectCurrentPeriod()">
           <fa-icon [icon]="faCircle"></fa-icon>
         </button>
-        <button class="btn btn-light mb-2" (click)="onSelectNextPeriod()">
+        <span class="tooltip">Current period</span>
+      </div>
+      <div class="tooltip-container">
+        <button 
+            type="button" 
+            class="form-button tooltip-element" 
+            (click)="onSelectNextPeriod()"
+            [disabled]="!canSelectNextPeriod()">
           <fa-icon [icon]="faTwoRight"></fa-icon>
         </button>
-      </div>
-    </div>
-  </form>
-    <div class="row">
-      <div class="col-xs-6 m-2">
-        <div class="btn-group btn-group-toggle form-group">
-          <label class="btn btn-light" [class.active]="hours.value === reportType">
-            <input type="radio" name="options" [(ngModel)]="reportType" value="hours" #hours (change)=reportTypeChanged()>
-            Hours
-          </label>
-          <label class="btn btn-light" [class.active]="money.value === reportType">
-            <input type="radio" name="options" [(ngModel)]="reportType" value="money" #money (change)=reportTypeChanged()>
-            Money
-          </label>
-          <label class="btn btn-light" [class.active]="combined.value === reportType">
-            <input type="radio" name="options" [(ngModel)]="reportType" value="combined" #combined (change)=reportTypeChanged()>
-            Combined
-          </label>
-        </div>
-      </div>
-      <div class="col-auto m-2">
-        <div class="form-inline">
-          <div class="mb-3">
-            <ng-select
-              class=""
-              [items]="projects$ | async"
-              [multiple]="true"
-              bindLabel="projectName"
-              groupBy="ownerId"
-              [selectableGroup]="true"
-              [selectableGroupAsModel]="false"
-              [closeOnSelect]="false"
-              bindValue="id"
-              [placeholder]="'Filter tasks'"
-              [(ngModel)]="filterProjects"
-              (change)="onFilterProjectsSelected()">
-              <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
-              </ng-template>
-              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
-                <span [hidden]="!item.isFavorite" class="ml-2 favorite">
-                  <fa-icon [icon]="faFullHeart"></fa-icon>
-                </span>
-                {{item.projectName}}
-              </ng-template>
-            </ng-select>
-          </div>
-          
-            <button class="btn btn-light mb-3 ml-2" type="button" (click)="onBuildReport()">
-              <fa-icon [icon]="faCheck"></fa-icon>
-            </button>
-          
-        </div>
+        <span class="tooltip">Next period</span>
       </div>
     </div>
 
-  <div class="row">
-    <div class="col-xs-12 w-100">
-      <ngx-charts-bar-vertical-stacked
-        *ngIf="reportType === 'hours' || reportType === 'money'"
-        [view]="[graphWidth, 400]"
-        [results]="data"
-        [scheme]="scheme"
-        [legend]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legendPosition]="'below'"
-      >
-      <ng-template #tooltipTemplate let-model="model">
-        <div class="area-tooltip-container">
-          <div class="tooltip-item">{{ formatDate(model.series) }}</div>
-          <div class="tooltip-item">{{ model.name }} • {{ reportType === 'hours' ? formatHours(model.value) : formatMoney(model.value) }}</div>
-        </div>
-        </ng-template>
-      </ngx-charts-bar-vertical-stacked>
-
-      <app-combo-chart
-        *ngIf="reportType === 'combined'"
-        class="chart-container"
-        [view]="[graphWidth, 400]"
-        [scheme]="scheme"
-        [results]="data.hours"
-        [lineResults]="data.money"
-        [legendPosition]="'below'"
-      >
-      </app-combo-chart>
+    <label for="report-type" class="form-label report-type-label">Report type</label>
+    <div class="report-type-selector">
+        <label class="report-type-button form-button" [class.active]="hours.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="hours" 
+              #hours 
+              (change)=reportTypeChanged()>
+          Hours
+        </label>
+        <label class="report-type-button form-button" [class.active]="money.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="money" 
+              #money 
+              (change)=reportTypeChanged()>
+          Money
+        </label>
+        <label class="report-type-button form-button" [class.active]="combined.value === reportType">
+          <input 
+              type="radio" 
+              name="options" 
+              [(ngModel)]="reportType" 
+              value="combined" 
+              #combined 
+              (change)=reportTypeChanged()>
+          Combined
+        </label>
     </div>
-  </div>
 
-
-  <h2 class="mt-3">Totals</h2>
-  <div class="d-flex flex-wrap mb-3">
-    <div>
-      <ngx-charts-pie-chart
-        *ngIf="reportType === 'hours' || reportType === 'combined'"
-        [view]="[450, 350]"
-        class="chart-container"
-        [view]="view"
-        [scheme]="scheme"
-        [results]="reportType === 'hours' ? totalsData : totalsData.hours"
-        [animations]="true"
-        [legend]="false"
-        [legendPosition]="'below'"
-        [explodeSlices]="false"
-        [labels]="true"
-        [doughnut]="true"
-        [arcWidth]="1"
-        [tooltipText]="hoursPieTooltipText"
-      >
-      </ngx-charts-pie-chart>
-    </div>
-    <div>
-      <ngx-charts-pie-chart
-        *ngIf="reportType === 'money' || reportType === 'combined'"
-        [view]="[450, 350]"
-        class="chart-container"
-        [view]="view"
-        [scheme]="scheme"
-        [results]="reportType === 'money' ? totalsData : totalsData.money"
-        [animations]="true"
-        [legend]="false"
-        [legendPosition]="'below'"
-        [explodeSlices]="false"
-        [labels]="true"
-        [doughnut]="true"
-        [arcWidth]="1"
-        [tooltipText]="moneyPieTooltipText"
-      >
-      </ngx-charts-pie-chart>
-    </div>
+    
   </div>
 </div>
+<div class="tasks-filter-row">
+  <ng-select
+      class="tasks-filter--dropdown"
+      name="tasks-filter"
+      [items]="projects$ | async"
+      [multiple]="true"
+      bindLabel="projectName"
+      groupBy="ownerId"
+      [selectableGroup]="true"
+      [selectableGroupAsModel]="false"
+      [closeOnSelect]="false"
+      bindValue="id"
+      [placeholder]="'Filter tasks'"
+      [(ngModel)]="filterProjects"
+      (change)="onFilterProjectsSelected()">
+    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
+      <span [hidden]="!item.isFavorite" class="ml-2 favorite">
+        <fa-icon [icon]="faFullHeart"></fa-icon>
+      </span>
+      {{item.projectName}}
+    </ng-template>
+  </ng-select>
+  <button class="form-button tasks-filter--apply-button" (click)="onApplyFiltersPressed()">Apply</button>
+</div>
+<!-- <app-multiple-select-dropdown
+    [items]="projects$ | async"
+    [displayProperty]="'projectName'">
+
+</app-multiple-select-dropdown> -->
+
+<div class="container">
+  <app-report-chart [data]="data" [chartType]="reportType"></app-report-chart>
+</div> 

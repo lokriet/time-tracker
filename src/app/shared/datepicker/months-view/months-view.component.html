@@ -1,0 +1,34 @@
+<div class="months-view">
+  <div class="view-header">
+    <button type="button" class="button--nav" (click)="onShowPreviousYear()">
+      <fa-icon [icon]="faLeft"></fa-icon>
+    </button>
+    <button type="button" class="button--nav" (click)="onShowYearSelector()">
+      {{ getHeaderText() }}
+    </button>
+    <button 
+        type="button" 
+        class="button--nav" 
+        [disabled]="isNextYearFuture()"
+        (click)="onShowNextYear()">
+      <fa-icon [icon]="faRight"></fa-icon>
+    </button>
+  </div>
+  <div class="months">
+    <button 
+        *ngFor="let month of months; let i=index" 
+        type="button"
+        class="button--nav"
+        [class.current]="isCurrentMonth(i)"
+        [class.selected]="isSelectedMonth(i)"
+        [disabled]="isFuture(i)"
+        (click)="onSelectMonth(i)">
+      {{ month }}
+    </button>
+  </div>
+  <div class="view-footer">
+    <button type="button" class="button--nav" (click)="onSelectCurrentMonth()">
+      Current Month
+    </button>
+  </div>
+</div>

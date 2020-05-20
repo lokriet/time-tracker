@@ -1,0 +1,64 @@
+@import '../../assets/scss/partials/colors';
+@import '../../assets/scss/partials/variables';
+
+.messages-container {
+  position: fixed;
+  top: $header-height;
+  right: 2rem;
+  max-width: 50vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  border: 1px solid $main-color--darker;
+  border-radius: $border-radius;
+
+  background-color: $background-color;
+  box-shadow: 0 0 2px 2px #aaaaaa42;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  
+  animation: slideOut 400ms;
+}
+
+@keyframes slideOut {
+  from {
+    margin-right: -3rem;
+    opacity: 0.5;
+  }
+  to {
+    margin-right: 0;
+    opacity: 1;
+  }
+}
+
+.message--icon,
+.message--text {
+  margin-right: 1rem;
+}
+
+.message--close-button {
+  cursor: pointer;
+}
+
+.message-info {
+  border-color: $main-color;
+  
+  .message--icon {
+    color: $main-color;
+  }
+
+}
+
+.message-error {
+  border-color: $accent-color;
+
+  .message--icon {
+    color: $accent-color;
+  }
+}

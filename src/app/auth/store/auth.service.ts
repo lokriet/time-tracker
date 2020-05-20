@@ -19,7 +19,6 @@ export class AuthService {
               private tasksService: TasksService) {
 
     this.initialAuthStateLoaded = new Promise((resolve, reject) => {
-      console.log('setting initial auth state...');
       let resolved = false;
 
       this.firebaseAuth.auth.onIdTokenChanged((user) => {
@@ -36,7 +35,6 @@ export class AuthService {
               if (!resolved) {
                 resolved = true;
                 resolve();
-                console.log('initial auth state loaded with current user data');
               }
             });
         } else {
@@ -44,7 +42,6 @@ export class AuthService {
           if (!resolved) {
             resolved = true;
             resolve();
-            console.log('initial auth state loaded with no user');
           }
         }
       });
@@ -67,7 +64,7 @@ export class AuthService {
               errorMessage = "User with this e-mail doesn't exist";
               break;
             default:
-              console.log(error);
+              // console.log(error);
               errorMessage = 'Unknown error';
           }
           reject(errorMessage);
@@ -95,7 +92,7 @@ export class AuthService {
               errorMessage = 'Password is weak. Try picking a stronger one';
               break;
             default:
-              console.log(error.code);
+              // console.log(error.code);
               errorMessage = 'Unknown error';
           }
           reject(errorMessage);

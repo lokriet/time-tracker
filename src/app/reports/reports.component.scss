@@ -1,0 +1,89 @@
+@import '../../assets/scss/partials/forms';
+
+.date-range-selector--container {
+  margin-top: 1rem;
+  display: flex;
+}
+
+.date-selection-nav {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+
+  &>label {
+    margin: 0.5rem 0 0.25rem 0.5rem;
+  }
+  
+  .date-selection-mode--dropdown {
+    width: 7.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .date-selection-nav--buttons {
+    display: flex;
+  
+    .form-button {
+      margin: 0 0 0 0.25rem;
+    }
+  }
+  
+  .report-type-label {
+    margin-top: 1rem;
+  }
+}
+
+.report-type-selector {
+  display: flex;
+  flex-direction: column;
+
+  input[type='radio'] {
+    display: none;
+  }
+
+  .report-type-button {
+    border-radius: 0;
+    text-align: center;
+    background-color: $main-color--lighter;
+    color: $main-color--darker;
+    padding-top: 0.5rem;
+    height: 2rem;
+    border: none;
+    border-bottom: $border-width solid $background-color;
+    margin-right: 0;
+    
+    &:first-child {
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+      border: none;
+    }
+
+    &.active,
+    &:hover {
+      background-color: $main-color;
+      color: white;
+    }
+  }
+}
+
+.tasks-filter-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tasks-filter--dropdown {
+  flex-grow: 1;
+  height: 2.5rem;
+  max-height: 2.5rem;
+  margin: 1rem 0 0 0.25rem;
+}
+
+.tasks-filter--apply-button {
+  flex-grow: 0;
+  margin: 1rem 0 0 1rem;
+}

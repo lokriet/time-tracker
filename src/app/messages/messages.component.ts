@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Order } from '@datorama/akita';
 import { faAngry } from '@fortawesome/free-regular-svg-icons';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Observable } from 'rxjs';
+
 import { Message, MessageType } from './message.model';
 import { MessagesQuery } from './store/messages.query';
-import { Observable } from 'rxjs';
 import { MessagesService } from './store/messages.service';
-import { Order } from '@datorama/akita';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+  styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnInit {
   faCheck = faCheck;
   faAngryFace = faAngry;
   faClose = faTimes;
-  
+
   infoType = MessageType.INFO;
   errorType = MessageType.ERROR;
 
@@ -32,5 +33,4 @@ export class MessagesComponent implements OnInit {
   onCloseMessage(messageId: number) {
     this.messagesService.removeMessage(messageId);
   }
-
 }

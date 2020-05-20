@@ -1,0 +1,39 @@
+<div class="form-dropdown" #dropdownElement>
+  <input 
+      type="text" 
+      class="form-control dropdown-input"
+      [class.open]="dropdownOpen"
+      [placeholder]="placeholder"
+      (click)="onDropdownInputClicked()"
+      (keyup)="onDropdownInputKey($event)"
+      [value]="selectedItem ? getItemDisplayString(selectedItem) : ''"
+      #dropdownInput
+      >
+  <div 
+      class="dropdown-area" 
+      [class.open]="dropdownOpen"
+      [@collapsed]="!dropdownOpen"
+      #optionsList>
+      <button
+          type="button" 
+          class="dropdown-item"
+          *ngFor="let filteredItem of filteredItems; let i = index" 
+          [class.selected]="i === hoveredItemIndex"
+          (click)="onItemSelected(filteredItem.index)"
+          (mouseenter)="onItemHovered(i)">
+            <ng-container 
+                *ngTemplateOutlet="dropdownItemTemplate ? dropdownItemTemplate : dropdownItemDefault;
+                                  context: {
+                                              displayText: filteredItem.value, 
+                                              item: items[filteredItem.index],
+                                              searchTerm: filterString
+                                           }" >
+
+            </ng-container>
+            <ng-template #dropdownItemDefault let-displayText="displayText" let-searchTerm="searchTerm">
+              <span [innerHTML]="displayText | filterString: filterString"></span>
+            </ng-template>
+        </button>
+  </div>
+</div>
+

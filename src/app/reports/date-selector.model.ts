@@ -1,15 +1,16 @@
-import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
-import { DateRange } from './date-range/date-range.model';
+// import { DateRange } from './date-range/date-range.model';
+import { DateRange } from '../shared/datepicker/date-range-selector/date-range.model';
 
 export enum DateSelectionMode {
-  WEEKLY,
-  BIWEEKLY,
-  MONTHLY
+  WEEKLY = 'Weekly',
+  BIWEEKLY = 'Bi-Weekly',
+  MONTHLY = 'Monthly'
 }
 
 export class DateSelector {
-  constructor(private calendar: NgbCalendar) {
+  constructor(/*private calendar: NgbCalendar*/) {
     this.dateSelectionMode = DateSelectionMode.WEEKLY;
   }
 
@@ -77,6 +78,77 @@ export class DateSelector {
     return this.currentSelectedDateRange;
   }
 
+  isNextPeriodEndFuture(): boolean {
+    let dateToCheck;
+    if (!this.currentSelectedDateRange) {
+      this.setCurrentPeriod();
+      dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+      this.setSelectedPeriod(null);
+    } else {
+      dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+    }
+
+    if (dateToCheck.getTime() > this.getToday().getTime()) {
+      return true;
+    } else {
+      switch (this.dateSelectionMode) {
+        case DateSelectionMode.WEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 7);
+          break;
+        case DateSelectionMode.BIWEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 14);
+          break;
+        case DateSelectionMode.MONTHLY:
+          dateToCheck.setDate(1);
+          dateToCheck.setMonth(dateToCheck.getMonth() + 2);
+          dateToCheck.setDate(dateToCheck.getDate() - 1);
+          break;
+      }
+
+      const nextMonth = this.getToday();
+      nextMonth.setDate(1);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      return dateToCheck.getTime() > nextMonth.getTime();
+    }
+  }
+
+  isNextPeriodStartFuture(): boolean {
+    let dateToCheck;
+    const currentPeriodWasSet = !!this.currentSelectedDateRange;
+    let result;
+    if (!currentPeriodWasSet) {
+      this.setCurrentPeriod();
+    }
+    dateToCheck = new Date(this.currentSelectedDateRange.endDate);
+
+    const today = this.getToday().getTime()
+    if (dateToCheck.getTime() > today) {
+      result = true;
+    } else {
+      dateToCheck = new Date(this.currentSelectedDateRange.startDate);
+      switch (this.dateSelectionMode) {
+        case DateSelectionMode.WEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 7);
+          break;
+        case DateSelectionMode.BIWEEKLY:
+          dateToCheck.setDate(dateToCheck.getDate() + 14);
+          break;
+        case DateSelectionMode.MONTHLY:
+          dateToCheck.setDate(1);
+          dateToCheck.setMonth(dateToCheck.getMonth() + 2);
+          dateToCheck.setDate(dateToCheck.getDate() - 1);
+          break;
+      }
+      result = dateToCheck.getTime() > today;
+    }
+
+    if (!currentPeriodWasSet) {
+      this.setSelectedPeriod(null);
+    }
+
+    return result;
+  }
+
   private setCurrentPeriod() {
     switch (this.dateSelectionMode) {
       case DateSelectionMode.WEEKLY:
@@ -92,103 +164,120 @@ export class DateSelector {
   }
 
   private setCurrentWeek() {
-    const today = this.calendar.getToday();
-    const todayWeekday = this.calendar.getWeekday(today);
-    let first: NgbDate;
+    const today = this.getToday();
+    const todayWeekday = today.getDay();
+    let first: Date;
     if (todayWeekday === 1) {
-      first = new NgbDate(today.year, today.month, today.day);
+      first = new Date(today);
     } else {
-      first = this.calendar.getPrev(today, 'd', todayWeekday - 1);
+      first = this.getPrev(today, todayWeekday - 1);
     }
-    const last = this.calendar.getNext(first, 'd', 6);
+    const last = this.getNext(first, 6);
 
-    const result = {fromDate: first, toDate: last};
+    const result = {startDate: first, endDate: last};
     this.currentSelectedDateRange = result;
   }
 
   private setPreviousWeek() {
-    const result = {fromDate: this.calendar.getPrev(this.currentSelectedDateRange.fromDate, 'd', 7),
-                    toDate: this.calendar.getPrev(this.currentSelectedDateRange.toDate, 'd', 7)};
+    const result = {startDate: this.getPrev(this.currentSelectedDateRange.startDate, 7),
+                    endDate: this.getPrev(this.currentSelectedDateRange.endDate, 7)};
 
     this.currentSelectedDateRange = result;
   }
 
   private setNextWeek() {
-    const result = {fromDate: this.calendar.getNext(this.currentSelectedDateRange.fromDate, 'd', 7),
-                    toDate: this.calendar.getNext(this.currentSelectedDateRange.toDate, 'd', 7)};
+    const result = {startDate: this.getNext(this.currentSelectedDateRange.startDate, 7),
+                    endDate: this.getNext(this.currentSelectedDateRange.endDate, 7)};
 
     this.currentSelectedDateRange = result;
   }
 
   private setCurrentTwoWeeks() {
-    const today = this.calendar.getToday();
-    const todayWeekday = this.calendar.getWeekday(today);
-    let last: NgbDate;
+    const today = this.getToday();
+    const todayWeekday = today.getDay();
+    let last: Date;
     if (todayWeekday === 7) {
-      last = new NgbDate(today.year, today.month, today.day);
+      last = new Date(today);
     } else {
-      last = this.calendar.getNext(today, 'd', 7 - todayWeekday);
+      last = this.getNext(today, 7 - todayWeekday);
     }
-    const first = this.calendar.getPrev(last, 'd', 13);
+    const first = this.getPrev(last, 13);
 
-    const result = {fromDate: first, toDate: last};
+    const result = {startDate: first, endDate: last};
     this.currentSelectedDateRange = result;
   }
 
   private setPreviousTwoWeeks() {
-    const result = {fromDate: this.calendar.getPrev(this.currentSelectedDateRange.fromDate, 'd', 14),
-                    toDate: this.calendar.getPrev(this.currentSelectedDateRange.toDate, 'd', 14)};
+    const result = {startDate: this.getPrev(this.currentSelectedDateRange.startDate, 14),
+                    endDate: this.getPrev(this.currentSelectedDateRange.endDate, 14)};
 
     this.currentSelectedDateRange = result;
   }
 
   private setNextTwoWeeks() {
-    const result = {fromDate: this.calendar.getNext(this.currentSelectedDateRange.fromDate, 'd', 14),
-                    toDate: this.calendar.getNext(this.currentSelectedDateRange.toDate, 'd', 14)};
+    const result = {startDate: this.getNext(this.currentSelectedDateRange.startDate, 14),
+                    endDate: this.getNext(this.currentSelectedDateRange.endDate, 14)};
 
     this.currentSelectedDateRange = result;
   }
 
   private setCurrentMonth() {
-    const today = this.calendar.getToday();
-    const first = new NgbDate(today.year, today.month, 1);
-    const isDecember = first.month === 12;
-    let last = new NgbDate(isDecember ? today.year + 1 : today.year,
-                           isDecember ? 1 : today.month + 1,
+    const today = this.getToday();
+    const first = new Date(today.getFullYear(), today.getMonth(), 1);
+    const isDecember = first.getMonth() === 11;
+    let last = new Date(isDecember ? today.getFullYear() + 1 : today.getFullYear(),
+                           isDecember ? 0 : today.getMonth() + 1,
                            1);
-    last = this.calendar.getPrev(last, 'd', 1);
+    last = this.getPrev(last, 1);
 
-    const result = {fromDate: first, toDate: last};
+    const result = {startDate: first, endDate: last};
     this.currentSelectedDateRange = result;
   }
 
   private setPreviousMonth() {
-    const isJanuary = this.currentSelectedDateRange.fromDate.month === 1;
-    const first = new NgbDate(isJanuary ? this.currentSelectedDateRange.fromDate.year - 1 : this.currentSelectedDateRange.fromDate.year,
-                                         isJanuary ? 12 : this.currentSelectedDateRange.fromDate.month - 1,
-                                         1);
-    const isDecember = first.month === 12;
-    let last = new NgbDate(isDecember ? first.year + 1 : first.year,
-                           isDecember ? 1 : first.month + 1,
+    const isJanuary = this.currentSelectedDateRange.startDate.getMonth() === 0;
+    const first = new Date(
+                            isJanuary ? this.currentSelectedDateRange.startDate.getFullYear() - 1 : this.currentSelectedDateRange.startDate.getFullYear(),
+                            isJanuary ? 11 : this.currentSelectedDateRange.startDate.getMonth() - 1,
+                            1);
+    const isDecember = first.getMonth() === 11;
+    let last = new Date(isDecember ? first.getFullYear() + 1 : first.getFullYear(),
+                           isDecember ? 0 : first.getMonth() + 1,
                            1);
-    last = this.calendar.getPrev(last, 'd', 1);
+    last = this.getPrev(last, 1);
 
-    const result = {fromDate: first, toDate: last};
+    const result = {startDate: first, endDate: last};
     this.currentSelectedDateRange = result;
   }
 
   private setNextMonth() {
-    let isDecember = this.currentSelectedDateRange.fromDate.month === 12;
-    const first = new NgbDate(isDecember ? this.currentSelectedDateRange.fromDate.year + 1 : this.currentSelectedDateRange.fromDate.year,
-                                         isDecember ? 1 : this.currentSelectedDateRange.fromDate.month + 1,
+    let isDecember = this.currentSelectedDateRange.endDate.getMonth() === 11;
+    const first = new Date(isDecember ? this.currentSelectedDateRange.endDate.getFullYear() + 1 : this.currentSelectedDateRange.endDate.getFullYear(),
+                                         isDecember ? 0 : this.currentSelectedDateRange.endDate.getMonth() + 1,
                                          1);
-    isDecember = first.month === 12;
-    let last = new NgbDate(isDecember ? first.year + 1 : first.year,
-                           isDecember ? 1 : first.month + 1,
+    isDecember = first.getMonth() === 11;
+    let last = new Date(isDecember ? first.getFullYear() + 1 : first.getFullYear(),
+                           isDecember ? 0 : first.getMonth() + 1,
                            1);
-    last = this.calendar.getPrev(last, 'd', 1);
+    last = this.getPrev(last, 1);
 
-    const result = {fromDate: first, toDate: last};
+    const result = {startDate: first, endDate: last};
     this.currentSelectedDateRange = result;
+  }
+
+  private getToday(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  }
+
+  private getPrev(date: Date, daysNo: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() - daysNo);
+    return result;
+  }
+
+  private getNext(date: Date, daysNo: number): Date {
+    return this.getPrev(date, -daysNo);
   }
 }

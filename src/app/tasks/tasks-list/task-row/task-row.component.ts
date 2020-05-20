@@ -16,7 +16,7 @@ import { TasksUI } from '../../store/tasks.store';
 @Component({
   selector: 'app-task-row',
   templateUrl: './task-row.component.html',
-  styleUrls: ['./task-row.component.css'],
+  styleUrls: ['./task-row.component.scss'],
   animations: [
     // Each unique animation requires its own trigger. The first argument of the trigger function is the name
     trigger('rotatedState', [
@@ -24,7 +24,14 @@ import { TasksUI } from '../../store/tasks.store';
         state('rotated', style({ transform: 'rotate(90deg)' })),
         transition('rotated => default', animate('400ms ease-out')),
         transition('default => rotated', animate('400ms ease-in'))
-    ])
+    ]),
+
+    trigger('collapse', [
+      state('default', style({ height: 0 })),
+      state('rotated', style({ height: '*' })),
+      transition('rotated => default', animate('400ms ease-out')),
+      transition('default => rotated', animate('400ms ease-in'))
+  ])
   ]
 })
 export class TaskRowComponent implements OnInit, OnDestroy {
@@ -82,7 +89,7 @@ export class TaskRowComponent implements OnInit, OnDestroy {
 
   formatTimeRange(timeRange: TimeRange) {
     if (timeRange) {
-      return formatTime(timeRange.startTime) + '-' + formatTime(timeRange.endTime);
+      return formatTime(timeRange.startTime) + ' - ' + formatTime(timeRange.endTime);
     }
     return '';
   }

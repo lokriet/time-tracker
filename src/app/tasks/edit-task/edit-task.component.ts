@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Order } from '@datorama/akita';
@@ -14,7 +14,6 @@ import {
   faStop,
   faSyncAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { ComponentCanDeactivate } from 'src/app/can-deactivate.component';
 
@@ -33,7 +32,7 @@ import { timeRangesValidator } from './edit-task.validators';
 @Component({
   selector: 'app-edit-task',
   templateUrl: './edit-task.component.html',
-  styleUrls: ['./edit-task.component.css']
+  styleUrls: ['./edit-task.component.scss']
 })
 export class EditTaskComponent extends ComponentCanDeactivate implements OnInit, OnDestroy {
   faCalendar = faCalendarAlt;
@@ -52,6 +51,9 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
   taskForm: FormGroup;
   editMode = false;
 
+  // @ViewChild('projectDropdown', { static: true }) projectDropdown: ElementRef;
+  // projectsDropdownOpen = false;
+
   tickingMode = false;
   isPaused = false;
   tickingBreakIndex: number = null;
@@ -61,8 +63,7 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
 
   projects$: Observable<Project[]>;
 
-  constructor(private calendar: NgbCalendar,
-              private tasksService: TasksService,
+  constructor(private tasksService: TasksService,
               private tasksQuery: TasksQuery,
               private tasksStore: TasksStore,
               private router: Router,
@@ -131,6 +132,14 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
     }, { validators: timeRangesValidator });
   }
 
+  // onProjectSelected(project: Project) {
+  //   this.taskForm.get('project').setValue(project);
+  //   this.projectsDropdownOpen = false;
+  // }
+
+  // onProjectInputClicked() {
+  //   this.projectsDropdownOpen = !this.projectsDropdownOpen;
+  // }
 
   formatTaskLength() {
     if (this.taskForm.value.workHours) {
@@ -152,10 +161,6 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
       return formatBreakLength(this.taskForm.value.breaks[index]);
     }
     return '';
-  }
-
-  getToday() {
-    return this.calendar.getToday();
   }
 
   onAddBreak() {
@@ -205,7 +210,9 @@ export class EditTaskComponent extends ComponentCanDeactivate implements OnInit,
       // start ticking
       this.tickingMode = true;
       (this.taskForm.get('breaks') as FormArray).clear();
-      this.taskForm.get('workDate').setValue(this.calendar.getToday());
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      this.taskForm.get('workDate').setValue(today);
 
       const startTime = new Date();
       startTime.setSeconds(startTime.getSeconds(), 0);

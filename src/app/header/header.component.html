@@ -1,17 +1,13 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
-    <a class="navbar-brand" [routerLink]="['/']" >Time Tracker</a>
-    <button class="navbar-toggler" 
-            type="button" 
-            data-toggle="collapse" 
-            data-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" 
-            aria-expanded="false" 
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<nav>
+  <a class="navbar-brand" [routerLink]="['/']">
+    <img src="../../assets/img/header/donut.svg" alt="">
+  </a>
+
+  <div class="align-baseline">
+    <a class="navbar-brand" [routerLink]="['/']"><p>Time Tracker</p></a>
   
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+    <div class="navbar-nav" #navigation>
+      <ul class="navbar-nav-group nav-main">
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="'/tasks'">Tasks</a>
         </li>
@@ -21,11 +17,8 @@
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="'/reports'">Reports</a>
         </li>
-        <!-- <li class="nav-item"  *ngIf="isAuthenticated$ | async">
-          <a class="nav-link" (click)="onStoreTasks()" style="cursor: pointer">Store</a>
-        </li> -->
       </ul>
-      <ul class="navbar-nav" *ngIf="!(isAuthenticated$ | async)">
+      <ul class="navbar-nav-group nav-signin" *ngIf="!(isAuthenticated$ | async)">
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="'/login'">Log In</a>
         </li>
@@ -33,10 +26,26 @@
           <a class="nav-link" [routerLink]="'/register'">Register</a>
         </li>
       </ul>
-      <ul class="navbar-nav" *ngIf="isAuthenticated$ | async">
+      <ul class="navbar-nav-group nav-signout" *ngIf="isAuthenticated$ | async">
         <li class="nav-item">
           <a class="nav-link" (click)="onLogout()" style="cursor: pointer">Log Out</a>
         </li>
+        <!-- <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="'/profile'">Profile</a>
+        </li> -->
       </ul>
     </div>
-  </nav>
+    <div class="nav-toggle-button">
+      <button
+          class="btn hamburger hamburger--elastic"
+          [class.is-active]="menuOpen"
+          type="button" 
+          (click)="onHamburgerClick()">
+        <span class="hamburger-box">
+          <span class="hamburger-inner"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="backdrop" [class.backdrop-closed]="!menuOpen" (click)="onBackdropClick()"></div>

@@ -1,11 +1,27 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <form #f="ngForm" (ngSubmit)="onRegister()">
-        <input type="text" name="email" id="email" class="form-control mb-2" placeholder="E-mail" [(ngModel)]="email" required>
-        <input type="password" name="password" id="password" class="form-control mb-2" placeholder="Password" [(ngModel)]="password" password minlength="6">
-        <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Register</button>
-      </form>
-    </div>
-  </div>
-</div>
+<form #f="ngForm" (ngSubmit)="onRegister()" class="retister-form">
+  <input 
+    type="text" 
+    name="email" 
+    id="email" 
+    class="form-control" 
+    placeholder="E-mail" 
+    [(ngModel)]="email" 
+    autoComplete="username"
+    required >
+  <input 
+    type="password" 
+    name="password" 
+    id="password" 
+    class="form-control" 
+    placeholder="Password" 
+    [(ngModel)]="password" 
+    password 
+    minlength="6"
+    autoComplete="new-password">
+  <button 
+    type="submit" 
+    class="form-button" 
+    [disabled]="!f.valid">
+      Register
+  </button>
+</form>

@@ -1,0 +1,44 @@
+<div class="form-dropdown multiple-dropdown" #dropdownElement>
+  <input 
+      type="text" 
+      class="form-control dropdown-input"
+      [class.open]="dropdownOpen"
+      [placeholder]="placeholder"
+      (click)="onDropdownInputClicked()"
+      (keydown)="onDropdownInputKey($event)"
+      [value]="'TODO!!!!'"
+      #dropdownInput
+      >
+  <div 
+      class="dropdown-area" 
+      [class.open]="dropdownOpen"
+      [@collapsed]="!dropdownOpen"
+      #optionsList>
+    <button
+        type="button" 
+        class="dropdown-item"
+        *ngFor="let item of items; let i = index" 
+        [class.selected]="selectedMarkers[i]"
+        [class.hovered]="this.hoveredItemIndex === i"
+        (click)="onItemSelectionSwitched(i)"
+        (mouseenter)="onItemHovered(i)">
+      <ng-container 
+          *ngTemplateOutlet="dropdownItemTemplate ? dropdownItemTemplate : dropdownItemDefault;
+                            context: {
+                                        displayText: getItemDisplayString(item), 
+                                        item: item,
+                                        isSelected: selectedMarkers[i]
+                                      }" >
+
+      </ng-container>
+      <ng-template #dropdownItemDefault let-displayText="displayText" let-isSelected="isSelected">
+        <!-- <div class="dropdown-option"> -->
+          <span class="checkbox-icon">
+            <fa-icon [icon]="faCheck" [class.checked]="isSelected"></fa-icon>
+          </span>
+          <span> {{ displayText }}</span>
+        <!-- </div> -->
+      </ng-template>
+    </button>
+  </div>
+</div>

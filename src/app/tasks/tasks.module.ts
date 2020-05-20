@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { EditTaskComponent } from './edit-task/edit-task.component';
@@ -12,6 +11,7 @@ import { TaskRowComponent } from './tasks-list/task-row/task-row.component';
 import { TasksListComponent } from './tasks-list/tasks-list.component';
 import { TasksRoutingModule } from './tasks-routing.module';
 import { TasksComponent } from './tasks.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -24,8 +24,8 @@ import { TasksComponent } from './tasks.component';
   ],
   imports: [
     CommonModule,
+    SharedModule,
     FontAwesomeModule,
-    NgbDatepickerModule,
     ReactiveFormsModule,
     TasksRoutingModule,
     NgSelectModule

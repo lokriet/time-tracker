@@ -1,0 +1,181 @@
+@import "./colors";
+@import "./variables";
+
+input {
+  outline: none !important;
+}
+
+form.ng-dirty input.ng-invalid {
+  border: $border-width solid $accent-color!important;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba($accent-color, .25);
+  }
+}
+
+.form-group {
+  display: flex;
+  align-items: flex-start;
+  margin: 0.5rem 0;
+}
+
+.form-control {
+  border: $border-width solid $main-color--lighter;
+  color: $main-color--darker;
+  font-family: 'Quicksand', Arial, sans-serif;
+  font-size: 1rem;
+  border-radius: $border-radius;
+  padding: 0.5rem 0.75rem;
+  margin: 0 $input-x-margin;
+
+  &:focus {
+    border-color: $main-color;
+    box-shadow: 0 0 0 0.2rem rgba($main-color, 0.25);
+  }
+
+  &.ng-invalid.ng-touched {
+    border: $border-width solid $accent-color!important;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($accent-color, .25);
+    }
+  }
+
+  &:disabled {
+    background-color: darken($background-color, 3%);
+  }
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $main-color--lighter;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: $main-color--lighter;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: $main-color--lighter;
+}
+
+.form-button {
+  background: $main-color;
+  border: $border-width solid $main-color;
+  border-radius: $border-radius;
+  padding: 0 0.75rem;
+  margin: 0 $input-x-margin;
+  box-sizing: content-box;
+  height: 2.25rem;
+  font-family: 'Quicksand', Arial, sans-serif;
+  color: white;
+  cursor: pointer;
+  
+  &.form-button-submit {
+    background: $accent-color;
+    border-color: $accent-color;
+
+    &:disabled {
+      background: $accent-color--lighter;
+      border-color: $accent-color--lighter;
+    }
+  }
+
+  &:focus,
+  &:active {
+    outline: none !important;
+  }
+
+  &:disabled {
+    background: $main-color--lighter;
+    border-color: $main-color--lighter;
+  }
+}
+
+.form-dropdown {
+  display: inline-block;
+  width: inherit;
+
+  .dropdown-input {
+    width: inherit;
+    transition: border-radius 400ms;
+  
+    &.open {
+      border-radius: $border-radius $border-radius 0 0;
+    }
+  }
+
+  .dropdown-area {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0.1rem 0.25rem 0 0.25rem;
+    border: none;
+    border-radius: 0 0 $border-radius $border-radius;
+    max-height: 12rem;
+    width: inherit;
+    border: $border-width solid transparent;
+    transition: border-color 400ms;
+    z-index: 10;
+  
+    &.open {
+      border-color: $main-color--lighter;
+    }
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .dropdown-item {
+    display: flex;
+    background-color: white;
+    color: $main-color--darker;
+    font-family: $main-font;
+    font-size: 1rem;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 11;
+  
+    &.selected {
+      background-color: $main-color;
+      color: white;
+    }
+  
+    &:active,
+    &:focus {
+      background-color: $main-color;
+      color: white;
+      outline: none !important;
+    }
+  }
+}
+
+/* Hidding the checkboxes */
+input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox-icon {
+  cursor: pointer; 
+  margin: 0 0.25rem;
+  font-size: 1rem;
+  color: $background-color;
+  background-color: white;
+  border: $border-width solid $main-color--lighter;
+  border-radius: $border-radius / 2;
+  padding: 0.25rem 0.5rem;
+
+  .checked {
+    color: $accent-color;
+  }
+}
+
+.form-label {
+  margin: 0 0.25rem;
+  color: $main-color--darker;
+}
+

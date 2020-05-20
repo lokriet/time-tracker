@@ -1,8 +1,0 @@
-/* Hidding the radiobuttons & checkboxes */
-.favorite-checkbox {
-  display: none;
-}
-
-.favorite {
-  cursor: pointer; 
-}
