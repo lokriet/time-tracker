@@ -30,7 +30,6 @@ export class TasksService {
           });
           this.tasksStore.set(tasks);
           resolve();
-          console.log('tasks store initialized');
         });
       } else {
         resolve();
@@ -51,7 +50,7 @@ export class TasksService {
       })
       .catch(error => {
         this.messagesService.addError('Failed to create task in database');
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -64,7 +63,7 @@ export class TasksService {
       )
       .catch(error => {
         this.messagesService.addError('Failed to update task in database');
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -77,7 +76,7 @@ export class TasksService {
       })
       .catch(error => {
         this.messagesService.addError('Failed to remove task from database');
-        console.log(error);
+        // console.log(error);
       })
   }
 

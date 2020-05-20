@@ -17,11 +17,9 @@ export class TasksResolverService implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> | Observable<boolean> {
     return this.projectsService.initStoreCache(this.authService.getCurrentUserUid())
            .then(() => {
-             console.log('projects store initialized, going on to tasks store...');
              return this.tasksService.initStoreCache(this.authService.getCurrentUserUid());
             })
            .then(() => {
-             console.log('tasks store initialized, loading page now');
              return true;
             });
   }

@@ -70,9 +70,20 @@
   }
 }
 
-.tasks-filter-dropdown {
-  width: 7.75rem;
+.tasks-filter-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.tasks-filter--dropdown {
+  flex-grow: 1;
   height: 2.5rem;
   max-height: 2.5rem;
   margin: 1rem 0 0 0.25rem;
+}
+
+.tasks-filter--apply-button {
+  flex-grow: 0;
+  margin: 1rem 0 0 1rem;
 }

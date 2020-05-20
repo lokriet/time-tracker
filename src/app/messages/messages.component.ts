@@ -33,5 +33,4 @@ export class MessagesComponent implements OnInit {
   onCloseMessage(messageId: number) {
     this.messagesService.removeMessage(messageId);
   }
-
 }

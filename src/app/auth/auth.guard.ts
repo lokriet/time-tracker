@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       if (this.authService.isAuthenticatedNow()) {
         return true;
       } else {
-console.log(state);
         this.messagesService.addError('User is not logged in');
 
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});

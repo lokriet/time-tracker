@@ -76,39 +76,42 @@
         </label>
     </div>
 
-    <ng-select
-        class="tasks-filter-dropdown"
-        name="tasks-filter"
-        [items]="projects$ | async"
-        [multiple]="true"
-        bindLabel="projectName"
-        groupBy="ownerId"
-        [selectableGroup]="true"
-        [selectableGroupAsModel]="false"
-        [closeOnSelect]="false"
-        bindValue="id"
-        [placeholder]="'Filter tasks'"
-        [(ngModel)]="filterProjects"
-        (change)="onFilterProjectsSelected()">
-      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-        <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
-      </ng-template>
-      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-        <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
-        <span [hidden]="!item.isFavorite" class="ml-2 favorite">
-          <fa-icon [icon]="faFullHeart"></fa-icon>
-        </span>
-        {{item.projectName}}
-      </ng-template>
-    </ng-select>
+    
   </div>
 </div>
-
-<app-multiple-select-dropdown
+<div class="tasks-filter-row">
+  <ng-select
+      class="tasks-filter--dropdown"
+      name="tasks-filter"
+      [items]="projects$ | async"
+      [multiple]="true"
+      bindLabel="projectName"
+      groupBy="ownerId"
+      [selectableGroup]="true"
+      [selectableGroupAsModel]="false"
+      [closeOnSelect]="false"
+      bindValue="id"
+      [placeholder]="'Filter tasks'"
+      [(ngModel)]="filterProjects"
+      (change)="onFilterProjectsSelected()">
+    <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> Select all
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+      <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/>
+      <span [hidden]="!item.isFavorite" class="ml-2 favorite">
+        <fa-icon [icon]="faFullHeart"></fa-icon>
+      </span>
+      {{item.projectName}}
+    </ng-template>
+  </ng-select>
+  <button class="form-button tasks-filter--apply-button" (click)="onApplyFiltersPressed()">Apply</button>
+</div>
+<!-- <app-multiple-select-dropdown
     [items]="projects$ | async"
     [displayProperty]="'projectName'">
 
-</app-multiple-select-dropdown>
+</app-multiple-select-dropdown> -->
 
 <div class="container">
   <app-report-chart [data]="data" [chartType]="reportType"></app-report-chart>

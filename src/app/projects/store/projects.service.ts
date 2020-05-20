@@ -31,7 +31,6 @@ export class ProjectsService {
           });
           this.projectsStore.set(projects);
           resolve();
-          console.log('projects store initialized');
         });
       } else {
         resolve();
@@ -62,7 +61,7 @@ export class ProjectsService {
       })
       .catch(error => {
         this.messagesService.addError('Failed to create project in database');
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -76,7 +75,7 @@ export class ProjectsService {
       )
       .catch(error => {
         this.messagesService.addError('Failed to update project in database');
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -89,7 +88,7 @@ export class ProjectsService {
       )
       .catch(error => {
         this.messagesService.addError('Failed to update project in database');
-        console.log(error);
+        // console.log(error);
       });
   }
 
@@ -101,7 +100,7 @@ export class ProjectsService {
       })
       .catch(error => {
         this.messagesService.addError('Failed to remove project from database');
-        console.log(error);
+        // console.log(error);
       })
   }
 

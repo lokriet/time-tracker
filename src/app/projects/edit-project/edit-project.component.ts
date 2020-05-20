@@ -148,10 +148,8 @@ export class EditProjectComponent implements OnInit, OnDestroy {
     ) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      console.log('preventing default...');
-      console.log(e);
     } else {
-      console.log(e.keyCode);
+      // console.log(e.keyCode);
     }
   }
 

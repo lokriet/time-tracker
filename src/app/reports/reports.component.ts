@@ -189,6 +189,10 @@ export class ReportsComponent implements OnInit {
     this.reportsStore.updateFilterProjects(this.filterProjects);
   }
 
+  onApplyFiltersPressed() {
+    this.onBuildReport();
+  }
+
   // formatHours(hours: number) {
   //   return formatHours(hours);
   // }

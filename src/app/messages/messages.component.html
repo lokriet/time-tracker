@@ -1,10 +1,22 @@
 <div class="messages-container">
-  <div *ngFor="let message of (messages | async)" class="mb-2">
-    <div *ngIf="message.type == infoType" class="alert alert-success shadow mr-3 mb-3" role="alert">
-        <fa-icon [icon]="faCheck"></fa-icon> {{ message.message }} <fa-icon [icon]="faClose" aria-label="Close" class="float-right ml-3" (click)="onCloseMessage(message.id)"></fa-icon>
+  <ng-container *ngFor="let message of (messages | async)">
+    <div *ngIf="message.type == infoType" class="message message-info" role="alert">
+        <span class="message--icon"><fa-icon [icon]="faCheck" ></fa-icon> </span>
+        <div class="message--text">{{ message.message }}</div>
+        <fa-icon [icon]="faClose" 
+          aria-label="Close" 
+          class="message--close-button"
+          (click)="onCloseMessage(message.id)">
+        </fa-icon>
     </div>
-    <div *ngIf="message.type == errorType"  class="alert alert-danger shadow mr-3 mb-3" role="alert">
-        <fa-icon [icon]="faAngryFace"></fa-icon> {{ message.message }} <fa-icon [icon]="faClose" aria-label="Close" class="float-right ml-3" (click)="onCloseMessage(message.id)"></fa-icon>
+    <div *ngIf="message.type == errorType"  class="message message-error" role="alert">
+      <span class="message--icon"><fa-icon [icon]="faAngryFace"></fa-icon> </span>
+        <div class="message--text">{{ message.message }}</div>
+        <fa-icon 
+          [icon]="faClose" 
+          aria-label="Close" 
+          class="message--close-button"
+          (click)="onCloseMessage(message.id)"></fa-icon>
     </div>
-  </div>
+  </ng-container>
 </div>
