@@ -9,8 +9,8 @@ import { ReportsComponent } from './reports/reports.component';
 import { TasksResolverService } from './tasks/tasks-resolver.service';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/tasks', pathMatch: 'full' },
-  { path: '', component: HomeComponent },
+  { path: '', redirectTo: '/tasks', pathMatch: 'full' },
+  // { path: '', component: HomeComponent },
   { path: 'reports', resolve: { loaded : TasksResolverService }, canActivate: [ AuthGuard ], component: ReportsComponent },
   {
     path: 'tasks',
